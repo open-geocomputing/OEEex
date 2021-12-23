@@ -96,6 +96,9 @@ function loadConsoleWatcher(){
     });
     var obsConfig = { childList: true/*, characterData: true, attributes: true, subtree: true */};
     myObserver.observe(document.querySelector('pre.console'), obsConfig);
+
+    document.querySelector('.goog-button.run-button').addEventListener('click',function(){listOfAuthorizedConfirm={};})
+    document.querySelector('.goog-button.reset-button').addEventListener('click',function(){listOfAuthorizedConfirm={};})
 }
 
 overloadBackup();
