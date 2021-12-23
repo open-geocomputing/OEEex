@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "regexSubstitution": "https://proxy-oeel-code.open-geocomputing.org:47849/OpenEarthEngineLibrary/\\1"
+      }
+    },
+    "condition": {
+      "regexFilter": "^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)"
+    }
+  }
+]

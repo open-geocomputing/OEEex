@@ -1,0 +1,197 @@
+.dark #head{
+	background-color:#242629;
+	background-image:-webkit-gradient(radial,100 36,0,100 -40,120,from(#16181a),to(#242629));
+	border-bottom:1px solid #1a1a1a;
+}
+
+.dark #logo>img{
+	filter: invert(1) hue-rotate(180deg) brightness(1.5);
+}
+
+.dark #main{
+	background-color:var(--oeel-background-color) ;
+	color: var(--oeel-color);
+}
+
+html.dark{
+	--oeel-background-color: rgb(29, 31, 33);
+	--oeel-color: #C5C8C6;
+	--ee-button-action-color:#000;
+	--ee-button-menu-color:#000;
+	--ee-legacy-blue:#1050b7;
+	--ee-legacy-darkblue:#125ace;
+	--ee-legacy-darkestblue:#619eff;
+	--ee-legacy-alert:#bd6b00;
+	--ee-legacy-red:#c83f2d;
+	--ee-legacy-color-inactive:#878787;
+	--ee-legacy-color-error:#ff4242;
+	--ee-legacy-button-border:#242424;
+	--ee-legacy-button-border-shadow:#404040;
+	--color-error:#ff4242;
+	--color-hover-bg:#0f0f0f;
+	--icon-loading:url('/images/loading.gif');
+	--icon_dms_black_18:url(//fonts.gstatic.com/s/i/googlematerialicons/mapsmode/v16/black-18dp/1x/gm_mapsmode_black_18dp.png);
+	--icon_dms_white_18:url(//fonts.gstatic.com/s/i/googlematerialicons/mapsmode/v16/white-18dp/1x/gm_mapsmode_white_18dp.png);
+	--icon_classifier_black_18:url(//fonts.gstatic.com/s/i/googlematerialicons/scatter_plot/v10/black-18dp/1x/gm_scatter_plot_black_18dp.png);
+	--icon_classifier_white_18:url(//fonts.gstatic.com/s/i/googlematerialicons/scatter_plot/v10/white-18dp/1x/gm_scatter_plot_white_18dp.png);
+	--icon_image_collection_black_18:url(//www.gstatic.com/images/icons/material/system/1x/auto_awesome_motion_black_18dp.png);
+	--icon_image_collection_white_18:url(//www.gstatic.com/images/icons/material/system/1x/auto_awesome_motion_white_18dp.png);
+	--icon_image_black_18:url(//www.gstatic.com/images/icons/material/system/1x/image_black_18dp.png);
+	--icon_image_white_18:url(//www.gstatic.com/images/icons/material/system/1x/image_white_18dp.png);
+	--icon_table_black_18:url(//www.gstatic.com/images/icons/material/system/1x/table_chart_black_18dp.png);
+	--icon_table_white_18:url(//www.gstatic.com/images/icons/material/system/1x/table_chart_white_18dp.png);
+	--icon_folder_black_18:url(//www.gstatic.com/images/icons/material/system/1x/folder_black_18dp.png);
+	--icon_folder_white_18:url(//www.gstatic.com/images/icons/material/system/1x/folder_white_18dp.png)
+}
+
+.dark .docs-list .docs-method-header:hover, .dark .docs-list-popup .docs-method-header {
+    background: #0f0f0f;
+}
+
+.dark .docs-list-popup {
+	background : var(--oeel-background-color);
+	color: var(--oeel-color);
+}
+
+.dark .tree-manager .tree-file:not(.drag-and-drop):before, .dark .tree-drag-clone.tree-file:not(.drag-and-drop):before, .dark .zippy>.header:before, .dark ee-zippy>.header:before{
+    filter: invert(1) hue-rotate(180deg);
+}
+
+.dark .tree-manager .tree-file:hover, .dark .tree-manager .tree-file.tree-item-selected{
+    background: var(--color-hover-bg);
+}
+
+.dark ::selection {
+	background: #445871;
+}
+
+.dark .tree-manager .tree-drag-target{
+	background:#413506;
+}
+.dark .tree-drag-clone{
+	background:var(--oeel-background-color);
+}
+
+.dark .env-list>.header, .dark .env-list>.body{
+	background:var(--oeel-background-color);
+}
+
+.dark .env-entry-prefix{
+	color:white
+}
+
+.dark .env-list>.env-gutter,.dark .ace_editor .ace_gutter{
+	background:#393939 !important;
+
+}
+
+.dark .env-list>.env-gutter:hover, .dark .env-list>.header:hover{
+	background-color: black;
+}
+
+.dark .ace_ee_instance, .dark .ace_ee_static{
+	color: #c43aff!important
+}
+
+.dark .goog-splitpane-handle {
+    background-color: #535151;
+    filter: invert(1) brightness(1.7);
+}
+
+.dark .editor-panel>.header, .dark .tab-panel>.header .goog-tab-bar{
+	border-color: #333333;
+}
+
+
+.dark .ace_numeric {
+    color: #4685ea !important;
+}
+
+.dark input{
+	background-color:var(--oeel-background-color) ;
+}
+
+.dark .ee-search .search-textbox, .dark .search, .dark .repo-manager .search{
+	color: var(--oeel-color);
+	border-color: #242424;
+    border-top-color: #404040;
+}
+
+.dark .repo-manager .search{
+    border-color: #2f2f2f;
+    border-top-color: #5b5a5a;
+}
+
+/*:host(.dark) .user-box {
+	background-color: #2f2f2f;
+}*/
+
+.dark .tab-panel>.header .goog-tab-selected {
+    background: var(--oeel-background-color);
+    color: white;
+    border-bottom-color: var(--oeel-background-color);
+}
+
+.dark .task.legacy .info{
+	color: var(--oeel-color);
+}
+
+.dark .panel .explorer.loading:before {
+    filter: invert(1) hue-rotate(180deg) brightness(1.5);
+    transform-origin: 8px 8px;
+    transform: rotate(180deg);
+}
+
+.dark .env-entry .env-entry-delete{
+	filter: invert(1);
+}
+
+.dark .ee-renamer .jfk-textinput{color: white}
+
+.dark .tree-manager .tree-folder>ee-zippy>.header:hover,
+.dark .repo-manager .repo-list>ee-zippy>.header:hover {
+    background: black;
+}
+
+.dark .tree-manager .button {
+	background-color: #1d1d1d;
+}
+
+.dark ee-task-manager-app{
+	background-color:rgb(29, 31, 33) ;
+	color: #C5C8C6;
+}
+
+
+.OEEexHide{
+	display: none;
+}
+.OEEexHide+hr.divider{
+	display: none;
+}
+.OEEexVerbose{
+	background-color: #b5fffe;
+}
+
+.dark .OEEexVerbose{
+	background-color: #005e5d;
+}
+
+/*.dark ee-task-pane#task-pane>ee-remote-task-list>.remote-tasks .task.legacy .info {*/
+
+/*.dark .ui-chart.loading::before, .dark .explorer.loading:before, .dark .profile-viewer-status.loading:before, .dark .tree-manager.loading .zippy>.header:before, .dark .tree-manager.loading ee-zippy>.header:before, .dark .tree-manager .tree-folder.loading .zippy>.header:before, .dark .tree-manager .tree-folder.loading ee-zippy>.header:before, .dark .tree-manager .zippy.loading>.header:before, .dark .tree-manager ee-zippy.loading>.header:before, .dark .asset-manager .project-list.loading::after, .dark .asset-manager.loading .tree-list.has-message::before, .dark #search-container>.ee-search .search-section.loading .search-heading, .dark .inspect-view.loading:before, .dark .ui-thumbnail.loading::before, .dark .namespace-migration-wizard.loading:after, .dark .scripts-manager.loading:before, .dark .script-migration-dialog.loading::after, .dark .task.run, .dark nin-on-client .indicator, .dark .task.submitted-to-backend .indicator, .dark .task.running-on-backend .indicator{
+	filter: invert(1) hue-rotate(180deg) brightness(1.5);
+    transform-origin: 8px 8px;
+    transform: rotate(180deg);
+}
+*/
+/*
+f1f1f1 1d1f21
+e5e5e5 1a1a1a
+fafafa 050505
+
+
+
+
+
+*/

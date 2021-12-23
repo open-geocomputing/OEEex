@@ -1,0 +1,56 @@
+{
+  "name": "Open Earth Engine extension",
+  "description": "An unofficel extension to enhance Google Earth Engine, and Open Earth Engine experience.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "declarative_net_request" : {
+    "rule_resources" : [{
+      "id": "ruleset",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  },
+  "web_accessible_resources": [{
+    "resources": ["EEDarkMode.js","uploadWithManifest.js","hackEEConfirm.js","addCommandS.js"],
+    "matches": ["https://code.earthengine.google.com/*"]
+  }],
+  "host_permissions": [
+    "https://code.earthengine.google.com/repo/file/load?*"
+  ],
+  "permissions": [
+    // "https://code.earthengine.google.com/*",
+    "activeTab",
+    "storage",
+    "declarativeNetRequest"
+    // "declarativeNetRequestFeedback"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://code.earthengine.google.com/*"], 
+      "js": ["injectionScript.js"],
+      "css" : ["EEDarkMode.css"]
+    }
+  ],
+  "action": {
+    //"default_popup": "popup.html",
+    "default_icon": {
+      "16": "/images/logo_white_OEEex_open_16.png",
+      "32": "/images/logo_white_OEEex_open_32.png",
+      "48": "/images/logo_white_OEEex_open_48.png",
+      "128": "/images/logo_white_OEEex_open_128.png"
+    }
+  },
+  "icons": {
+    "16": "/images/logo_white_OEEex_open_16.png",
+    "32": "/images/logo_white_OEEex_open_32.png",
+    "48": "/images/logo_white_OEEex_open_48.png",
+    "128": "/images/logo_white_OEEex_open_128.png"
+  },
+  //"options_page": "options.html",
+  "externally_connectable": {
+    "matches": ["https://code.earthengine.google.com/*"]
+  }
+}
