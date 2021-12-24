@@ -1,8 +1,7 @@
 const consoleExtensionPrefix='OEEex_AddonConfirmManager';
 var consoleExtensionVerbose=false;
 
-Function.prototype.clone = function() {
-    var that = this;
+clone4OEE = function(that) {
     var temp = function temporary() { return that.apply(this, arguments); };
     for(var key in this) {
         if (this.hasOwnProperty(key)) {
@@ -15,7 +14,7 @@ Function.prototype.clone = function() {
 listOfAuthorizedConfirm={};
 var confirmBackup;
 var overloadBackup=function(){
-    if(!confirmBackup)confirmBackup=window.confirm.clone();
+    if(!confirmBackup)confirmBackup=clone4OEE(window.confirm);
     window.confirm=function(e){
         console.log(e);
         var noForward=false;
