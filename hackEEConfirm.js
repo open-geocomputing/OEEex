@@ -2,10 +2,10 @@ const consoleExtensionPrefix='OEEex_AddonConfirmManager';
 var consoleExtensionVerbose=false;
 
 clone4OEE = function(that) {
-    var temp = function temporary() { return that.apply(this, arguments); };
-    for(var key in this) {
-        if (this.hasOwnProperty(key)) {
-            temp[key] = this[key];
+    var temp = function temporary() { return that.apply(that, arguments); };
+    for(var key in that) {
+        if (that.hasOwnProperty(key)) {
+            temp[key] = that[key];
         }
     }
     return temp;
