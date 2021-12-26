@@ -1,11 +1,19 @@
-listOfScript=['uploadWithManifest.js','hackEEConfirm.js','EEDarkMode.js','addCommandS.js'];
+listOfScript=['uploadWithManifest','hackEEConfirm','EEDarkMode','addCommandS'];
+
+chrome.storage.local.get(listOfScript, function(result){
+  for(let key in result)
+    if(result[key]){
+    	var s = document.createElement('script');
+		s.src = chrome.runtime.getURL(key+'.js');
+		s.onload = function() {
+		    this.remove();
+		};
+		(document.head || document.documentElement).appendChild(s);
+    }
+});
+
 for (var i = listOfScript.length - 1; i >= 0; i--)
 {
-	var s = document.createElement('script');
-	s.src = chrome.runtime.getURL(listOfScript[i]);
-	s.onload = function() {
-	    this.remove();
-	};
-	(document.head || document.documentElement).appendChild(s);
+	
 }
 
