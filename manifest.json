@@ -31,7 +31,7 @@
     {
       "matches": ["https://code.earthengine.google.com/*"], 
       "js": ["injectionScript.js"],
-      "css" : ["EEDarkMode.css"]
+      "css" : ["EEDarkMode.css","OEEex.css"]
     }
   ],
   "action": {
