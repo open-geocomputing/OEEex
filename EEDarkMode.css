@@ -161,37 +161,3 @@ html.dark{
 	background-color:rgb(29, 31, 33) ;
 	color: #C5C8C6;
 }
-
-
-.OEEexHide{
-	display: none;
-}
-.OEEexHide+hr.divider{
-	display: none;
-}
-.OEEexVerbose{
-	background-color: #b5fffe;
-}
-
-.dark .OEEexVerbose{
-	background-color: #005e5d;
-}
-
-/*.dark ee-task-pane#task-pane>ee-remote-task-list>.remote-tasks .task.legacy .info {*/
-
-/*.dark .ui-chart.loading::before, .dark .explorer.loading:before, .dark .profile-viewer-status.loading:before, .dark .tree-manager.loading .zippy>.header:before, .dark .tree-manager.loading ee-zippy>.header:before, .dark .tree-manager .tree-folder.loading .zippy>.header:before, .dark .tree-manager .tree-folder.loading ee-zippy>.header:before, .dark .tree-manager .zippy.loading>.header:before, .dark .tree-manager ee-zippy.loading>.header:before, .dark .asset-manager .project-list.loading::after, .dark .asset-manager.loading .tree-list.has-message::before, .dark #search-container>.ee-search .search-section.loading .search-heading, .dark .inspect-view.loading:before, .dark .ui-thumbnail.loading::before, .dark .namespace-migration-wizard.loading:after, .dark .scripts-manager.loading:before, .dark .script-migration-dialog.loading::after, .dark .task.run, .dark nin-on-client .indicator, .dark .task.submitted-to-backend .indicator, .dark .task.running-on-backend .indicator{
-	filter: invert(1) hue-rotate(180deg) brightness(1.5);
-    transform-origin: 8px 8px;
-    transform: rotate(180deg);
-}
-*/
-/*
-f1f1f1 1d1f21
-e5e5e5 1a1a1a
-fafafa 050505
-
-
-
-
-
-*/

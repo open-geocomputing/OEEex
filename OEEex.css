@@ -1,0 +1,33 @@
+.OEEexHide,
+.OEEexHide+div,
+.OEEexHide+div+div,
+.OEEexHide+div+div+div,
+.OEEexHide+div+div+div+div{
+	display: none;
+}
+.OEEexHide+hr.divider,
+.OEEexHide+div+hr.divider,
+.OEEexHide+div+div+hr.divider,
+.OEEexHide+div+div+div+hr.divider,
+.OEEexHide+div+div+div+div+hr.divider{
+	display: none;
+}
+.OEEexVerbose{
+	background-color: #b5fffe;
+}
+
+.dark .OEEexVerbose{
+	background-color: #005e5d;
+}
+
+.OEEexUploadButton iron-icon{
+	min-width: 30px;
+	box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 24%) 0px 1px 2px;
+	color: var(--ee-legacy-blue);
+	font-size: var(--ee-button-font-size);
+	min-height: 30px;
+}
+
+.OEEexUploadButton.dragover iron-icon{
+	color: blueviolet;
+}
