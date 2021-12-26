@@ -1,0 +1,73 @@
+html{
+	--oeel-background-color: rgb(240,240,240);
+	--oeel-color: black;
+}	
+
+html.dark{
+	--oeel-background-color: rgb(29, 31, 33);
+	--oeel-color: #C5C8C6;
+}	
+
+#logo{
+	margin: 0 auto;
+}
+
+.param > div{
+	display: none;
+}
+
+.param > div.available{
+	display: block;
+}
+
+.dark{
+	background-color:var(--oeel-background-color) ;
+	color: var(--oeel-color);
+}
+
+main div.block{
+	max-width: 700px;
+    margin: 0 auto;
+}
+
+div.lock{
+	margin: -1em 0;
+}
+
+.message-body{
+	position: relative;
+}
+
+.lightMode{
+    border: solid 2px #3e8ed0;
+    border-radius: calc(1em + 3px);
+    right: 1em;
+    position: absolute;
+    top: 0.75em;
+    padding: 6px 5px 0px 5px;
+    margin: 0;
+    background-color: #3e8ed033;
+}
+
+.lightMode span{
+	color: gray;
+}
+.lightMode span.active{
+	text-shadow: #3e8ed0 0px 0px 7px;
+	color: #3e8ed0;
+}
+
+.off .message-body{
+	/*pointer-events: none;*/
+	filter: opacity(0.8) grayscale(0.6);
+}
+
+.off .message-body span{
+	/*pointer-events: none;*/
+	filter: blur(1.5px);
+}
+
+.off .message-header{
+	filter: opacity(0.5)
+}
+

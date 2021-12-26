@@ -2,6 +2,12 @@
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.set({lightMode: 'automatic'});
+    chrome.storage.local.set({
+        uploadWithManifest:true,
+        hackEEConfirm:true,
+        EEDarkMode:true,
+        addCommandS:navigator.platform.toLowerCase().includes('mac')
+    });
 });
 
 function addListenerOnNewPort(port){
@@ -25,8 +31,7 @@ function addListenerOnNewPort(port){
     });
 }
 
-listPort=[]
-chrome.runtime.onConnectExternal.addListener(function(port) {
+function portConnection(port) {
   if(port.name === "oeel.extension.lightMode"){
     listPort.push(port);
     addListenerOnNewPort(port);
@@ -34,4 +39,8 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
         listPort= listPort.filter(function(el) { return el !== port});
     });
   }
-});
+}
+
+listPort=[]
+chrome.runtime.onConnectExternal.addListener(portConnection);
+chrome.runtime.onConnect.addListener(portConnection);

@@ -1,4 +1,4 @@
-
+var lightIsAutomatic=true;
 var portWithBackground = chrome.runtime.connect(document.currentScript.src.match("([a-z]{32})")[0],{name: "oeel.extension.lightMode"});
 
 portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
@@ -14,6 +14,7 @@ portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 function switch2DarkMode(toDark,isAuto=false){
+	lightIsAutomatic=isAuto;
 	if (toDark){
 		listRoot.map( e => e.classList.add('dark'));
 	}
@@ -134,7 +135,8 @@ function switchModeToAutomatic(){
 }
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    switch2DarkMode(e.matches,true);
+	if(lightIsAutomatic)
+    	switch2DarkMode(e.matches,true);
 });
 
 addModeSwitch();
