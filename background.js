@@ -3,6 +3,7 @@
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.set({lightMode: 'automatic'});
     chrome.storage.local.set({
+        planetLab:true,
         uploadWithManifest:true,
         hackEEConfirm:true,
         EEDarkMode:true,
@@ -44,3 +45,68 @@ function portConnection(port) {
 listPort=[]
 chrome.runtime.onConnectExternal.addListener(portConnection);
 chrome.runtime.onConnect.addListener(portConnection);
+
+
+const PlanetRulesId=10;
+function setPlanetApiKey(planetKey){
+    if(planetKey)
+    chrome.declarativeNetRequest.updateSessionRules(
+       {addRules:[{
+          "id": PlanetRulesId,
+          "priority": 1,
+          "action":{
+            type: 'modifyHeaders',// as RuleActionType,
+            requestHeaders: [
+              { 
+                header: 'Authorization', 
+                operation: 'set',// as HeaderOperation, 
+                value: 'Basic '+btoa(planetKey+':')
+              },
+            ],
+          },
+          "condition": { "regexFilter": "^https://(tiles|api)\\.planet\\.com/"}}
+         ],
+         removeRuleIds: [PlanetRulesId]
+       },
+    )
+}
+
+function loadPlanetApiKey(dic){ 
+    if('planetConfig' in dic){
+        planetParam=dic['planetConfig'];
+        if('newValue' in planetParam) planetParam=planetParam['newValue'];
+        setPlanetApiKey(planetParam["apiKey"]);
+    }
+}
+
+chrome.storage.onChanged.addListener(loadPlanetApiKey);
+chrome.storage.local.get(['planetConfig'], loadPlanetApiKey);
+
+
+listPlanetPort=[];
+
+function sendPlanetConfig(ports=listPlanetPort){
+    if(!Array.isArray(ports)){
+        ports=[ports];
+    }
+
+    chrome.storage.local.get(['planetConfig'], function(data) {
+        if('planetConfig' in data){
+            console.log('send planetConfig'+data['planetConfig'])
+            ports.map((sender)=>sender.postMessage({ type:'planetConfig', message: data['planetConfig'] }));
+        }
+    });
+}
+
+function PlanetPortConnection(port) {
+  if(port.name === "oeel.extension.planet"){
+    listPlanetPort.push(port);
+    sendPlanetConfig(port);
+    port.onDisconnect.addListener(function() {
+        listPlanetPort= listPlanetPort.filter(function(el) { return el !== port});
+    });
+  }
+}
+
+chrome.runtime.onConnectExternal.addListener(PlanetPortConnection);
+chrome.runtime.onConnect.addListener(PlanetPortConnection);

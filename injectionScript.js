@@ -1,4 +1,4 @@
-listOfScript=['uploadWithManifest','hackEEConfirm','EEDarkMode','addCommandS'];
+listOfScript=['planetLab','uploadWithManifest','hackEEConfirm','EEDarkMode','addCommandS'];
 
 chrome.storage.local.get(listOfScript, function(result){
   for(let key in result)
@@ -11,9 +11,4 @@ chrome.storage.local.get(listOfScript, function(result){
 		(document.head || document.documentElement).appendChild(s);
     }
 });
-
-for (var i = listOfScript.length - 1; i >= 0; i--)
-{
-	
-}
 

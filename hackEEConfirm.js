@@ -45,7 +45,6 @@ function strToBool(s)
 }
 
 function confirmManager(code,element){
-    console.log(code)
     var instructions=code.slice(consoleExtensionPrefix.length+1);
     {
         var actionPrefix='removeConfirmRetain';

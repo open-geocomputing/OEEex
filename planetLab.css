@@ -1,0 +1,50 @@
+.planetScenesList option{
+    height: 150px;
+    background: var(--bg-text) no-repeat, var(--bg-image) no-repeat,#eeeeee;
+    background-position: left,right;
+    background-size: auto,contain;
+}
+
+.planetScenesList.withoutPrevi option{
+    background-image: var(--bg-text);
+    background-position: left;
+    background-size: auto;
+}
+
+select.planetScenesList{
+    font-size: 18px;
+    width: 100%;
+    height: 350px;
+}
+.dark select.planetScenesList{
+    color: #c5c8c6;
+}
+
+.planetScenesList option:nth-child(2n){
+    background-color: #c8c7c7;
+}
+
+.dark .planetScenesList option{
+    background-color: #1d1f21;
+    background-image: var(--bg-text-dark), var(--bg-image);
+}
+
+.dark .planetScenesList.withoutPrevi option{
+    background-image: var(--bg-text-dark),#1d1f21;
+}
+
+.dark .planetScenesList option:nth-child(2n){
+    background-color: #1d1f21ee;
+}
+
+.dark .planetScenesList option::selection{
+    background-image: var(--bg-text);
+}
+
+.planetScenesList option:checked{
+    background-color: #b8b8e5;
+}
+.dark .planetScenesList option:checked{
+    background-color: #1a1a46;
+}
+
