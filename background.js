@@ -108,5 +108,7 @@ function PlanetPortConnection(port) {
   }
 }
 
+chrome.storage.onChanged.addListener(function(){sendPlanetConfig();});
+
 chrome.runtime.onConnectExternal.addListener(PlanetPortConnection);
 chrome.runtime.onConnect.addListener(PlanetPortConnection);

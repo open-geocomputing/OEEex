@@ -347,52 +347,68 @@ function planetDownloadSelected(randomId,a){
 
     if(planetConfig && planetConfig.apiVersion==2)
     {
-        let imageRequest=new XMLHttpRequest();
-        imageRequest.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
-        imageRequest.responseType = 'json';
-        imageRequest.setRequestHeader("Content-Type", "application/json");
-        imageRequest.onload = function(e) {
-            console.log(this.response)
-          if (this.status == 200) {
-            displayResult(val,this.response,assetConfig);
-            return;
-          }
-          if (this.status >=400) {
-            alert(this.response)
-            return;
-          }
+
+        let batchSize=parseInt(planetConfig.batchSize)
+        let arrayOfNode=[];
+        let numberOfChunck=Math.ceil(imageIDs.length/batchSize);
+        for (let i=0; i<numberOfChunck; i++ ){
+            arrayOfNode[i]=imageIDs.slice(i*batchSize,Math.min((i+1)*batchSize,imageIDs.length));
         }
 
-        planetConfig.collectionPath='projects/earthengine-geouu/assets/Planet'
 
-        let reg=/^projects\/(.+)\/assets\/(.*$)/
-        let matches=reg.exec(planetConfig.collectionPath);
+        for (let i = 0; i < arrayOfNode.length; i++) {
+            
+            let imageRequest=new XMLHttpRequest();
+            imageRequest.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
+            imageRequest.responseType = 'json';
+            imageRequest.setRequestHeader("Content-Type", "application/json");
+            imageRequest.onload = function(e) {
+                console.log(this.response)
+              if (this.status == 200) {
+                displayResult(val,this.response,assetConfig);
+                return;
+              }
+              if (this.status >=400) {
+                alert(this.response)
+                return;
+              }
+            }
 
-        if(matches.length!=3)
-            return
+            planetConfig.collectionPath='projects/earthengine-geouu/assets/Planet'
 
-        requestData={
-            "name": "Planet->GEE",
-            "products":
-            [
+            let reg=/^projects\/(.+)\/assets\/(.*$)/
+            let matches=reg.exec(planetConfig.collectionPath);
+
+            if(matches.length!=3)
+                return
+
+            requestData={
+                "name": "Planet->GEE",
+                "products":
+                [
+                    {
+                        "item_ids": arrayOfNode[i],
+                        "item_type": item_type,
+                        "product_bundle": assetConfig
+                    }
+                ],
+                "delivery":
                 {
-                    "item_ids": imageIDs,
-                    "item_type": item_type,
-                    "product_bundle": assetConfig
-                }
-            ],
-            "delivery":
-            {
-                "google_earth_engine":
-                {
-                    "project": matches[1],
-                    "collection": matches[2]
+                    "google_earth_engine":
+                    {
+                        "project": matches[1],
+                        "collection": matches[2],
+                    }
                 }
             }
-        }
 
-        console.log(requestData)
-        //imageRequest.send(JSON.stringify(requestData));
+            if(planetConfig.serviceAccount && planetConfig.serviceAccount!=''){
+                requestData.delivery.google_earth_engine['credentials']=btoa(planetConfig.serviceAccount);
+            }
+
+            console.log(requestData)
+            //imageRequest.send(JSON.stringify(requestData));
+        }
         
     }
 }
