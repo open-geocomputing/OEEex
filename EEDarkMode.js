@@ -55,22 +55,28 @@ function addModeSwitch(){
 	    portWithBackground.postMessage({type:"getLightMode"});
 	});
 
-	var fontLink = document.createElement('link');
+	let fontLink = document.createElement('link');
     fontLink.type = 'text/css';
     fontLink.rel = 'stylesheet';
 	(document.head || document.documentElement).appendChild(fontLink);
 	fontLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons"
 
-	var htmlCode='<ee-menu-button align="right"><span id="toogleModeButton"  slot="button"'+
+	let button=document.createElement('ee-menu-button');
+	button.innerHTML='<span id="toogleModeButton"  slot="button"'+
 	' class="material-icons" style="font-family: &quot;Material Icons&quot; ; color: rgba(115, 115, 115, 0.7);'+
-	'  font-size: 0px; padding: 0 0 0 7px; vertical-align: bottom;">brightness_medium</span></ee-menu-button>';
-	var userBoxElement=document.getElementsByTagName('user-box')
+	'  font-size: 0px; padding: 0 0 0 7px; vertical-align: bottom;">brightness_medium</span>';
+	button.setAttribute('align',"right");
+	let userBoxElement=document.getElementsByTagName('user-box')
+
+
 
 	if(userBoxElement && userBoxElement.length>0)
 	{
 		var localRoot=userBoxElement[0].shadowRoot;
 		
-		localRoot.firstElementChild.innerHTML=htmlCode+localRoot.firstElementChild.innerHTML;
+		localRoot.children[0].insertBefore(button,localRoot.children[0].firstChild)
+
+
 		buttonLight=localRoot.getElementById('toogleModeButton');
 		buttonLight.addEventListener("click", switchMode);
 		buttonLight.addEventListener("dblclick", switchModeToAutomatic);
