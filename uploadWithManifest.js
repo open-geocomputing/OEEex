@@ -1,5 +1,5 @@
 var taskPanel=null;
-
+var GEEUserAssetRoot=null;
 maxParallelGSUpload=10;
 parallelGSUpload=0;
 toGSuploadList=[];
@@ -127,6 +127,13 @@ function uploadFilesInGEE(arrayOfUris,fileArray){
 	return array;
 }
 
+function getUserRoot(){
+	if(!GEEUserAssetRoot){
+		GEEUserAssetRoot=ee.data.getAssetRoots()[0].id;	
+	}
+	return GEEUserAssetRoot;
+}
+
 function ingestInGEE(manifest,successCallback,errorCallback){
 	let ingestCall=new XMLHttpRequest();
 	ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/image:import',true);
@@ -146,6 +153,18 @@ function ingestInGEE(manifest,successCallback,errorCallback){
    	}
   }
   ingestCall.setRequestHeader("Authorization", ee.data.getAuthToken());
+
+  let reg=/^projects\/(.+)\/assets\/(.*$)/
+  let matches=reg.exec(manifest['name']);
+
+  if(!matches || matches.length!=3){
+  		if(manifest['name'].startsWith('users/') || manifest['name'].startsWith('projects/'))
+      {
+      	manifest['name']='projects/earthengine-legacy/assets/'+manifest['name'];
+  		}else{
+  			manifest['name']='projects/earthengine-legacy/assets/'+getUserRoot()+'/'+manifest['name'];
+  		}
+  }
 
 	ingestCall.send(JSON.stringify({"imageManifest": manifest,
 					"requestId": uuidv4(),
@@ -281,7 +300,7 @@ function addManifestToIngestInGEE(manifest,uploadEvents){
 		uploadDic.panelTask.querySelector('.content').style.background='#ff5722';
 	}
 	catch(e){
-		// add to teh list of stuff to ingest
+		// add to the list of stuff to ingest
 		for (var i = uploadEvents.length - 1; i >= 0; i--) {
 			if(uploadEvents[i].responseURL.includes('https://code.earthengine.google.com/assets/upload/geturl')){
 				addGSUploadToList(uploadEvents[i]);

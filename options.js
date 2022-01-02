@@ -50,7 +50,15 @@ function setSatus(key,value){
   }
 }
 
-chrome.storage.onChanged.addListener(setSatus);
+chrome.storage.onChanged.addListener(function(dic){
+  for( let idx in listOfScript)
+  {
+    let key=listOfScript[idx];
+    if(key in dic){
+      setSatus(key,dic[key]['newValue']);
+    }
+  }
+});
 
 portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
   if(request.type=='changeLightMode'){

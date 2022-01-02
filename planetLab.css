@@ -17,6 +17,7 @@ select.planetScenesList{
     height: 350px;
 }
 .dark select.planetScenesList{
+    background-color: #1d1f21;
     color: #c5c8c6;
 }
 

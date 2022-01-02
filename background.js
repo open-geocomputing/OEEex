@@ -11,6 +11,16 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });
 
+
+chrome.action.onClicked.addListener(tab => {
+  if(tab.url.startsWith('https://code.earthengine.google.com')){
+    chrome.tabs.create({ url: "https://www.open-geocomputing.org/OpenEarthEngineLibrary/" });
+  }
+  else{
+    chrome.tabs.create({ url: "https://code.earthengine.google.com/" });
+  }
+});
+
 function addListenerOnNewPort(port){
     port.onMessage.addListener((request, sender, sendResponse) => {
         if(request.type=='getLightMode'){
@@ -79,7 +89,24 @@ function loadPlanetApiKey(dic){
     }
 }
 
+function checkDependances(dic){
+    console.log(JSON.stringify(dic));
+    if('planetLab' in dic){
+        if(dic['planetLab']['newValue'])
+        {
+            chrome.storage.local.set({uploadWithManifest:true})
+        }
+    }
+    if('uploadWithManifest' in dic){
+        if(!dic['uploadWithManifest']['newValue'])
+        {
+            chrome.storage.local.set({planetLab:false})
+        }
+    }
+}
+
 chrome.storage.onChanged.addListener(loadPlanetApiKey);
+chrome.storage.onChanged.addListener(checkDependances);
 chrome.storage.local.get(['planetConfig'], loadPlanetApiKey);
 
 
@@ -92,7 +119,6 @@ function sendPlanetConfig(ports=listPlanetPort){
 
     chrome.storage.local.get(['planetConfig'], function(data) {
         if('planetConfig' in data){
-            console.log('send planetConfig'+data['planetConfig'])
             ports.map((sender)=>sender.postMessage({ type:'planetConfig', message: data['planetConfig'] }));
         }
     });
