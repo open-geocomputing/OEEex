@@ -8,6 +8,14 @@ html.dark{
 	--oeel-color: #C5C8C6;
 }	
 
+header{
+	width: auto;
+	height: 300px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: linear-gradient(to top right, #524ad0 10%, #D099FA);
+}
+
 #logo{
 	margin: 0 auto;
 }
@@ -66,9 +74,10 @@ div.lock{
 	filter: opacity(0.8) grayscale(0.6);
 }
 
-.off .message-body span{
+.off .message-body span.lightMode, .off .message-body div.subsection.box{
 	/*pointer-events: none;*/
 	filter: blur(1.5px);
+	pointer-events:none
 }
 
 .off .message-header{

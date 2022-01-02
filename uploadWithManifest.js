@@ -1,3 +1,5 @@
+var portUwM= chrome.runtime.connect(document.currentScript.src.match("([a-z]{32})")[0],{name: "oeel.extension.UwM"});
+
 var taskPanel=null;
 var GEEUserAssetRoot=null;
 maxParallelGSUpload=10;
@@ -7,6 +9,16 @@ toGSuploadList=[];
 maxParallelDownload=10;
 parallelDownload=0;
 toDownloadList=[];
+
+
+portUwM.onMessage.addListener((request, sender, sendResponse) => {
+	if(request.type=='parallelUpload'){
+		maxParallelGSUpload=request.message;
+	}
+	if(request.type=='parallelDownload'){
+		maxParallelDownload=request.message;
+	}
+})
 
 function addButtonOnAssetPanel(){
 	var topButton=document.querySelector('.top-buttons');
@@ -139,37 +151,37 @@ function ingestInGEE(manifest,successCallback,errorCallback){
 	ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/image:import',true);
 	ingestCall.responseType = 'json';
 	ingestCall.onload = function(e) {
-	  if (this.status == 200) {
-	    successCallback();
-   	}
-   	else{
-   		if(confrim('Error:'+this.response+'\n Do you want to retry ?'))
-   		{
-   			ingestInGEE(manifest,successCallback,errorCallback);
-   		}
-	   	else{
-	   		errorCallback();
-	   	}
-   	}
-  }
-  ingestCall.setRequestHeader("Authorization", ee.data.getAuthToken());
+		if (this.status == 200) {
+			successCallback();
+		}
+		else{
+			if(confrim('Error:'+this.response+'\n Do you want to retry ?'))
+			{
+				ingestInGEE(manifest,successCallback,errorCallback);
+			}
+			else{
+				errorCallback();
+			}
+		}
+	}
+	ingestCall.setRequestHeader("Authorization", ee.data.getAuthToken());
 
-  let reg=/^projects\/(.+)\/assets\/(.*$)/
-  let matches=reg.exec(manifest['name']);
+	let reg=/^projects\/(.+)\/assets\/(.*$)/
+	let matches=reg.exec(manifest['name']);
 
-  if(!matches || matches.length!=3){
-  		if(manifest['name'].startsWith('users/') || manifest['name'].startsWith('projects/'))
-      {
-      	manifest['name']='projects/earthengine-legacy/assets/'+manifest['name'];
-  		}else{
-  			manifest['name']='projects/earthengine-legacy/assets/'+getUserRoot()+'/'+manifest['name'];
-  		}
-  }
+	if(!matches || matches.length!=3){
+		if(manifest['name'].startsWith('users/') || manifest['name'].startsWith('projects/'))
+		{
+			manifest['name']='projects/earthengine-legacy/assets/'+manifest['name'];
+		}else{
+			manifest['name']='projects/earthengine-legacy/assets/'+getUserRoot()+'/'+manifest['name'];
+		}
+	}
 
 	ingestCall.send(JSON.stringify({"imageManifest": manifest,
-					"requestId": uuidv4(),
+		"requestId": uuidv4(),
 					"overwrite": false //maybe doing something for this
-					}));
+				}));
 }
 
 function uploadFromLocal(index,uris,fileEntry){
@@ -177,34 +189,34 @@ function uploadFromLocal(index,uris,fileEntry){
 	uploadImage.open("GET",'https://code.earthengine.google.com/assets/upload/geturl',true);
 	uploadImage.responseType = 'json';
 	uploadImage.onload = function(e) {
-	  if (this.status == 200) {
-	    let uploadAddresObject=this.response;
-    	fileEntry.file(function(fileData){
+		if (this.status == 200) {
+			let uploadAddresObject=this.response;
+			fileEntry.file(function(fileData){
 				var uploadFormData = new FormData();
 				uploadFormData.append("data", fileData);
 				let uploadImageToGS=new XMLHttpRequest();
 				uploadImageToGS.open("POST",uploadAddresObject.url,true);
 				uploadImageToGS.responseType = 'json';
 				uploadImageToGS.onload = function(e) {
-				  if (this.status == 200) {
-				  	let gsAddress=this.response
-				    	uris[index]=gsAddress[0];
-				    	checkForImediateIngestion(uploadImage.uploadDic);
-							checkForGSUpload(true);
-				  }
+					if (this.status == 200) {
+						let gsAddress=this.response
+						uris[index]=gsAddress[0];
+						checkForImediateIngestion(uploadImage.uploadDic);
+						checkForGSUpload(true);
+					}
 				}
 				uploadImageToGS.upload.onprogress = (event) => {
 					let uploadDelta=event.loaded-uploadImage.alreadyUploaded;
 					uploadImage.alreadyUploaded=event.loaded;
 					updateDispaly(uploadImage.uploadDic,uploadDelta);
-			  }
+				}
 				uploadImageToGS.send(uploadFormData);
 			});
-	  }
+		}
 	};
 	fileEntry.getMetadata(function(metadata) { 
-    uploadImage.fileSize=metadata.size;
-    uploadImage.alreadyUploaded=0;
+		uploadImage.fileSize=metadata.size;
+		uploadImage.alreadyUploaded=0;
 	});
 	return uploadImage;
 }
@@ -214,31 +226,31 @@ function uploadFromBlob(index,uris,blob){
 	uploadImage.open("GET",'https://code.earthengine.google.com/assets/upload/geturl',true);
 	uploadImage.responseType = 'json';
 	uploadImage.onload = function(e) {
-	  if (this.status == 200) {
-	    let uploadAddresObject=this.response;
+		if (this.status == 200) {
+			let uploadAddresObject=this.response;
 			var uploadFormData = new FormData();
 			uploadFormData.append("data", blob,'uploadImage.tif');
 			let uploadImageToGS=new XMLHttpRequest();
 			uploadImageToGS.open("POST",uploadAddresObject.url,true);
 			uploadImageToGS.responseType = 'json';
 			uploadImageToGS.onload = function(e) {
-			  if (this.status == 200) {
-			  	let gsAddress=this.response
-			    	uris[index]=gsAddress[0];
-			    	checkForImediateIngestion(uploadImage.uploadDic);
-						checkForGSUpload(true);
-			  }
+				if (this.status == 200) {
+					let gsAddress=this.response
+					uris[index]=gsAddress[0];
+					checkForImediateIngestion(uploadImage.uploadDic);
+					checkForGSUpload(true);
+				}
 			}
 			uploadImageToGS.upload.onprogress = (event) => {
 				let uploadDelta=event.loaded-uploadImage.alreadyUploaded;
 				uploadImage.alreadyUploaded=event.loaded;
 				updateDispaly(uploadImage.uploadDic,uploadDelta);
-		  }
+			}
 			uploadImageToGS.send(uploadFormData);
-	  }
+		}
 	};
-  uploadImage.fileSize=blob.size;
-  uploadImage.alreadyUploaded=0;
+	uploadImage.fileSize=blob.size;
+	uploadImage.alreadyUploaded=0;
 	return uploadImage;
 }
 
@@ -248,27 +260,27 @@ function uploadFromRemote(index,uris){
 	downloadImage.responseType = 'blob';
 	downloadImage.onload = function(e) {
 		if (this.status == 429) {
-	    uploadFromRemote(index,uris);
-  	}
-	  if (this.status == 200) {
-	    let downloadObject=this.response;
-	    let uploadJob=uploadFromBlob(index,uris,new Blob([downloadObject], {type:"multipart/form-data"}));
-	    uploadJob.uploadDic=downloadImage.uploadDic;
-	    uploadJob.uploadDic.uploadEvents[uploadJob.uploadDic.uploadEvents.indexOf(downloadImage)]=uploadJob;
-	    addGSUploadToList(uploadJob,true);
-	    checkForDownload(true);
-  	}
-  }
-  downloadImage.fileSize=Infinity;
-  downloadImage.alreadyUploaded=0;
-  return downloadImage;
+			uploadFromRemote(index,uris);
+		}
+		if (this.status == 200) {
+			let downloadObject=this.response;
+			let uploadJob=uploadFromBlob(index,uris,new Blob([downloadObject], {type:"multipart/form-data"}));
+			uploadJob.uploadDic=downloadImage.uploadDic;
+			uploadJob.uploadDic.uploadEvents[uploadJob.uploadDic.uploadEvents.indexOf(downloadImage)]=uploadJob;
+			addGSUploadToList(uploadJob,true);
+			checkForDownload(true);
+		}
+	}
+	downloadImage.fileSize=Infinity;
+	downloadImage.alreadyUploaded=0;
+	return downloadImage;
 }
 
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+		return v.toString(16);
+	});
 }
 
 
@@ -342,7 +354,7 @@ function updateDispaly(uploadDic,chunkSize){
 	{	
 		uploadDic.panelTask.querySelector('.content').style.background=
 		'linear-gradient(90deg, #4caf50 '+(propUpload-smoothness)*100+
-												'%, rgb(180 180 180 / 37%) '+(propUpload+smoothness)*100+'%)';
+		'%, rgb(180 180 180 / 37%) '+(propUpload+smoothness)*100+'%)';
 	}
 }
 
@@ -363,43 +375,43 @@ function isReadyToIngest(jsonData){
 						canBeIngested&=jsonData[k][i].startsWith("gs://");
 						if(!canBeIngested)return canBeIngested;
 					}
-				else{
-					canBeIngested&=isReadyToIngest(jsonData[k]);
-					if(!canBeIngested)return canBeIngested;
+					else{
+						canBeIngested&=isReadyToIngest(jsonData[k]);
+						if(!canBeIngested)return canBeIngested;
+					}
 				}
 			}
 		}
+		return canBeIngested;
 	}
-	return canBeIngested;
-}
 
-function checkForImediateIngestion(uploadDic){
-	if(isReadyToIngest(uploadDic.manifest)){
-		ingestInGEE(uploadDic.manifest,function(){
-			uploadDic.panelTask.remove()
-		},function(){
-			uploadDic.panelTask.querySelector('.content').style.background='red';
-		})
+	function checkForImediateIngestion(uploadDic){
+		if(isReadyToIngest(uploadDic.manifest)){
+			ingestInGEE(uploadDic.manifest,function(){
+				uploadDic.panelTask.remove()
+			},function(){
+				uploadDic.panelTask.querySelector('.content').style.background='red';
+			})
+		}
 	}
-}
 
 
-function addCommonToDownloadList(upload, toTheFront=false){
-	if (toTheFront)
-		toDownloadList.unshift(upload);
-	else
-		toDownloadList.push(upload);
-	checkForDownload(false);
-}
-
-function checkForDownload(fromPrevious=false){
-	if(fromPrevious)parallelDownload--;
-	while((toDownloadList.length>0) && (parallelDownload<maxParallelDownload)){
-		parallelDownload++;
-		toDownloadList[0].send();
-		toDownloadList.shift();
+	function addCommonToDownloadList(upload, toTheFront=false){
+		if (toTheFront)
+			toDownloadList.unshift(upload);
+		else
+			toDownloadList.push(upload);
+		checkForDownload(false);
 	}
-}
+
+	function checkForDownload(fromPrevious=false){
+		if(fromPrevious)parallelDownload--;
+		while((toDownloadList.length>0) && (parallelDownload<maxParallelDownload)){
+			parallelDownload++;
+			toDownloadList[0].send();
+			toDownloadList.shift();
+		}
+	}
 
 /*
 maxParallelDownload=10;

@@ -2,15 +2,15 @@ var lightIsAutomatic=true;
 var portWithBackground = chrome.runtime.connect(document.currentScript.src.match("([a-z]{32})")[0],{name: "oeel.extension.lightMode"});
 
 portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.type=='changeLightMode'){
-        if(request.message=='automatic'){
-        	if((typeof buttonLight!= 'undefined') && buttonLight)
-        		buttonLight.innerHTML='brightness_medium';
+	if(request.type=='changeLightMode'){
+		if(request.message=='automatic'){
+			if((typeof buttonLight!= 'undefined') && buttonLight)
+				buttonLight.innerHTML='brightness_medium';
 			switch2DarkMode((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),true)
 		}else{
 			switch2DarkMode(request.message,false);
 		}
-    };
+	};
 })
 
 function switch2DarkMode(toDark,isAuto=false){
@@ -52,12 +52,12 @@ function addModeSwitch(){
 	listRoot.push(document.getElementsByTagName('html')[0]);
 
 	window.addEventListener("load", function(){
-	    portWithBackground.postMessage({type:"getLightMode"});
+		portWithBackground.postMessage({type:"getLightMode"});
 	});
 
 	let fontLink = document.createElement('link');
-    fontLink.type = 'text/css';
-    fontLink.rel = 'stylesheet';
+	fontLink.type = 'text/css';
+	fontLink.rel = 'stylesheet';
 	(document.head || document.documentElement).appendChild(fontLink);
 	fontLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons"
 
@@ -142,7 +142,7 @@ function switchModeToAutomatic(){
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
 	if(lightIsAutomatic)
-    	switch2DarkMode(e.matches,true);
+		switch2DarkMode(e.matches,true);
 });
 
 addModeSwitch();

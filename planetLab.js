@@ -10,6 +10,8 @@ var planetActivated=0;
 planetPortWithBackground.onMessage.addListener((request, sender, sendResponse) => {
     if(request.type=='planetConfig'){
         planetConfig=request.message;
+        // if('maxParallelActivation' in planetConfig)
+        //     maxPlanetActivated=planetConfig['maxParallelActivation'];
     };
 })
 
@@ -168,21 +170,21 @@ function runPlanetSearch(consoleCode,val){
     while(jsonVal){
         switch(jsonVal.functionName) {
             case "Collection.filter":
-                listFilter.push(genreateFilter(jsonVal.arguments.filter))
-                jsonVal=jsonVal.arguments.collection;
-                break;
+            listFilter.push(genreateFilter(jsonVal.arguments.filter))
+            jsonVal=jsonVal.arguments.collection;
+            break;
             case "ImageCollection.load":
-                var listParameter=jsonVal.arguments.id.split('/');
-                if(listParameter[0]!='PlanetLab')
-                    console.error('Unexistant dataset !')
-                else
-                {
-                    item_type=listParameter[1];
-                    if(listParameter.length>2)
-                        assetConfig=listParameter[2];
-                }
-                jsonVal=undefined;
-                break;
+            var listParameter=jsonVal.arguments.id.split('/');
+            if(listParameter[0]!='PlanetLab')
+                console.error('Unexistant dataset !')
+            else
+            {
+                item_type=listParameter[1];
+                if(listParameter.length>2)
+                    assetConfig=listParameter[2];
+            }
+            jsonVal=undefined;
+            break;
             default:
             console.error(jsonVal.functionName+ 'is not supported !')
         }
@@ -218,18 +220,18 @@ function runPlanetSearch(consoleCode,val){
       if (this.status == 200) {
         displayResult(val,this.response,assetConfig,item_type);
         return;
-      }
-      if(this.status ==429){
+    }
+    if(this.status ==429){
         this.open("POST",'https://api.planet.com/data/v1/quick-search',true);
         this.sendPlanetWhenPossible(JSON.stringify(researchData),true);
         return;
-      }
-      if (this.status >=400) {
+    }
+    if (this.status >=400) {
         alert("Error loading data from Planet.")
         return;
-      }
     }
-    planetSearch.sendPlanetWhenPossible(JSON.stringify(researchData),true);
+}
+planetSearch.sendPlanetWhenPossible(JSON.stringify(researchData),true);
 
 }
 
@@ -272,76 +274,76 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
     }
 
     var dataJson=JSON.stringify(
+    {
+        "expression":
         {
-            "expression":
+            "result": "0",
+            "values":
             {
-                "result": "0",
-                "values":
+                "0":
                 {
-                    "0":
+                    "functionInvocationValue":
                     {
-                        "functionInvocationValue":
+                        "arguments":
                         {
-                            "arguments":
+                            "collection":
                             {
-                                "collection":
+                                "functionInvocationValue":
                                 {
-                                    "functionInvocationValue":
+                                    "arguments":
                                     {
-                                        "arguments":
+                                        "collection":
                                         {
-                                            "collection":
+                                            "functionInvocationValue":
                                             {
-                                                "functionInvocationValue":
+                                                "arguments":
                                                 {
-                                                    "arguments":
+                                                    "id":
                                                     {
-                                                        "id":
-                                                        {
-                                                            "constantValue": collectionPath
-                                                        }
-                                                    },
-                                                    "functionName": "ImageCollection.load"
-                                                }
-                                            },
-                                            "filter":
-                                            {
-                                                "functionInvocationValue":
-                                                {
-                                                    "arguments":
-                                                    {
-                                                        "rightField":
-                                                        {
-                                                            "valueReference": "1"
-                                                        },
-                                                        "leftValue":
-                                                        {
-                                                            "constantValue":features.map(e=>{return e.id})
-                                                        }
-                                                    },
-                                                    "functionName": "Filter.listContains"
-                                                }
+                                                        "constantValue": collectionPath
+                                                    }
+                                                },
+                                                "functionName": "ImageCollection.load"
                                             }
                                         },
-                                        "functionName": "Collection.filter"
-                                    }
-                                },
-                                "property":
-                                {
-                                    "valueReference": "1"
+                                        "filter":
+                                        {
+                                            "functionInvocationValue":
+                                            {
+                                                "arguments":
+                                                {
+                                                    "rightField":
+                                                    {
+                                                        "valueReference": "1"
+                                                    },
+                                                    "leftValue":
+                                                    {
+                                                        "constantValue":features.map(e=>{return e.id})
+                                                    }
+                                                },
+                                                "functionName": "Filter.listContains"
+                                            }
+                                        }
+                                    },
+                                    "functionName": "Collection.filter"
                                 }
                             },
-                            "functionName": "AggregateFeatureCollection.array"
-                        }
-                    },
-                    "1":
-                    {
-                        "constantValue": "id"
+                            "property":
+                            {
+                                "valueReference": "1"
+                            }
+                        },
+                        "functionName": "AggregateFeatureCollection.array"
                     }
+                },
+                "1":
+                {
+                    "constantValue": "id"
                 }
             }
         }
-        );
+    }
+    );
 
     let chackIDAvailableInGEE=new XMLHttpRequest();
     chackIDAvailableInGEE.open("POST",'https://content-earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/value:compute',true);
@@ -361,15 +363,15 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
             head.parentNode.parentNode.classList.remove('loading');
         }
         return;
-      }
-      if (this.status >=400) {
+    }
+    if (this.status >=400) {
         alert("Unable to check the image already available on GEE, make sure not to download the image already present.")
         return;
-      }
     }
+}
 
-    chackIDAvailableInGEE.setRequestHeader("Authorization", ee.data.getAuthToken());
-    chackIDAvailableInGEE.send(dataJson);
+chackIDAvailableInGEE.setRequestHeader("Authorization", ee.data.getAuthToken());
+chackIDAvailableInGEE.send(dataJson);
 }
 
 loadMore=false;
@@ -400,7 +402,7 @@ function displayResult(val,result,assetConfig,item_type){
     val.querySelector('#satckToActivatePlanetImages_'+randomId).addEventListener('click',function(){planetDownloadSelected(randomId,assetConfig,item_type);});
 
     let loadMoreImage=function(e){
-    
+
         let nextLink=e.target.getAttribute('linkMore');
         if(!nextLink || nextLink=='null') return;
         e.target.parentNode.parentNode.classList.add('loading');
@@ -415,28 +417,28 @@ function displayResult(val,result,assetConfig,item_type){
             e.target.setAttribute('linkMore',result._links._next)
             addSceneInConsole(randomId,result.features,assetConfig,item_type,true);
             return;
-          }
-          if(this.status ==429){
+        }
+        if(this.status ==429){
             this.planetSearch.open("GET",nextLink,true);
             this.sendPlanetWhenPossible(null,true);
             return;
-          }
-          if (this.status >=400) {
+        }
+        if (this.status >=400) {
             alert("Error loading data from Planet.")
             return;
-          }
         }
-        planetSearch.sendPlanetWhenPossible();
     }
+    planetSearch.sendPlanetWhenPossible();
+}
 
-    val.querySelector('.planetScenesList').addEventListener('loadMore',loadMoreImage);
+val.querySelector('.planetScenesList').addEventListener('loadMore',loadMoreImage);
 
-    val.querySelector('.planetScenesList').addEventListener('scroll',function(e){
-        if(!loadMore && e.target.scrollHeight-e.target.scrollTop<10*e.target.firstChild.offsetHeight){
-            let event = new Event('loadMore');
-            e.target.dispatchEvent(event);
-        }
-    })
+val.querySelector('.planetScenesList').addEventListener('scroll',function(e){
+    if(!loadMore && e.target.scrollHeight-e.target.scrollTop<10*e.target.firstChild.offsetHeight){
+        let event = new Event('loadMore');
+        e.target.dispatchEvent(event);
+    }
+})
 }
 
 function planetDownloadSelected(randomId,a){
@@ -469,11 +471,11 @@ function planetDownloadSelected(randomId,a){
                 "name": "Planet->GEE",
                 "products":
                 [
-                    {
-                        "item_ids": arrayOfNode[i],
-                        "item_type": item_type,
-                        "product_bundle": assetConfig
-                    }
+                {
+                    "item_ids": arrayOfNode[i],
+                    "item_type": item_type,
+                    "product_bundle": assetConfig
+                }
                 ],
                 "delivery":
                 {
@@ -498,19 +500,19 @@ function planetDownloadSelected(randomId,a){
               if (this.status == 200) {
                 displayResult(val,this.response,assetConfig);
                 return;
-              }
-              if(this.status ==429){
+            }
+            if(this.status ==429){
                 this.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
                 this.sendPlanetWhenPossible(JSON.stringify(requestData),true);
                 return;
-              }
-              if (this.status >=400) {
+            }
+            if (this.status >=400) {
                 alert(this.response)
                 return;
-              }
             }
+        }
 
-            
+
 
             //imageRequest.sendPlanetWhenPossible(JSON.stringify(requestData),false);
             listImageElement.map((e)=>e.remove())
@@ -550,17 +552,17 @@ function requestPlanetImageStatus(im2Transfer){
     sheckImageStatus.onload = function(result) {
       if (this.status == 200) {
         processPlanetImageStatus(im2Transfer,this.response);
-      }
-      if(this.status ==429){
+    }
+    if(this.status ==429){
         requestPlanetImageStatus(im2Transfer);
         return;
-      }
-      if (this.status >=400) {
+    }
+    if (this.status >=400) {
         alert("Error loading data from Planet.")
         return;
-      }
     }
-    sheckImageStatus.sendPlanetWhenPossible(null,true);
+}
+sheckImageStatus.sendPlanetWhenPossible(null,true);
 }
 
 function processPlanetImageStatus(im2Transfer,reponse){
@@ -589,16 +591,16 @@ function processPlanetImageStatus(im2Transfer,reponse){
         requestToActivate.onload = function(result) {
           if (this.status == 202) {
             return;
-          }
-          if(this.status ==429){
+        }
+        if(this.status ==429){
             this.open("GET",activeLink,true);
             this.sendPlanetWhenPossible(null,true)
             return;
-          }
-          alert("Error in activating "+JSON.stringify(im2Transfer));
         }
-        requestToActivate.sendPlanetWhenPossible(null,true);
+        alert("Error in activating "+JSON.stringify(im2Transfer));
     }
+    requestToActivate.sendPlanetWhenPossible(null,true);
+}
     // if(reponse[xmlAssetType].status=="inactive"){
     //     //activate image
     //     let activeLink=reponse[xmlAssetType]._links.activate;
@@ -629,24 +631,24 @@ function processPlanetImageStatus(im2Transfer,reponse){
         requestToActivate.onload = function(result) {
           if (this.status == 202) {
             return;
-          }
-          if(this.status ==429){
+        }
+        if(this.status ==429){
             this.open("GET",activeLink,true);
             this.sendPlanetWhenPossible(null,true)
             return;
-          }
-          alert("Error in activating UDM "+JSON.stringify(im2Transfer));
         }
-        requestToActivate.sendPlanetWhenPossible(null,true);
+        alert("Error in activating UDM "+JSON.stringify(im2Transfer));
     }
+    requestToActivate.sendPlanetWhenPossible(null,true);
+}
 
-    if( (reponse[trueAssetType].status=="active") &&
+if( (reponse[trueAssetType].status=="active") &&
         (!udm || reponse[udm].status=="active") /*&&
         (reponse[xmlAssetType].status=="active")*/ ){
-        im2Transfer.downloadLink=reponse[trueAssetType]["location"];
-        if(udm) im2Transfer.downloadLink_udm=reponse[udm]["location"];
+    im2Transfer.downloadLink=reponse[trueAssetType]["location"];
+if(udm) im2Transfer.downloadLink_udm=reponse[udm]["location"];
 
-        let requestMetaData=new XMLHttpRequest();
+let requestMetaData=new XMLHttpRequest();
         //requestMetaData.open("GET",reponse[xmlAssetType]["location"],true);
         requestMetaData.open("GET",im2Transfer.assetLink.slice(0,-8),true);
         requestMetaData.responseType = 'json';
@@ -655,18 +657,18 @@ function processPlanetImageStatus(im2Transfer,reponse){
           if (this.status == 200) {
             createPlanetManifest(im2Transfer,trueAssetType,udm,this.response)
             return;
-          }
-          if(this.status ==429){
+        }
+        if(this.status ==429){
             this.open("GET",im2Transfer.assetLink.slice(0,-8),true);
             this.sendPlanetWhenPossible(null,true)
             return;
-          }
-          alert("Error in loading XML "+JSON.stringify(im2Transfer));
         }
-        requestMetaData.sendPlanetWhenPossible(null,true);
-    }else{
-        requestPlanetImageStatus(im2Transfer);
+        alert("Error in loading XML "+JSON.stringify(im2Transfer));
     }
+    requestMetaData.sendPlanetWhenPossible(null,true);
+}else{
+    requestPlanetImageStatus(im2Transfer);
+}
 }
 
 function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
@@ -676,30 +678,30 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
 
         switch(im2Transfer.itemType) {
             case "PSScene3Band":
-                bandsName=[ { "id": fullName[0],"tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[1],"tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[2],"tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
-                break;
+            bandsName=[ { "id": fullName[0],"tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[1],"tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[2],"tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
+            break;
             case "PSScene4Band":
-                bandsName=[ { "id": fullName[0],"tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[1],"tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[2],"tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[4],"tileset_band_index": 3,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
-                break;
+            bandsName=[ { "id": fullName[0],"tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[1],"tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[2],"tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[4],"tileset_band_index": 3,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
+            break;
             case "PSOrthoTile":
-                bandsName=[ { "id": fullName[0],"tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[1],"tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[2],"tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[4],"tileset_band_index": 3,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
-                break;
+            bandsName=[ { "id": fullName[0],"tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[1],"tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[2],"tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[4],"tileset_band_index": 3,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
+            break;
             case "REOrthoTile":
-                bandsName=[ { "id": fullName[0],"tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[1],"tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[2],"tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[3],"tileset_band_index": 3,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
-                            { "id": fullName[4],"tileset_band_index": 4,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
-                break;
-            }
+            bandsName=[ { "id": fullName[0],"tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[1],"tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[2],"tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[3],"tileset_band_index": 3,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": fullName[4],"tileset_band_index": 4,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
+            break;
+        }
         if(planetConfig.bandNomenclature=='default'){
             for (var i = bandsName.length - 1; i >= 0; i--) {
                 bandsName[i].id='B'+(i+1);
@@ -716,20 +718,20 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
     if(udm){
         switch(udm.toLowerCase()){
             case "udm":
-                UDMBandsName=[ { "id": "UDM","tileset_band_index": 0,"tileset_id":"udm","pyramidingPolicy": "SAMPLE"}];
-                break;
+            UDMBandsName=[ { "id": "UDM","tileset_band_index": 0,"tileset_id":"udm","pyramidingPolicy": "SAMPLE"}];
+            break;
             case "udm2":
             case "udm_2":
-                UDMBandsName=[ { "id": "Clear", "tileset_band_index": 0,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
-                            { "id": "Snow", "tileset_band_index": 1,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
-                            { "id": "Shadow", "tileset_band_index": 2,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
-                            { "id": "Light_haze", "tileset_band_index": 3,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
-                            { "id": "Heavy_haze", "tileset_band_index": 4,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
-                            { "id": "Cloud", "tileset_band_index": 5,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
-                            { "id": "Confidence", "tileset_band_index": 6,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
-                            { "id": "UDM", "tileset_band_index": 7,"tileset_id":"udm","pyramidingPolicy": "SAMPLE"}];
-                break;
-            }
+            UDMBandsName=[ { "id": "Clear", "tileset_band_index": 0,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
+            { "id": "Snow", "tileset_band_index": 1,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
+            { "id": "Shadow", "tileset_band_index": 2,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
+            { "id": "Light_haze", "tileset_band_index": 3,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
+            { "id": "Heavy_haze", "tileset_band_index": 4,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
+            { "id": "Cloud", "tileset_band_index": 5,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
+            { "id": "Confidence", "tileset_band_index": 6,"tileset_id":"udm","pyramidingPolicy": "MEAN"},
+            { "id": "UDM", "tileset_band_index": 7,"tileset_id":"udm","pyramidingPolicy": "SAMPLE"}];
+            break;
+        }
         if(planetConfig.bandNomenclature=='default'){
             for (var i = UDMBandsName.length - 1; i >= 0; i--) {
                 UDMBandsName[i].id='Q'+(i+1);
@@ -759,16 +761,16 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
     {
         "name": planetConfig.collectionPath+"/"+jsonMeta.id+"_"+im2Transfer.assetType,
         "tilesets": [
+        {
+            "id": "colorImage", 
+            "sources": [
             {
-                "id": "colorImage", 
-                "sources": [
-                    {
-                        "uris": [
-                            im2Transfer.downloadLink
-                        ]
-                    }
+                "uris": [
+                im2Transfer.downloadLink
                 ]
             }
+            ]
+        }
         ],
         /*"mask_bands": {
             "tileset_id": "udm"
@@ -784,15 +786,15 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
     if(udm){
         planetManifest["tilesets"]
         .push({
-                "id": "udm", 
-                "sources": [
-                    {
-                        "uris": [
-                            im2Transfer.downloadLink_udm
-                        ]
-                    }
+            "id": "udm", 
+            "sources": [
+            {
+                "uris": [
+                im2Transfer.downloadLink_udm
                 ]
-            });
+            }
+            ]
+        });
         bandsName.push(...UDMBandsName);
     }
     if(bandsName)
@@ -850,15 +852,15 @@ setTimeout(function(){
         if(upload.responseURL.startsWith('https://api.planet.com')||
            upload.responseURL.startsWith('https://link.planet.com')){
             let value={request:upload, data:null, downloadCountShift:0};
-            if (upload.responseURL.startsWith('https://link.planet.com')){
-                value.downloadCountShift=1;
-            }
-            if (toTheFront)
-                listPlanetRequest.unshift(value);
-            else
-                listPlanetRequest.push(value);
-            checkForPlanetRequest();
-        }else
-            originalAddCommonToDownloadList(upload, toTheFront);
-    }
+        if (upload.responseURL.startsWith('https://link.planet.com')){
+            value.downloadCountShift=1;
+        }
+        if (toTheFront)
+            listPlanetRequest.unshift(value);
+        else
+            listPlanetRequest.push(value);
+        checkForPlanetRequest();
+    }else
+    originalAddCommonToDownloadList(upload, toTheFront);
+}
 },0);

@@ -120,31 +120,69 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
     switch2DarkMode(e.matches,true);
 });
 
+// manifestUpload
+
+
+function setManifestUploadParam(dic){
+  if('parallelUpload' in dic){
+    let value=dic['parallelUpload'];
+    if(typeof value === 'object' && 'newValue' in value)value=value['newValue'];
+    document.getElementById('parallelUpload').value=value;
+    document.getElementById('parallelUpload').dispatchEvent(new Event('input'));
+  }
+  if('parallelDownload' in dic){
+    let value=dic['parallelDownload'];
+    if(typeof value === 'object' && 'newValue' in value) value=value['newValue'];
+    document.getElementById('parallelDownload').value=value;
+    document.getElementById('parallelDownload').dispatchEvent(new Event('input'));
+  }
+}
+
+chrome.storage.onChanged.addListener(setManifestUploadParam);
+
+function saveNewManifestParam(event=false){
+  chrome.storage.local.set({parallelUpload:document.getElementById('parallelUpload').value,
+                            parallelDownload:document.getElementById('parallelDownload').value});
+}
+
+document.getElementById('parallelUpload').addEventListener('change',saveNewManifestParam);
+document.getElementById('parallelDownload').addEventListener('change',saveNewManifestParam);
+
+chrome.storage.local.get(['parallelUpload','parallelDownload'],setManifestUploadParam);
 
 //init
 runOnceLoaded();
 setLight();
 setModuleStatus();
+updateStatus();
 
+
+
+function makeRangeDisplay(idObject){
+  let rangeV = document.getElementById(idObject);
+  let range=rangeV.parentNode.querySelector('input');
+
+  let setValue = ()=>{
+    newValue = Number( (range.value - range.min) * 100 / (range.max - range.min) ),
+    newPosition = 10 - (newValue * 0.2);
+    rangeV.innerHTML = `<span>${range.value}</span>`;
+    rangeV.style.left = `calc(${newValue}% + (${newPosition}px))`;
+  };
+  setValue()
+  range.addEventListener('input', setValue);
+}
+
+
+makeRangeDisplay('rangeParallelUpload');
+makeRangeDisplay('rangeParallelDownload');
 
 //planet
 
 var planetApiV=2;
 
-const
-range = document.getElementById('PlanetBatchSize'),
-rangeV = document.getElementById('rangeV'),
-setValue = ()=>{
-  const
-  newValue = Number( (range.value - range.min) * 100 / (range.max - range.min) ),
-  newPosition = 10 - (newValue * 0.2);
-  rangeV.innerHTML = `<span>${range.value}</span>`;
-  rangeV.style.left = `calc(${newValue}% + (${newPosition}px))`;
-};
-setValue()
-range.addEventListener('input', setValue);
 
-
+makeRangeDisplay('rangePlanetBatchSize');
+makeRangeDisplay('rangePlanetParallelActivation');
 
 /******* value *******/
 
@@ -165,7 +203,9 @@ function setPlanetConfig(dic){
     document.querySelector('.planetApi.button.v'+planetApiV).classList.remove('is-outlined');
     document.querySelector('input[name="PlanetBandNaming"][value='+planetParam["bandNomenclature"]+']').checked=true;;
     document.getElementById('PlanetBatchSize').value=planetParam["batchSize"];
-    setValue();
+    document.getElementById('PlanetBatchSize').dispatchEvent(new Event('input'));
+    document.getElementById('PlanetParallelActivation').value=planetParam["maxParallelActivation"];
+    document.getElementById('PlanetParallelActivation').dispatchEvent(new Event('input'));
     document.getElementById('PlanetServiceAccount').value=planetParam["serviceAccount"];
 
     document.querySelector('.content.planetLab.available').classList.remove('somethingMissing');
@@ -183,6 +223,7 @@ function constructPlanetConfig(){
     apiVersion:planetApiV,
     bandNomenclature:document.querySelector('input[name="PlanetBandNaming"]:checked').value,
     batchSize:document.getElementById('PlanetBatchSize').value,
+    maxParallelActivation:document.getElementById('PlanetParallelActivation').value,
     serviceAccount:document.getElementById('PlanetServiceAccount').value
   }
 }
@@ -229,6 +270,7 @@ function addPlanetListner(){
   document.getElementById('PlanetPathInGEE').addEventListener('change',saveNewPlanetParam);
   document.getElementById('PlanetThumbnail').addEventListener('change',saveNewPlanetParam);
   document.getElementById('PlanetBatchSize').addEventListener('change',saveNewPlanetParam);
+  document.getElementById('PlanetParallelActivation').addEventListener('change',saveNewPlanetParam);
   document.getElementById('PlanetServiceAccount').addEventListener('change',saveNewPlanetParam);
   document.querySelectorAll('input[name="PlanetBandNaming"]').forEach((e)=>e.addEventListener('change',saveNewPlanetParam));
 
@@ -243,3 +285,5 @@ function addPlanetListner(){
 }
 
 addPlanetListner();
+
+//stroke-width
