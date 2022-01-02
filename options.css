@@ -8,6 +8,14 @@ html.dark{
 	--oeel-color: #C5C8C6;
 }	
 
+header{
+	width: auto;
+	height: 300px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	background: linear-gradient(to top right, #524ad0 10%, #D099FA);
+}
+
 #logo{
 	margin: 0 auto;
 }
@@ -22,6 +30,10 @@ html.dark{
 
 .dark{
 	background-color:var(--oeel-background-color) ;
+	color: var(--oeel-color);
+}
+
+.dark body{
 	color: var(--oeel-color);
 }
 
@@ -62,12 +74,143 @@ div.lock{
 	filter: opacity(0.8) grayscale(0.6);
 }
 
-.off .message-body span{
+.off .message-body span.lightMode, .off .message-body div.subsection.box{
 	/*pointer-events: none;*/
 	filter: blur(1.5px);
+	pointer-events:none
 }
 
 .off .message-header{
 	filter: opacity(0.5)
 }
 
+.message-header .icon{
+	margin: -2px auto -2px 10px;
+	font-size: 35px;
+}
+
+.message-header .icon{
+	display: none;
+}
+
+.somethingMissing:not(.off) .message-header .icon{
+	display: flex;
+}
+
+
+
+.hr-text {
+	position: relative;
+	text-align: center;
+	height: 1.5em;
+	background-color: transparent;
+}
+
+.hr-text:before {
+	content: '';
+	background: linear-gradient(to right, transparent, #818078, transparent);
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 100%;
+	height: 1px;
+}
+.hr-text:after {
+	color: black;
+	content: attr(data-content);
+	position: relative;
+	padding: 0 0.5em;
+	line-height: 1.5em;
+	background-color: white;
+}
+
+.hr-big{
+	background: linear-gradient(90deg, #0000 0%, #818078 15%, #111111 50%, #818078 85%, #0000 100%);
+	left: 0;
+	top: 50%;
+	width: 100%;
+	height: 2px;
+}
+
+.radio-list ol,.radio-list input{
+	display: inline-grid;
+    vertical-align: middle;
+}
+
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 20px 0;
+  width: 100%;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #3e8ed0;
+  border-radius: 25px;
+}
+input[type=range]::-webkit-slider-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 4px 0 rgba(0,0,0, 1);
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -8px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #3e8ed0;
+}
+.range-wrap{
+  width: 100%;
+  position: relative;
+}
+.range-value{
+  position: absolute;
+  top: -50%;
+}
+.range-value span{
+  width: 30px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  background: #3e8ed0;
+  color: #fff;
+  font-size: 12px;
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  border-radius: 6px;
+}
+.range-value span:before{
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 10px solid #3e8ed0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  margin-top: -1px;
+}
+
+.control .wrong, .control .wrong + span.icon{
+	color: red
+}
+
+#planetApiOptions .planetApi{
+	display: none;
+}
+
+#planetApiOptions.v1 .planetApi.v1,#planetApiOptions.v2 .planetApi.v2{
+	display: block;
+}

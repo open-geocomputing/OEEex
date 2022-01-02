@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net  https://fonts.gstatic.com https://assets9.lottiefiles.com 'unsafe-inline'; ">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net  https://fonts.gstatic.com https://assets9.lottiefiles.com https://api.planet.com 'unsafe-inline'; ">
   <title>OEEex options</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <link rel="stylesheet" href="options.css">
   <script src="3rd_party/lottie-player.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+  rel="stylesheet">
 </head>
 <body>
   <header>
-    <lottie-player src="https://assets9.lottiefiles.com/datafiles/gUENLc1262ccKIO/data.json" id='logo' background="transparent"  speed="1"  style="width: 300px; height: 300px;" ></lottie-player>
+    <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 300px; height: 300px;" ></lottie-player>
   </header>
   <main>
     <div class="block param darkMode">
@@ -22,7 +22,7 @@
           <div class="message-header">
             Night mode
             <div class="lock">
-              <lottie-player src="https://assets9.lottiefiles.com/datafiles/gUENLc1262ccKIO/data.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
             </div>
           </div>
           <div class="message-body">
@@ -52,7 +52,7 @@
           <div class="message-header">
             macOS shortcuts
             <div class="lock">
-              <lottie-player src="https://assets9.lottiefiles.com/datafiles/gUENLc1262ccKIO/data.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
             </div>
           </div>
           <div class="message-body">
@@ -65,7 +65,7 @@
           <div class="message-header">
             Confirm manager
             <div class="lock">
-              <lottie-player src="https://assets9.lottiefiles.com/datafiles/gUENLc1262ccKIO/data.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
             </div>
           </div>
           <div class="message-body">
@@ -78,27 +78,166 @@
           <div class="message-header">
             Upload images with manifest
             <div class="lock">
-              <lottie-player src="https://assets9.lottiefiles.com/datafiles/gUENLc1262ccKIO/data.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
             </div>
           </div>
           <div class="message-body">
             This add support for image upload using manifests
+            <div class="subsection box mt-2">
+              <h5>Parallel upload</h5>
+              <div class="range-wrap">
+                <div class="range-value" id="rangeParallelUpload"></div>
+                <input type="range" id="parallelUpload" name="batchSize" min="1" max="20" step="1" value="5">
+              </div>
+              <h5>Parallel downlaod (for transfer)</h5>
+              <div class="range-wrap">
+                <div class="range-value" id="rangeParallelDownload"></div>
+                <input type="range" id="parallelDownload" name="batchSize" min="1" max="20" step="1" value="5">
+              </div>
+            </div>
           </div>
         </article>
       </div>
-      <div class="content is-medium planet">
+      <div class="content is-medium planetLab">
         <article class="message is-info">
           <div class="message-header">
-            Planet
+            Planet <span class="icon has-text-warning">⚠️</span>
             <div class="lock">
-              <lottie-player src="https://assets9.lottiefiles.com/datafiles/gUENLc1262ccKIO/data.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
             </div>
           </div>
           <div class="message-body">
-            All the options regarding PlanetLab
+            All the options regarding PlanetLab integration.
+            <div class="subsection box mt-2">
+              <h3>Settings</h3>
+              <h4>API key</h4>
+              <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input id="planetApiKey" class="input" placeholder="API Key">
+                  <span class="icon is-small is-left">
+                    <span class="material-icons">key</span>
+                  </span>
+                </p>
+              </div>
+              <hr class="hr-text" data-content="OR">
+              <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input id="planetEmail" class="input" type="email" placeholder="Email">
+                  <span class="icon is-small is-left">
+                    <span class="material-icons">email</span>
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <p class="control has-icons-left">
+                  <input id="planetPwd" class="input" type="password" placeholder="Password">
+                  <span class="icon is-small is-left">
+                    <span class="material-icons">lock</span>
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <p class="control">
+                  <button id='planetLogin' class="button is-success">
+                    Login
+                  </button>
+                </p>
+              </div>
+              <hr class="hr-big">
+              <h4>Collection path in Earth Engine</h4>
+              <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input id="PlanetPathInGEE" class="input" placeholder="ImageCollection path">
+                  <span class="icon is-small is-left">
+                    <span class="material-icons">account_tree</span>
+                  </span>
+                </p>
+              </div>
+              <hr class="hr-big">
+              <h4>Search result</h4>
+              <label class="checkbox">
+                <input id='PlanetThumbnail' type="checkbox" name="thumbnail">
+                Show thumbnail
+              </label>
+              
+              <hr class="hr-big">
+              <div class="columns">
+                <h4 class="column m-0">API version</h4>
+                <div class="buttons has-addons is-3 is-gapless">
+                  <button class="planetApi button v1 is-info is-outlined">V1</button>
+                  <button class="planetApi button v2 is-info is-outlined">V2</button>
+                </div>
+              </div>
+              <div id="planetApiOptions">
+                <div class="subsection box planetApi v1">
+                  <h4>API V1</h4>
+                  <h5>Band nomenclature</h5>
+                  <div class="control columns">
+                    <label class="radio column radio-list">
+                      <input type="radio" name="PlanetBandNaming" value="default" checked>
+                      <ol>
+                        <li>B1</li>
+                        <li>B2</li>
+                        <li>B3</li>
+                        <li>B4</li>
+                        <li>Q1</li>
+                        <li>Q2</li>
+                      </ol>
+                    </label>
+                    <label class="radio column radio-list">
+                      <input type="radio" name="PlanetBandNaming" value="trueName">
+                      <ol>
+                        <li>Blue</li>
+                        <li>Green</li>
+                        <li>Red</li>
+                        <li>NIR</li>
+                        <li>Cloud</li>
+                        <li>Snow</li>
+                      </ol>
+                    </label>
+                    <label class="radio column radio-list">
+                      <input type="radio" name="PlanetBandNaming" value="hybrid">
+                      <ol>
+                        <li>B1_Blue</li>
+                        <li>B2_Green</li>
+                        <li>B3_Red</li>
+                        <li>B4_NIR</li>
+                        <li>Q1_Clear</li>
+                        <li>Q2_Snow</li>
+                      </ol>
+                    </label>
+                  </div>
+                  <h5>Maximum parallel activations</h5>
+                  <div class="range-wrap">
+                    <div class="range-value" id="rangePlanetParallelActivation"></div>
+                    <input type="range" id="PlanetParallelActivation" name="batchSize" min="1" max="500" step="1">
+                  </div>
+                </div>
+                <div class="subsection box planetApi v2">
+                  <h4>API V2</h4>
+                  <h5>Batch size</h5>
+                  <div class="range-wrap">
+                    <div class="range-value" id="rangePlanetBatchSize"></div>
+                    <input type="range" id="PlanetBatchSize" name="batchSize" min="1" max="500" step="1">
+                  </div>
+                  
+                  <h5>Service account</h5>
+                  <div class="field">
+                    <p class="control has-icons-left has-icons-right">
+                      <input id="PlanetServiceAccount" class="input" type="email" placeholder="service account">
+                      <span class="icon is-small is-left">
+                        <span class="material-icons">alternate_email</span>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </article>
       </div>
+      <p>This extension was originally developed by <a href="http://mgravey.com">Mathieu Gravey</a> as part of the <a href="https://www.open-geocomputing.org">Open Geocumputing</a> to enhance the usage of the <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/">Open Earth Engine Library</a>. Animations on this page were done by <a href="">Pauline Ahumada</a>.</p>
+      <!-- Anyone else contributing, please say what you did, and put your name in the above paragraph -->
     </div>
   </main>
 </body>

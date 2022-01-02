@@ -14,11 +14,14 @@
     }]
   },
   "web_accessible_resources": [{
-    "resources": ["EEDarkMode.js","uploadWithManifest.js","hackEEConfirm.js","addCommandS.js"],
+    "resources": ["planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEEConfirm.js","addCommandS.js"],
     "matches": ["https://code.earthengine.google.com/*"]
   }],
   "host_permissions": [
-    "https://code.earthengine.google.com/repo/file/load?*"
+    "https://code.earthengine.google.com/repo/file/load?*",
+    "https://api.planet.com/*",
+    "https://link.planet.com/*",
+    "https://tiles.planet.com/*"
   ],
   "permissions": [
     "activeTab",
@@ -29,7 +32,7 @@
     {
       "matches": ["https://code.earthengine.google.com/*"], 
       "js": ["injectionScript.js"],
-      "css" : ["EEDarkMode.css","OEEex.css"]
+      "css" : ["EEDarkMode.css","OEEex.css","planetLab.css"]
     }
   ],
   "action": {

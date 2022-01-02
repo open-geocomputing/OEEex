@@ -30,7 +30,9 @@ var overloadBackup=function(){
 }
 
 function analysisGeeAddon(val){
-    var consoleCode=val.querySelector('.trivial').innerHTML;
+    let obj=val.querySelector('.trivial');
+    if(!obj)return;
+    var consoleCode=obj.innerHTML;
     if(consoleCode.startsWith(consoleExtensionPrefix+':')){
         confirmManager(consoleCode,val);
         return; 
@@ -45,7 +47,6 @@ function strToBool(s)
 }
 
 function confirmManager(code,element){
-    console.log(code)
     var instructions=code.slice(consoleExtensionPrefix.length+1);
     {
         var actionPrefix='removeConfirmRetain';
