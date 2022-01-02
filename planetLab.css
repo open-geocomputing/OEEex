@@ -7,7 +7,8 @@
 
 .planetScenesList.withoutPrevi option{
     background-image: var(--bg-text);
-    background-position: left;
+    background-position: left bottom;
+    height: 78px;
     background-size: auto;
 }
 
@@ -28,14 +29,19 @@ select.planetScenesList{
 .dark .planetScenesList option{
     background-color: #1d1f21;
     background-image: var(--bg-text-dark), var(--bg-image);
+    background-position: left, right;
+    background-size: auto,contain;
 }
 
 .dark .planetScenesList.withoutPrevi option{
-    background-image: var(--bg-text-dark),#1d1f21;
+    background-color: #1d1f21;
+    background-image: var(--bg-text-dark);
+    background-position: left bottom;
+    background-size: auto;
 }
 
-.dark .planetScenesList option:nth-child(2n){
-    background-color: #1d1f21ee;
+.dark .planetScenesList option:nth-child(2n),.dark .planetScenesList.withoutPrevi option:nth-child(2n){
+    background-color: #333333;
 }
 
 .dark .planetScenesList option::selection{

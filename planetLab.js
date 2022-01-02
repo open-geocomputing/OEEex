@@ -12,6 +12,10 @@ planetPortWithBackground.onMessage.addListener((request, sender, sendResponse) =
         planetConfig=request.message;
         // if('maxParallelActivation' in planetConfig)
         //     maxPlanetActivated=planetConfig['maxParallelActivation'];
+        document.querySelectorAll('.planetScenesList').forEach(e=>{
+            if(!planetConfig.Thumbnail) e.classList.add('withoutPrevi');
+            else e.classList.remove('withoutPrevi');
+        });
     };
 })
 
@@ -239,6 +243,7 @@ planetSearch.sendPlanetWhenPossible(JSON.stringify(researchData),true);
 function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
     let head=document.querySelector('#randId_'+randomId+' .planetScenesList');
     if(!head)return;
+    if(!planetConfig.Thumbnail)head.classList.add('withoutPrevi');
     for (var i = 0; i < features.length; i++) {
         let im = document.createElement("option");
         im.innerHTML=features[i].id;
