@@ -706,6 +706,16 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
             { "id": fullName[3],"tileset_band_index": 3,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
             { "id": fullName[4],"tileset_band_index": 4,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
             break;
+            case "PSScene":
+            bandsName=[ { "id": "CoastalBlue","tileset_band_index": 0,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": "Blue","tileset_band_index": 1,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": "GreenI","tileset_band_index": 2,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": "GreenII","tileset_band_index": 3,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": "Yellow","tileset_band_index": 4,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": "Red","tileset_band_index": 5,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": "RedEdge","tileset_band_index": 6,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"},
+            { "id": "NIR","tileset_band_index": 7,"tileset_id":"colorImage","pyramidingPolicy": "MEAN"}];
+            break;
         }
         if(planetConfig.bandNomenclature=='default'){
             for (var i = bandsName.length - 1; i >= 0; i--) {
