@@ -12,6 +12,7 @@
       "regexFilter": "^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)"
     }
   },
+  // why this is needed ?? because Planet API answer with wrong headers
   {
     "id": 2,
     "priority": 1,
@@ -23,6 +24,32 @@
     },
     "condition": {
       "regexFilter": "^https://link.planet.com/download\\?(.*)"
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "Access-Control-Allow-Origin", "operation": "set", "value": "*" }
+      ]
+    },
+    "condition": {
+      "regexFilter": "^https://api.planet.com/(.*)"
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "Access-Control-Allow-Headers", "operation": "append", "value": "content-type" }
+      ]
+    },
+    "condition": {
+      "regexFilter": "^https://api.planet.com/(.*)"
     }
   }
 ]

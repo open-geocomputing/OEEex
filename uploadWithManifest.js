@@ -436,4 +436,4 @@ function checkForGSUpload(fromPrevious=false){
 	}
 }
 
-addButtonOnAssetPanel();
+setTimeout(addButtonOnAssetPanel,0);

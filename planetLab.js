@@ -1,4 +1,4 @@
-const consolePlanetExtensionPrefix='GEE_Addon_PlanetSearch';
+const consolePlanetExtensionPrefix='OEEex_AddonPlanetSearch';
 planetConfig=null;
 var OEEex_version='1.0'
 
@@ -350,6 +350,196 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
     }
     );
 
+
+    // var dataJson=JSON.stringify(
+    // {
+    //     "expression":
+    //     {
+    //         "result": "0",
+    //         "values":
+    //         {
+    //             "0":
+    //             {
+    //                 "functionInvocationValue":
+    //                 {
+    //                     "arguments":
+    //                     {
+    //                         "collection":
+    //                         {
+    //                             "functionInvocationValue":
+    //                             {
+    //                                 "arguments":
+    //                                 {
+    //                                     "collection":
+    //                                     {
+    //                                         "functionInvocationValue":
+    //                                         {
+    //                                             "arguments":
+    //                                             {
+    //                                                 "collection":
+    //                                                 {
+    //                                                     "functionInvocationValue":
+    //                                                     {
+    //                                                         "arguments":
+    //                                                         {
+    //                                                             "id":
+    //                                                             {
+    //                                                                 "constantValue": collectionPath
+    //                                                             }
+    //                                                         },
+    //                                                         "functionName": "ImageCollection.load"
+    //                                                     }
+    //                                                 },
+    //                                                 "baseAlgorithm":
+    //                                                 {
+    //                                                     "functionDefinitionValue":
+    //                                                     {
+    //                                                         "argumentNames":
+    //                                                         [
+    //                                                             "_MAPPING_VAR_0_0"
+    //                                                         ],
+    //                                                         "body": "1"
+    //                                                     }
+    //                                                 }
+    //                                             },
+    //                                             "functionName": "Collection.map"
+    //                                         }
+    //                                     },
+    //                                     "filter":
+    //                                     {
+    //                                         "functionInvocationValue":
+    //                                         {
+    //                                             "arguments":
+    //                                             {
+    //                                                 "rightField":
+    //                                                 {
+    //                                                     "valueReference": "2"
+    //                                                 },
+    //                                                 "leftValue":
+    //                                                 {
+    //                                                     "constantValue":features.map(e=>{return e.id})
+    //                                                 }
+    //                                             },
+    //                                             "functionName": "Filter.listContains"
+    //                                         }
+    //                                     }
+    //                                 },
+    //                                 "functionName": "Collection.filter"
+    //                             }
+    //                         },
+    //                         "property":
+    //                         {
+    //                             "valueReference": "2"
+    //                         }
+    //                     },
+    //                     "functionName": "AggregateFeatureCollection.array"
+    //                 }
+    //             },
+    //             "1":
+    //             {
+    //                 "functionInvocationValue":
+    //                 {
+    //                     "arguments":
+    //                     {
+    //                         "object":
+    //                         {
+    //                             "argumentReference": "_MAPPING_VAR_0_0"
+    //                         },
+    //                         "key":
+    //                         {
+    //                             "valueReference": "2"
+    //                         },
+    //                         "value":
+    //                         {
+    //                             "functionInvocationValue":
+    //                             {
+    //                                 "arguments":
+    //                                 {
+    //                                     "list":
+    //                                     {
+    //                                         "functionInvocationValue":
+    //                                         {
+    //                                             "arguments":
+    //                                             {
+    //                                                 "list":
+    //                                                 {
+    //                                                     "functionInvocationValue":
+    //                                                     {
+    //                                                         "arguments":
+    //                                                         {
+    //                                                             "string":
+    //                                                             {
+    //                                                                 "functionInvocationValue":
+    //                                                                 {
+    //                                                                     "arguments":
+    //                                                                     {
+    //                                                                         "input":
+    //                                                                         {
+    //                                                                             "functionInvocationValue":
+    //                                                                             {
+    //                                                                                 "arguments":
+    //                                                                                 {
+    //                                                                                     "object":
+    //                                                                                     {
+    //                                                                                         "argumentReference": "_MAPPING_VAR_0_0"
+    //                                                                                     },
+    //                                                                                     "property":
+    //                                                                                     {
+    //                                                                                         "constantValue": "system:index"
+    //                                                                                     }
+    //                                                                                 },
+    //                                                                                 "functionName": "Element.get"
+    //                                                                             }
+    //                                                                         }
+    //                                                                     },
+    //                                                                     "functionName": "String"
+    //                                                                 }
+    //                                                             },
+    //                                                             "regex":
+    //                                                             {
+    //                                                                 "valueReference": "3"
+    //                                                             }
+    //                                                         },
+    //                                                         "functionName": "String.split"
+    //                                                     }
+    //                                                 },
+    //                                                 "start":
+    //                                                 {
+    //                                                     "constantValue": 0
+    //                                                 },
+    //                                                 "end":
+    //                                                 {
+    //                                                     "constantValue": 4
+    //                                                 }
+    //                                             },
+    //                                             "functionName": "List.slice"
+    //                                         }
+    //                                     },
+    //                                     "separator":
+    //                                     {
+    //                                         "valueReference": "3"
+    //                                     }
+    //                                 },
+    //                                 "functionName": "List.join"
+    //                             }
+    //                         }
+    //                     },
+    //                     "functionName": "Element.set"
+    //                 }
+    //             },
+    //             "2":
+    //             {
+    //                 "constantValue": "id"
+    //             },
+    //             "3":
+    //             {
+    //                 "constantValue": "_"
+    //             }
+    //         }
+    //     }
+    // }
+    // );
+
     let chackIDAvailableInGEE=new XMLHttpRequest();
     chackIDAvailableInGEE.open("POST",'https://content-earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/value:compute',true);
     chackIDAvailableInGEE.responseType = 'json';
@@ -499,11 +689,11 @@ function planetDownloadSelected(randomId,a){
 
             let imageRequest=new XMLHttpRequest();
             imageRequest.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
-            imageRequest.responseType = 'json';
+            //imageRequest.responseType = 'json';
             imageRequest.setRequestHeader("Content-Type", "application/json");
             imageRequest.onload = function(e) {
               if (this.status == 200) {
-                displayResult(val,this.response,assetConfig);
+                alert(this.response["_links"]["_self"])
                 return;
             }
             if(this.status ==429){
@@ -512,14 +702,14 @@ function planetDownloadSelected(randomId,a){
                 return;
             }
             if (this.status >=400) {
-                alert(this.response)
+                alert(JSON.stringify(this.response))
                 return;
             }
         }
 
 
 
-            //imageRequest.sendPlanetWhenPossible(JSON.stringify(requestData),false);
+            imageRequest.sendPlanetWhenPossible(JSON.stringify(requestData),false);
             listImageElement.map((e)=>e.remove())
         }
     }
