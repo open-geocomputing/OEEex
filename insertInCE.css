@@ -1,0 +1,13 @@
+.insertInCEButton{
+	float: right;
+	margin: -2px -14px -2px 0;
+    padding: 0;
+}
+
+.insertInCEButton:hover {
+    color: #4987ef;
+}
+
+.dark .insertInCEButton:hover {
+    color: #1050b7;;
+}
