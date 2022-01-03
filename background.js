@@ -3,7 +3,7 @@
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.set({lightMode: 'automatic'});
     chrome.storage.local.set({
-        planetLab:true,
+        planetLab:false,
         uploadWithManifest:true,
         hackEEConfirm:true,
         EEDarkMode:true,
