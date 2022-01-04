@@ -38,6 +38,9 @@ function addInsertCEButton(obj,title,lib,editor,isConstructor){
 			for (var i = (isConstructor ? 0 : 1); i < lib.args.length; i++) {
 				let name=('optional'in lib.args[i] && lib.args[i].optional? '//':'	')
 				+'	'+lib.args[i].name+':'
+				if(lib.args[i].type=="Function"){
+					name+='function(arg){}'
+				}
 				name+=',\n';
 				text+=name;
 			}
