@@ -1,7 +1,13 @@
+.docs-list .main-section .docs-method-header.OEEenhanced{
+    position: relative;
+    padding-right: 25px;
+}
+
 .insertInCEButton{
-	float: right;
-	margin: -2px -14px -2px 0;
-    padding: 0;
+	margin: -2px 0 -2px 0;
+    position: absolute;
+    float: none;
+    right: 0px;
 }
 
 .insertInCEButton:hover {
