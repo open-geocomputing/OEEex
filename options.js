@@ -146,8 +146,8 @@ function setManifestUploadParam(dic){
 chrome.storage.onChanged.addListener(setManifestUploadParam);
 
 function saveNewManifestParam(event=false){
-  chrome.storage.local.set({parallelUpload:document.getElementById('parallelUpload').value,
-                            parallelDownload:document.getElementById('parallelDownload').value});
+  chrome.storage.local.set({parallelUpload:parseInt(document.getElementById('parallelUpload').value),
+                            parallelDownload:parseInt(document.getElementById('parallelDownload').value)});
 }
 
 document.getElementById('parallelUpload').addEventListener('change',saveNewManifestParam);
@@ -227,8 +227,8 @@ function constructPlanetConfig(){
     Thumbnail:document.getElementById('PlanetThumbnail').checked,
     apiVersion:planetApiV,
     bandNomenclature:document.querySelector('input[name="PlanetBandNaming"]:checked').value,
-    batchSize:document.getElementById('PlanetBatchSize').value,
-    maxParallelActivation:document.getElementById('PlanetParallelActivation').value,
+    batchSize:parseInt(document.getElementById('PlanetBatchSize').value),
+    maxParallelActivation:parseInt(document.getElementById('PlanetParallelActivation').value),
     serviceAccount:document.getElementById('PlanetServiceAccount').value
   }
 }

@@ -35,7 +35,7 @@ function loadConsolePlanetWatcher(){
 function analysisPlanetAddon(val){
     let obj=val.querySelector('.trivial');
     if(!obj)return;
-    var consoleCode=obj.innerHTML;
+    let consoleCode=obj.innerHTML;
     if(consoleCode.startsWith(consolePlanetExtensionPrefix+':')){
         runPlanetSearch(consoleCode,val);
         return; 
@@ -178,7 +178,7 @@ function runPlanetSearch(consoleCode,val){
             jsonVal=jsonVal.arguments.collection;
             break;
             case "ImageCollection.load":
-            var listParameter=jsonVal.arguments.id.split('/');
+            let listParameter=jsonVal.arguments.id.split('/');
             if(listParameter[0]!='PlanetLab')
                 console.error('Unexistant dataset !')
             else
@@ -244,7 +244,7 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
     let head=document.querySelector('#randId_'+randomId+' .planetScenesList');
     if(!head)return;
     if(!planetConfig.Thumbnail)head.classList.add('withoutPrevi');
-    for (var i = 0; i < features.length; i++) {
+    for (let i = 0; i < features.length; i++) {
         let im = document.createElement("option");
         im.innerHTML=features[i].id;
         im.setAttribute('value',features[i].id);
@@ -278,7 +278,7 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
         }
     }
 
-    var dataJson=JSON.stringify(
+    let dataJson=JSON.stringify(
     {
         "expression":
         {
@@ -547,7 +547,7 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
     chackIDAvailableInGEE.onload = function(e) {
       if (this.status == 200) {
         let alreadyAvailable=this.response.result;
-        for (var i = 0; i < alreadyAvailable.length; i++) {
+        for (let i = 0; i < alreadyAvailable.length; i++) {
             head.querySelector('option[value="'+alreadyAvailable[i]+'"]').remove()
         }
         if((features.length==alreadyAvailable.length) && (features.length>0)){
@@ -573,7 +573,7 @@ loadMore=false;
 
 function displayResult(val,result,assetConfig,item_type){
     let randomId=Math.floor((Math.random() * 100000) + 1);
-    var htmlCode='<div class="planetSearch" id="randId_'+randomId+'">';
+    let htmlCode='<div class="planetSearch" id="randId_'+randomId+'">';
     htmlCode+='<button type="button" id="satckToActivatePlanetImages_'+randomId+'">Download selected</button>'
     //htmlCode+='<button type="button" id="selectAllImages_'+randomId+'">Select all</button>'
     //htmlCode+='<button type="button" id="toggleAllImages_'+randomId+'">Toggle</button>'
@@ -644,7 +644,7 @@ function planetDownloadSelected(randomId,a){
     if(planetConfig && planetConfig.apiVersion==2)
     {
         let imageIDs=listImageElement.map(e=> e.value);
-        let batchSize=parseInt(planetConfig.batchSize)
+        let batchSize=planetConfig.batchSize
         let arrayOfNode=[];
         let numberOfChunck=Math.ceil(imageIDs.length/batchSize);
         for (let i=0; i<numberOfChunck; i++ ){
@@ -867,7 +867,7 @@ let requestMetaData=new XMLHttpRequest();
 }
 
 function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
-    var bandsName=null;
+    let bandsName=null;
     {
         let fullName=["Blue","Green","Red","RedEdge","NIR"];
 
@@ -908,18 +908,18 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
             break;
         }
         if(planetConfig.bandNomenclature=='default'){
-            for (var i = bandsName.length - 1; i >= 0; i--) {
+            for (let i = bandsName.length - 1; i >= 0; i--) {
                 bandsName[i].id='B'+(i+1);
             }
         }
         if(planetConfig.bandNomenclature=='hybrid'){
-            for (var i = bandsName.length - 1; i >= 0; i--) {
+            for (let i = bandsName.length - 1; i >= 0; i--) {
                 bandsName[i].id='B'+(i+1)+'_'+bandsName[i].id;
             }
         }
     }
 
-    var UDMBandsName=[];
+    let UDMBandsName=[];
     if(udm){
         switch(udm.toLowerCase()){
             case "udm":
@@ -938,12 +938,12 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
             break;
         }
         if(planetConfig.bandNomenclature=='default'){
-            for (var i = UDMBandsName.length - 1; i >= 0; i--) {
+            for (let i = UDMBandsName.length - 1; i >= 0; i--) {
                 UDMBandsName[i].id='Q'+(i+1);
             }
         }
         if(planetConfig.bandNomenclature=='hybrid'){
-            for (var i = UDMBandsName.length - 1; i >= 0; i--) {
+            for (let i = UDMBandsName.length - 1; i >= 0; i--) {
                 UDMBandsName[i].id='Q'+(i+1)+'_'+UDMBandsName[i].id;
             }
         }
@@ -955,14 +955,14 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
     meta.ingestionTime=Date.now;
     meta.assetType=trueAssetType.assetType;
     meta.udmType=(udm?udm:'no_udm');
-    var keys =Object.keys(meta);
-    for (var i = 0; i < keys.length; i++) {
+    let keys =Object.keys(meta);
+    for (let i = 0; i < keys.length; i++) {
         if(typeof meta[keys[i]] == typeof true){
             meta[keys[i]]=Number(meta[keys[i]]);
         }
     }
 
-    var planetManifest=
+    let planetManifest=
     {
         "name": planetConfig.collectionPath+"/"+jsonMeta.id+"_"+im2Transfer.assetType,
         "tilesets": [
@@ -1007,6 +1007,9 @@ function createPlanetManifest(im2Transfer,trueAssetType,udm,jsonMeta){
         planetManifest["bands"]=bandsName;
     }
     let ue=exploreJson2Upload(planetManifest,null);
+    for (var i = ue.length - 1; i >= 0; i--) {
+    	ue[i].isPlanet=true;
+    }
     addManifestToIngestInGEE(planetManifest,ue);
 }
 
@@ -1036,7 +1039,8 @@ function checkForPlanetRequest(){
         {
             lastPlanetCall=Date.now();
             let obj=listPlanetRequest.shift();
-            parallelDownload+=obj.downloadCountShift;
+            if('downloadCountShift' in obj)
+            	parallelDownload+=obj.downloadCountShift;
             obj.request.send(obj.data);
             lastPlanetCall=Date.now();
         }
@@ -1054,12 +1058,8 @@ setTimeout(function(){
     let originalAddCommonToDownloadList=addCommonToDownloadList;
     addCommonToDownloadList=function(upload, toTheFront=false){
         // if it's a planet request it need to go in a different pipline
-        if(upload.responseURL.startsWith('https://api.planet.com')||
-           upload.responseURL.startsWith('https://link.planet.com')){
-            let value={request:upload, data:null, downloadCountShift:0};
-        if (upload.responseURL.startsWith('https://link.planet.com')){
-            value.downloadCountShift=1;
-        }
+        if('isPlanet' in upload){
+            let value={request:upload, data:null, downloadCountShift:1};
         if (toTheFront)
             listPlanetRequest.unshift(value);
         else
