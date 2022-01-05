@@ -12,7 +12,6 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });
 
-
 chrome.action.onClicked.addListener(tab => {
   if(tab.url.startsWith('https://code.earthengine.google.com')){
     chrome.tabs.create({ url: "https://www.open-geocomputing.org/OpenEarthEngineLibrary/" });

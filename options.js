@@ -4,9 +4,9 @@ var portWithBackground = chrome.runtime.connect({name: "oeel.extension.lightMode
 var lightIsAutomatic=true;
 
 function runOnceLoaded(){
-  const logoPlayer = document.querySelector("#logo");
-  logoPlayer.setDirection(-1);
-  logoPlayer.play();
+  // const logoPlayer = document.querySelector("#logo");
+  // //logoPlayer.setDirection(1);
+  // logoPlayer.play();
 
   for (var i = listOfScript.length - 1; i >= 0; i--) {
     document.querySelector('.'+listOfScript[i]).classList.add('available');
@@ -16,7 +16,7 @@ function runOnceLoaded(){
 function updateStatus(){
   chrome.storage.local.get(listOfScript, function(result){
     for(let key in result)
-      setSatus(key,result[key])
+      setSatus(key,result[key],true)
   });
 }
 
@@ -29,25 +29,30 @@ function setModuleStatus(){
       newKey[className]=superParentNode.classList.contains('off');
       chrome.storage.local.set(newKey);
       //updateStatus();
-      setSatus(className,newKey[className])
+      setSatus(className,newKey[className],false)
     }
     ));
 }
 
-function setSatus(key,value){
+function setSatus(key,value,isInit){
   if(!(listOfScript.includes(key)))
     return;
   let element=document.querySelector('.'+key);
   let player=element.querySelector('.lock lottie-player');
+  player.autoplay=false;
+
   if(value){
     element.classList.remove('off');
     player.setDirection(1);
     player.play();
   }else{
     element.classList.add('off');
-    player.setDirection(-1);
-    player.play();
+    if (!isInit) {
+      player.setDirection(-1);
+      player.play();
+    }
   }
+  
 }
 
 chrome.storage.onChanged.addListener(function(dic){
