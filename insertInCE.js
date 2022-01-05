@@ -232,6 +232,12 @@ function loadFunctionSignatures(observer){
 }
 
 (function(){
+	let fontLink = document.createElement('link');
+	fontLink.type = 'text/css';
+	fontLink.rel = 'stylesheet';
+	(document.head || document.documentElement).appendChild(fontLink);
+	fontLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons"
+
 	const observer = new MutationObserver(loadFunctionSignatures);
 	observer.observe(document.querySelector('.docs-list .main-section'), {subtree: true, childList: true});
 })()
