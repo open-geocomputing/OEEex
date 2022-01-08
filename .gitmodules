@@ -1,0 +1,4 @@
+[submodule "OpenEarthEngineLibrary"]
+	path = OpenEarthEngineLibrary
+	url = https://github.com/open-geocomputing/OpenEarthEngineLibrary.git
+	branch = master
