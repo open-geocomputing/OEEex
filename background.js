@@ -3,6 +3,7 @@
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.set({lightMode: 'automatic'});
     chrome.storage.local.set({
+        isShareable:true,
         insertInCE:true,
         planetLab:false,
         uploadWithManifest:true,

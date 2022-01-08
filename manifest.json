@@ -14,7 +14,7 @@
     }]
   },
   "web_accessible_resources": [{
-    "resources": ["insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEEConfirm.js","addCommandS.js"],
+    "resources": ["isShareable.js","insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEEConfirm.js","addCommandS.js"],
     "matches": ["https://code.earthengine.google.com/*"]
   }],
   "host_permissions": [
