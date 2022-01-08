@@ -110,6 +110,9 @@ html.dark{
 .dark input{
 	background-color:var(--oeel-background-color) ;
 }
+.dark input.ace_search_field{
+    background-color: revert;
+} 
 
 .dark .ee-search .search-textbox, .dark .search, .dark .repo-manager .search{
 	color: var(--oeel-color);

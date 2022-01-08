@@ -1,4 +1,4 @@
-listOfScript=['insertInCE','planetLab','uploadWithManifest','hackEEConfirm','EEDarkMode','addCommandS'];
+listOfScript=['isShareable','insertInCE','planetLab','uploadWithManifest','hackEEConfirm','EEDarkMode','addCommandS'];
 
 var portWithBackground = chrome.runtime.connect({name: "oeel.extension.lightMode"});
 var lightIsAutomatic=true;
