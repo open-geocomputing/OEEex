@@ -1,7 +1,7 @@
 {
   "name": "Open Earth Engine extension",
   "description": "An unofficel extension to enhance Google Earth Engine, and Open Earth Engine experience.",
-  "version": "0.91",
+  "version": "0.92",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"
