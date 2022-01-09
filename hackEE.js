@@ -90,7 +90,7 @@ function confirmManager(code,element){
             geeRequest.responseType = 'json';
             geeRequest.onload = function(e) {
                 if (this.status == 200) {
-                    assetId
+                    
                 }
                 else{
                     alert("error in path creation: "+path+'\n'+
@@ -110,7 +110,7 @@ function confirmManager(code,element){
             geeRequest.responseType = 'json';
             geeRequest.onload = function(e) {
                 if (this.status == 200) {
-                    successCallback();
+                    
                 }
                 else{
                     alert("Unable to export image");
@@ -129,7 +129,7 @@ function confirmManager(code,element){
             geeRequest.responseType = 'json';
             geeRequest.onload = function(e) {
                 if (this.status == 200) {
-                    successCallback();
+                    
                 }
                 else{
                     alert("Unable to export table");
@@ -148,7 +148,7 @@ function confirmManager(code,element){
             geeRequest.responseType = 'json';
             geeRequest.onload = function(e) {
                 if (this.status == 200) {
-                    successCallback();
+                    
                 }
                 else{
                     alert("Unable to export video");
