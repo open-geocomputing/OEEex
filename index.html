@@ -280,9 +280,20 @@
 						<p>
 							First activate the feature in the Option page, set up your account (If you login, it will recover the API key automatically for you), setup the path to your Planet imagery collection (this is required to remove already available assets from result list) and select the API version you want to use.
 							<br>
-							- APIv1 look to be available for everyone. But require the data to transit trough your computer. The computer with the page need to stay open. When you do the a asset search image already ingested (finished to be ingest!) are automatically removed from the list of available data
-							<br>
-							- APIv2 look to be available if we have payed quota (and only for any user, still unclear to me 🤔). With the order V2, once the order done, Planet manages the ingestion in GEE for you 👏. Currently, the id of the asset is still missing in the metadata, and therefore the automatic cleaning of result is not possible 🤷‍♂️. (I requested a modification in this way to Planet.)
+							<ul>
+								<li>
+									APIv1 look to be available for everyone. But require the data to transit trough your computer. A good internet connetion could be critical. The computer with the page need to stay open. When you do the a search, image already ingested (finished to be ingest!) are automatically removed from the list of available data. To download, select the image and press "Download" or simply double click on the image.
+									Once an image set for download, it will take up to 20 minutes for the activation (computation of the image on Planet side) before the download can start. Be patient!
+									Ps. if you select multiple images, all are activated in parallel.
+								</li>
+								<li>
+									APIv2 look to be available if we have payed quota (and only for any user, still unclear to me 🤔). With the order V2, once the order done, Planet manages the ingestion in GEE for you 👏. Currently, the id of the asset is still missing in the metadata, and therefore the automatic cleaning of result is not possible 🤷‍♂️. (I requested a modification in this way to Planet.)
+								</li>
+							</ul>
+						</p>
+						<h4>Advices</h4>
+						<p>
+							Once finish the set up, start with a single image to see if everything work as expected, before moving to more downloads.
 						</p>
 						<h4>How was it implemented?</h4>
 						<p>
