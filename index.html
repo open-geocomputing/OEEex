@@ -216,7 +216,7 @@
 						</h3>
 						<h4>Description</h4>
 						<p>
-							This feature allows to export and image collection without to have to press any button in the asset tab. But to save our planet always double check if you really need export a complete collection.
+							This feature allows to export an image, image collection, table, video without to have to press any button in the asset tab. But to save our planet always double check if you really need export a complete collection.
 						</p>
 						<h4>How to use it?</h4>
 						<p>
@@ -225,8 +225,7 @@
 						<h4>How was it implemented?</h4>
 						<p>
 							This was a challenging feature!<br>
-							This uses the <code>eye. Data. startProcessing () </code>function to start a computation without using the asset tab. However, this function popup a confirm message.
-							To "fix" this behavior a communication is introduced between the running code and the extension, trough some printing in the console.Weird message can appear in the console if the functionality is disabled or the extension not installed, but the code can still be executed. This communication tells the extension when to overload the confirm() message allowing for direct export
+							A communication is introduced between the running code and the extension, trough some printing in the console. Weird message can appear in the console if the functionality is disabled or the extension not installed, but the code can still be executed. This communication tells the extension what to do.
 					</div>
 
 					<div class="box" id="AssetsAvailability">
