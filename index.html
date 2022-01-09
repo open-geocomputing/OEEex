@@ -135,15 +135,15 @@
 						<h3 class="title is-3">
 							⌘+S
 						</h3>
-						<h2>Description</h2>
+						<h4>Description</h4>
 						<p>
 							Redirect the shortcut ⌘+S to the save button
 						</p>
-						<h2>How to use it?</h2>
+						<h4>How to use it?</h4>
 						<p>
 							Simply press ⌘+S 😀
 						</p>
-						<h2>How was it implemented?</h2>
+						<h4>How was it implemented?</h4>
 						<p>
 							This was implemented, adding a listener on pressed key. When ⌘+S is detected the save button is programmatically clicked.
 						</p>
@@ -153,18 +153,18 @@
 						<h3 class="title is-3">
 							Night mode
 						</h3>
-						<h2>Description</h2>
+						<h4>Description</h4>
 						<p>
 							The extension introduce a dark theme.
 						</p>
-						<h2>How to use it?</h2>
+						<h4>How to use it?</h4>
 						<p>
 							Simply select the mode you want with the logo in the upper right. For automatic mode based on your browser or system simply double click on the logo, or select the mode in the option page.
 							<br>
 							All you earth engine open in the same browser are linked. Changing the parameter in one page will cahnge the others.
 							The popup are expected for imediate interaction, and therefore require all your attention, these are intentionaly with a white background to keep you awake 😆.
 						</p>
-						<h2>How was it implemented?</h2>
+						<h4>How was it implemented?</h4>
 						<p>
 							The dark mode was implemented by using a standard dark theme for the ACE code editor. The other part of the interface was color changed, adding a new "dark" class that makes some CSS overload.
 							The communication between each open page is managed trough the extension background using a communications port and exchanging messages. This allows to sync the mode and to store your preferences.
@@ -175,15 +175,15 @@
 						<h3 class="title is-3">
 							OEEL caching
 						</h3>
-						<h2>Description</h2>
+						<h4>Description</h4>
 						<p>
 							OEEL caching provided 1h cache for files from the Open Earth Engine Library. This allows to reduce the execution time when using the library. This feature cannot be disabled.
 						</p>
-						<h2>How to use it?</h2>
+						<h4>How to use it?</h4>
 						<p>
 							You have nothing to do if you use the OEEL library it will automatically use the cache.
 						</p>
-						<h2>How was it implemented?</h2>
+						<h4>How was it implemented?</h4>
 						<p>
 							This feature was implemented by using a redirection on the specific OEEL file. Requests are redirected to <code>proxy-oeel-code.open-geocomputing.org</code> that respond the file with the right cache header.
 						</p>
@@ -193,17 +193,17 @@
 						<h3 class="title is-3">
 							Manifest upload
 						</h3>
-						<h2>Description</h2>
+						<h4>Description</h4>
 						<p>
 							Manifest upload allow to drag and drop one or more GeoTIFF with its manifest and get it ingested directly.
 						</p>
-						<h2>How to use it?</h2>
+						<h4>How to use it?</h4>
 						<p>
 							Simply start by creating a manifest following the instruction <a href="https://developers.google.com/earth-engine/guides/image_manifest">here</a>. The only difference is in the file address, don't use a gs:// address, but a local unix file style path (the path shouldn't contain .. to go to the parent directory).
 							<br>
 							Save the manifest as <code>manifest. json</code> in a folder (e.g., <code>myUploadFolder</code>) with the GeoTIFFs (image need can be in subfolders). Then drag and drop the folder on in the newly appeared logo (arrow up) in the asset tab. You can follow the progress of the upload in the task tab. The address can be some URLs too, if you want to ingest only available data. But the data would be transit my you computer.
 						</p>
-						<h2>How was it implemented?</h2>
+						<h4>How was it implemented?</h4>
 						<p>
 							The extension request a GS upload link to google, then the files are uploaded, the addresses in the manifest are replaced with the newly get gs:// address. Finally, the manifest is submitted to GEE. In case, of remotely available data (http(s)://) the data are first download in the browser, temporarily stored and upload on following the same approach as for local files. The server should allow requests from <code>https://code.earthengine.google.com</code>, else browser protection will cancel the request.
 						</p>
@@ -214,15 +214,15 @@
 						<h3 class="title is-3">
 							Automatic export
 						</h3>
-						<h2>Description</h2>
+						<h4>Description</h4>
 						<p>
 							This feature allows to export and image collection without to have to press any button in the asset tab. But to save our planet always double check if you really need export a complete collection.
 						</p>
-						<h2>How to use it?</h2>
+						<h4>How to use it?</h4>
 						<p>
 							This a OEEL included feature, simply use the appropriate <code>oeel.Export.ImageCollection.*</code> function.
 						</p>
-						<h2>How was it implemented?</h2>
+						<h4>How was it implemented?</h4>
 						<p>
 							This was a challenging feature!<br>
 							This uses the <code>eye. Data. startProcessing () </code>function to start a computation without using the asset tab. However, this function popup a confirm message.
@@ -233,15 +233,15 @@
 						<h3 class="title is-3">
 							Assets availability
 						</h3>
-						<h2>Description</h2>
+						<h4>Description</h4>
 						<p>
 							It checks if assets are publically available when sharing a script. This is only a check, and do NOT change assets or repository permission.
 						</p>
-						<h2>How to use it?</h2>
+						<h4>How to use it?</h4>
 						<p>
 							Simply clicking "get link" or "Copy Script Path". In the case of "Copy Script Path" it further check if the repository is public to allow another user to see the content.
 						</p>
-						<h2>How was it implemented?</h2>
+						<h4>How was it implemented?</h4>
 						<p>
 							The script and the environment header are statically checked to detect all the used assets. Then the list of these assets is sent to an external service that check its public availability.
 							<br><u>Limitation:</u> asset names that are dynamically created can therefore not be checked.
@@ -252,17 +252,17 @@
 						<h3 class="title is-3">
 							Insert function signature
 						</h3>
-						<h2>Description</h2>
+						<h4>Description</h4>
 						<p>
 							It allows to add a function signature from the documentation to the code script with a single click.
 						</p>
-						<h2>How to use it?</h2>
+						<h4>How to use it?</h4>
 						<p>
 							Move to the documentation tab, search for the function that interest you and click on the arrow!<br>
 							The function is imported with the dictionary styling. 
 							Optional arguments are commented, and default value is added as default value 😄.
 						</p>
-						<h2>How was it implemented?</h2>
+						<h4>How was it implemented?</h4>
 						<p>
 							This function request two files from Earth Engine that contain the function signature. At the click the signature is generated and imported into the editor.
 						</p>
@@ -272,11 +272,11 @@
 						<h3 class="title is-3">
 							PlanetLab image management
 						</h3>
-						<h2>Description</h2>
+						<h4>Description</h4>
 						<p>
 							This feature allows to search / order / transfer PlanetLab imagery directly from GEE.
 						</p>
-						<h2>How to use it?</h2>
+						<h4>How to use it?</h4>
 						<p>
 							First activate the feature in the Option page, set up your account (If you login, it will recover the API key automatically for you), setup the path to your Planet imagery collection (this is required to remove already available assets from result list) and select the API version you want to use.
 							<br>
@@ -284,7 +284,7 @@
 							<br>
 							- APIv2 look to be available if we have payed quota (and only for any user, still unclear to me 🤔). With the order V2, once the order done, Planet manages the ingestion in GEE for you 👏. Currently, the id of the asset is still missing in the metadata, and therefore the automatic cleaning of result is not possible 🤷‍♂️. (I requested a modification in this way to Planet.)
 						</p>
-						<h2>How was it implemented?</h2>
+						<h4>How was it implemented?</h4>
 						<p>
 							A very, very long story for a day I am motivated.
 						</p>
@@ -296,7 +296,7 @@
 						<p>The Open Earth Engine extension (aka. OEEex) is part of the <a href="/" target="_blanck">open-geocomputing initiative</a>. The goal is to provide Google Earth Engine (GEE) users with free and open extension that provided some missing features. Some of the codes required many hours of design and debugging.</p>
 						<h3 class="title is-3">The origin</h3>
 						<a target="_blank" href="https://unil.ch"><img src="https://www.unil.ch/modules/unil-core/img/unil-logo.svg" style="width: 165px; float: left; margin-right: 10px;"></a>
-						<p>The project finds its origin from an extension developed by Mathieu Gravey during his PhD for a usage by <a href="https://www.unil.ch/idyst/en/home.html">Institute of Earth Surface Dynamics at the University of Lausanne</a>. Starting with a way to search and automatically transfer Planet images to Google Earth Engine. It was finally the platform for many small added features. After <a href="https://earthoutreachonair.withgoogle.com/events/geoforgood21">Geo for Good 2021</a>, it seems obvious that it should be shared with the community. <a target="_blank" href="https://www.uu.nl/en"><img src="https://www.uu.nl/themes/custom/corp/src/images/uu-logo-en.svg" style="width: 165px; float: right; margin-right: 10px;"></a>The extension was redesigned and enhanced during the time at <a target="_blank" href="https://www.uu.nl/en">Utrecht Univerity</a>. A particular thanks to Dr. Raphaël Nussbaumer who is at the origin of the design of this web site, and Pauline Ahumada for the animated logo.</p>
+						<p>The project finds its origin from an extension developed by Mathieu Gravey during his PhD for a usage by <a href="https://www.unil.ch/idyst/en/home.html">Institute of Earth Surface Dynamics at the University of Lausanne</a>. Starting with a way to search and automatically transfer Planet images to Google Earth Engine. It was finally the platform for many small added features. After <a href="https://earthoutreachonair.withgoogle.com/events/geoforgood21">Geo for Good 2021</a>, it seems obvious that it should be shared with the community. <a target="_blank" href="https://www.uu.nl/en"><img src="https://www.uu.nl/themes/custom/corp/src/images/uu-logo-en.svg" style="width: 165px; float: right; margin-left: 10px;"></a>The extension was redesigned and enhanced during the time at <a target="_blank" href="https://www.uu.nl/en">Utrecht Univerity</a>. A particular thanks to Dr. Raphaël Nussbaumer who is at the origin of the design of this web site, and Pauline Ahumada for the animated logo.</p>
 						
 					</div>
 				</div>
@@ -325,7 +325,7 @@
 					</div>
 				</div>
 				<div class="control">
-					<div class="tags has-addons">Last update: <span id="lastUpdate"></span>
+					<div class="tags has-addons">Last update: 9th of January 2022<span id="lastUpdate"></span>
 					</div>
 				</div>
 			</div>
