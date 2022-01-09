@@ -1,4 +1,4 @@
-const consoleExtensionPrefix='OEEex_AddonConfirmManager';
+const consoleExtensionPrefix='OEEex_AddonManager';
 var consoleExtensionVerbose=false;
 
 clone4OEE = function(that) {
@@ -79,6 +79,83 @@ function confirmManager(code,element){
         if(instructions.startsWith(actionPrefix+':')){
             var status=instructions.slice(actionPrefix.length+1);
             consoleExtensionVerbose=strToBool(status);
+        }
+    }
+    {
+        var actionPrefix='createCollection';
+        if(instructions.startsWith(actionPrefix+':')){
+            let path=instructions.slice(actionPrefix.length+1);
+            let geeRequest=new XMLHttpRequest();
+            geeRequest.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/assets?assetId='+encodeURI(path),true);
+            geeRequest.responseType = 'json';
+            geeRequest.onload = function(e) {
+                if (this.status == 200) {
+                    assetId
+                }
+                else{
+                    alert("error in path creation: "+path+'\n'+
+                        this.response["error"]["message"]);
+                }
+            }
+            geeRequest.setRequestHeader("Authorization", ee.data.getAuthToken());
+            geeRequest.send('{"type":"IMAGE_COLLECTION"}');
+        }
+    }
+    {
+        var actionPrefix='exportImage';
+        if(instructions.startsWith(actionPrefix+':')){
+            var config=instructions.slice(actionPrefix.length+1);
+            let geeRequest=new XMLHttpRequest();
+            geeRequest.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/image:export',true);
+            geeRequest.responseType = 'json';
+            geeRequest.onload = function(e) {
+                if (this.status == 200) {
+                    successCallback();
+                }
+                else{
+                    alert("Unable to export image");
+                }
+            }
+            geeRequest.setRequestHeader("Authorization", ee.data.getAuthToken());
+            geeRequest.send(config)
+        }
+    }
+    {
+        var actionPrefix='exportTable';
+        if(instructions.startsWith(actionPrefix+':')){
+            var config=instructions.slice(actionPrefix.length+1);
+            let geeRequest=new XMLHttpRequest();
+            geeRequest.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/table:export',true);
+            geeRequest.responseType = 'json';
+            geeRequest.onload = function(e) {
+                if (this.status == 200) {
+                    successCallback();
+                }
+                else{
+                    alert("Unable to export table");
+                }
+            }
+            geeRequest.setRequestHeader("Authorization", ee.data.getAuthToken());
+            geeRequest.send(config)
+        }
+    }
+    {
+        var actionPrefix='exportVideo';
+        if(instructions.startsWith(actionPrefix+':')){
+            var config=instructions.slice(actionPrefix.length+1);
+            let geeRequest=new XMLHttpRequest();
+            geeRequest.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/video:export',true);
+            geeRequest.responseType = 'json';
+            geeRequest.onload = function(e) {
+                if (this.status == 200) {
+                    successCallback();
+                }
+                else{
+                    alert("Unable to export video");
+                }
+            }
+            geeRequest.setRequestHeader("Authorization", ee.data.getAuthToken());
+            geeRequest.send(config)
         }
     }
     if (!consoleExtensionVerbose){

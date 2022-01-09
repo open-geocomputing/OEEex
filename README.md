@@ -13,21 +13,21 @@ The use of the console to communicate allows the users without the extension to 
 
 ### Increase the counter for a key
 ```javascript
-	OEEex_AddonConfirmManager:removeConfirmRetain:theKeyText
+	OEEex_AddonManager:removeConfirmRetain:theKeyText
 ```
 
 ### Decrease the counter for a key
 ```javascript
-	OEEex_AddonConfirmManager:removeConfirmRelease:theKeyText
+	OEEex_AddonManager:removeConfirmRelease:theKeyText
 ```
 
 ### Reset the confirm manager
 ```javascript
-	OEEex_AddonConfirmManager:resetConfirm
+	OEEex_AddonManager:resetConfirm
 ```
 
 ### Activate verbose 
 Allow to keep the message in the console, typically to debug a script. With status (true OR false)
 ```javascript
-	OEEex_AddonConfirmManager:removeConfirmRetain:Status
+	OEEex_AddonManager:removeConfirmRetain:Status
 ```

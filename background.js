@@ -7,7 +7,7 @@ chrome.runtime.onInstalled.addListener(function() {
         insertInCE:true,
         planetLab:false,
         uploadWithManifest:true,
-        hackEEConfirm:true,
+        hackEE:true,
         EEDarkMode:true,
         addCommandS:navigator.platform.toLowerCase().includes('mac')
     });
