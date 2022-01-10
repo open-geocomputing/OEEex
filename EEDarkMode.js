@@ -49,6 +49,8 @@ function switch2DarkMode(toDark,isAuto=false){
 var listRoot=[];
 
 function addModeSwitch(){
+
+	//document.querySelector('ui-root').classList.add('notDark');
 	listRoot.push(document.getElementsByTagName('html')[0]);
 
 	window.addEventListener("load", function(){

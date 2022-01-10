@@ -73,7 +73,7 @@ function chekForAssets(){
 					message+="Warning: this script may contain some assets not publicly shared:\n"
 					message+=(" - "+warning.join("\n - ")).slice(0,-3)
 				}
-				alert(message)
+				if((error.length+warning.length)>0)alert(message)
 			}
 		}
 	}

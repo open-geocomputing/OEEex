@@ -13,6 +13,12 @@
 	color: var(--oeel-color);
 }
 
+
+div.ui-root {
+	color: initial;
+}
+
+
 html.dark{
 	--oeel-background-color: rgb(29, 31, 33);
 	--oeel-color: #C5C8C6;
