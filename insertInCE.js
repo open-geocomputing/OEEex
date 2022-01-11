@@ -6,7 +6,7 @@ function addInsertCEButton(obj,title,lib,editor,isConstructor){
 		span.addEventListener('click',function(event){
 			event.stopPropagation();
 			let text=title+'({\n'
-			for (var i = (isConstructor ? 0 : 1); i < lib.arguments.length; i++) {
+			for (var i = (isConstructor || title.indexOf('.')>0 ? 0 : 1); i < lib.arguments.length; i++) {
 				let name=('optional'in lib.arguments[i] && lib.arguments[i].optional? '//':'	')
 				+'	'+lib.arguments[i].argumentName+':'
 				if('defaultValue'in lib.arguments[i]){
