@@ -20,6 +20,33 @@ portUwM.onMessage.addListener((request, sender, sendResponse) => {
 	}
 })
 
+function simplify_path(main_path) {
+  let parts = main_path.split('/'),
+      new_path = [],
+      length = 0;
+  for (var i = 0; i < parts.length; i++) {
+    let part = parts[i];
+    if (part === '.' || part === '' || part === '..') {
+      if (part === '..' && length > 0) {
+        length--;
+      }
+      continue;
+    }
+    new_path[length++] = part;
+  }
+
+  if (length === 0) {
+    return '/';
+  }
+
+  let result = '';
+  for (var i = 0; i < length; i++) {
+    result +=  '/'+new_path[i] ;
+  }
+
+  return result;
+}
+
 function addButtonOnAssetPanel(){
 	var topButton=document.querySelector('.top-buttons');
 
@@ -67,7 +94,7 @@ function uploadTreeFolder(item,path){
 				if(entries[i].name.toLowerCase()=="manifest.json"){
 					manifest=entries[i];
 				}else{
-					fileArray[entries[i].name]=entries[i];
+					fileArray[simplify_path(entries[i].name)]=entries[i];
 				}
 			}
 		}
@@ -133,8 +160,9 @@ function uploadFilesInGEE(arrayOfUris,fileArray){
 		if(arrayOfUris[localIndex].startsWith("gs://")) continue;
 		if(arrayOfUris[localIndex].startsWith("http://") || arrayOfUris[localIndex].startsWith("https://"))
 			array.push(uploadFromRemote(localIndex,arrayOfUris));
-		else
-			array.push(uploadFromLocal(localIndex,arrayOfUris,fileArray[arrayOfUris[localIndex]]));
+		else{
+			array.push(uploadFromLocal(localIndex,arrayOfUris,fileArray[simplify_path(arrayOfUris[localIndex])]));
+		}
 	}
 	return array;
 }
@@ -155,7 +183,7 @@ function ingestInGEE(manifest,successCallback,errorCallback){
 			successCallback();
 		}
 		else{
-			if(confrim('Error:'+this.response+'\n Do you want to retry ?'))
+			if(confirm('Error:'+this.response+'\n Do you want to retry ?'))
 			{
 				ingestInGEE(manifest,successCallback,errorCallback);
 			}
