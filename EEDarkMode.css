@@ -157,6 +157,10 @@ html.dark{
 
 .dark .ee-renamer .jfk-textinput{color: white}
 
+.dark input.jfk-textinput, .dark .modal-dialog-content input
+{background-color: revert}
+
+
 .dark .tree-manager .tree-folder>ee-zippy>.header:hover,
 .dark .repo-manager .repo-list>ee-zippy>.header:hover {
     background: black;

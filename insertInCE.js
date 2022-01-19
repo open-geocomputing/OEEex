@@ -65,13 +65,10 @@ function loadFunctionSignaturesObserver(){
 
 	const observer = new MutationObserver(function(){
 		this.disconnect();
-		setTimeout(addFunctionSignaturesButtons,100);
+		setTimeout(addFunctionSignaturesButtons,0);
 	});
-	let docSection=document.querySelector('ee-docs-list')
 
-	if(docSection!==null)
-		observer.observe(docSection.shadowRoot, {subtree: true, childList: true});
-	//else
-		//setTimeout(loadFunctionSignaturesObserver,1);
+	observer.observe(document.querySelector('ee-docs-list').shadowRoot, {subtree: true, childList: true});
+	
 }
 loadFunctionSignaturesObserver();

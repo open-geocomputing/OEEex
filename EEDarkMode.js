@@ -93,17 +93,12 @@ function addModeSwitch(){
 		localRoot.adoptedStyleSheets=[...localRoot.adoptedStyleSheets,sheet];
 	}
 
-	// var eeDocList=document.getElementsByTagName('ee-docs-list');
-	// if(eeDocList && eeDocList.length>0){
-	// 	var localRoot=eeTaskPaneList[0].shadowRoot;
-	// 	var sheet = new CSSStyleSheet
-	// 	sheet.replaceSync( '.dark .task.legacy .info{ color:var(--oeel-color); } .dark .task.legacy .info .error-message {color: #e34a4a;}'+
-	// 		'.dark .task.legacy .indicator{filter: invert(1)}  .dark .task.task.submitted-to-backend .indicator, .dark .task.task.running-on-backend .indicator{filter: invert(1) hue-rotate(180deg) brightness(1.5);transform: rotate(180deg);}'+
-	// 		'.dark .task.legacy.failed .indicator{filter: brightness(1.5);} .dark .task.legacy:not(.completed):not(.failed) .content{background-color: rgb(86 86 86);}'+
-	// 		'.dark .task.legacy.type-INGEST_TABLE .content::before{background-image: url(//www.gstatic.com/images/icons/material/system/1x/file_upload_white_24dp.png);}');
-	// 	localRoot.adoptedStyleSheets=[...localRoot.adoptedStyleSheets,sheet];
-	// 	[...localRoot.children].map(e=>listRoot.push(e))
-	// }
+	let loaclRoot=document.querySelector('ee-docs-list').shadowRoot;
+	var sheet = new CSSStyleSheet;
+	sheet.replaceSync(':host(.dark) ee-zippy > .header:hover {background: var(--color-hover-bg);}'+
+		':host(.dark) ee-zippy > .header::before {filter:invert()}');
+	loaclRoot.adoptedStyleSheets=[...loaclRoot.adoptedStyleSheets,sheet];
+	listRoot.push(document.querySelector('ee-docs-list'))
 
 	var eeTaskPaneList=document.getElementsByTagName('ee-task-pane');
 	if(eeTaskPaneList && eeTaskPaneList.length>0){
