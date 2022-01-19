@@ -68,10 +68,9 @@ function addModeSwitch(){
 	' class="material-icons" style="font-family: &quot;Material Icons&quot; ; color: rgba(115, 115, 115, 0.7);'+
 	'  font-size: 0px; padding: 0 0 0 7px; vertical-align: bottom;">brightness_medium</span>';
 	button.setAttribute('align',"right");
+
+
 	let userBoxElement=document.getElementsByTagName('user-box')
-
-
-
 	if(userBoxElement && userBoxElement.length>0)
 	{
 		var localRoot=userBoxElement[0].shadowRoot;
@@ -93,6 +92,18 @@ function addModeSwitch(){
 		// Append your style to the existing style sheet.
 		localRoot.adoptedStyleSheets=[...localRoot.adoptedStyleSheets,sheet];
 	}
+
+	// var eeDocList=document.getElementsByTagName('ee-docs-list');
+	// if(eeDocList && eeDocList.length>0){
+	// 	var localRoot=eeTaskPaneList[0].shadowRoot;
+	// 	var sheet = new CSSStyleSheet
+	// 	sheet.replaceSync( '.dark .task.legacy .info{ color:var(--oeel-color); } .dark .task.legacy .info .error-message {color: #e34a4a;}'+
+	// 		'.dark .task.legacy .indicator{filter: invert(1)}  .dark .task.task.submitted-to-backend .indicator, .dark .task.task.running-on-backend .indicator{filter: invert(1) hue-rotate(180deg) brightness(1.5);transform: rotate(180deg);}'+
+	// 		'.dark .task.legacy.failed .indicator{filter: brightness(1.5);} .dark .task.legacy:not(.completed):not(.failed) .content{background-color: rgb(86 86 86);}'+
+	// 		'.dark .task.legacy.type-INGEST_TABLE .content::before{background-image: url(//www.gstatic.com/images/icons/material/system/1x/file_upload_white_24dp.png);}');
+	// 	localRoot.adoptedStyleSheets=[...localRoot.adoptedStyleSheets,sheet];
+	// 	[...localRoot.children].map(e=>listRoot.push(e))
+	// }
 
 	var eeTaskPaneList=document.getElementsByTagName('ee-task-pane');
 	if(eeTaskPaneList && eeTaskPaneList.length>0){

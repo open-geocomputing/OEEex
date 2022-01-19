@@ -216,6 +216,7 @@ function uploadFromLocal(index,uris,fileEntry){
 	let uploadImage=new XMLHttpRequest();
 	uploadImage.open("GET",'https://code.earthengine.google.com/assets/upload/geturl',true);
 	uploadImage.responseType = 'json';
+	uploadImage.isLocal=true;
 	uploadImage.onload = function(e) {
 		if (this.status == 200) {
 			let uploadAddresObject=this.response;
@@ -253,6 +254,7 @@ function uploadFromBlob(index,uris,blob){
 	let uploadImage=new XMLHttpRequest();
 	uploadImage.open("GET",'https://code.earthengine.google.com/assets/upload/geturl',true);
 	uploadImage.responseType = 'json';
+	uploadImage.isLocal=false;
 	uploadImage.onload = function(e) {
 		if (this.status == 200) {
 			let uploadAddresObject=this.response;
@@ -335,28 +337,28 @@ function addManifestToIngestInGEE(manifest,uploadEvents){
 	}
 	updateDispaly(uploadDic,0);
 
-	try{
-		var info=ee.data.getAsset(manifest.name);
-		uploadDic.panelTask.querySelector('.content').style.background='#ff5722';
-	}
-	catch(e){
-		// add to the list of stuff to ingest
-		for (var i = uploadEvents.length - 1; i >= 0; i--) {
-			if(uploadEvents[i].responseURL.includes('https://code.earthengine.google.com/assets/upload/geturl')){
-				addGSUploadToList(uploadEvents[i]);
-				continue;
-			}
-			// if(uploadEvents[i].responseURL.includes()){
-			// 	addGSUploadToList(uploadEvents[i]);
-			// 	continue;
-			// }
-			//Else
-			{
-				addCommonToDownloadList(uploadEvents[i]);
-				continue;
+	ee.data.getAsset(manifest.name,function(info){
+		if(info)
+		{
+			uploadDic.panelTask.querySelector('.content').style.background='#ff5722';
+		}else{
+			for (var i = uploadEvents.length - 1; i >= 0; i--) {
+				if(uploadEvents[i].isLocal){
+					addGSUploadToList(uploadEvents[i]);
+					continue;
+				}
+				// if(uploadEvents[i].responseURL.includes()){
+				// 	addGSUploadToList(uploadEvents[i]);
+				// 	continue;
+				// }
+				//Else
+				{
+					addCommonToDownloadList(uploadEvents[i]);
+					continue;
+				}
 			}
 		}
-	}
+	});
 }
 
 function updateDispaly(uploadDic,chunkSize){

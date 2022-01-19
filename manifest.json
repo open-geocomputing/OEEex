@@ -32,7 +32,7 @@
     {
       "matches": ["https://code.earthengine.google.com/*"], 
       "js": ["injectionScript.js"],
-      "css" : ["EEDarkMode.css","OEEex.css","planetLab.css","insertInCE.css"]
+      "css" : ["EEDarkMode.css","OEEex.css","planetLab.css"]
     }
   ],
   "action": {
