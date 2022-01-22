@@ -1,23 +1,34 @@
 const consolePlanetExtensionPrefix='OEEex_AddonPlanetSearch';
+var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
 planetConfig=null;
 var OEEex_version='1.0'
-
-var planetPortWithBackground = chrome.runtime.connect(document.currentScript.src.match("([a-z]{32})")[0],{name: "oeel.extension.planet"});
 
 const maxPlanetActivated=10;
 var planetActivated=0; 
 
-planetPortWithBackground.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.type=='planetConfig'){
-        planetConfig=request.message;
-        // if('maxParallelActivation' in planetConfig)
-        //     maxPlanetActivated=planetConfig['maxParallelActivation'];
-        document.querySelectorAll('.planetScenesList').forEach(e=>{
-            if(!planetConfig.Thumbnail) e.classList.add('withoutPrevi');
-            else e.classList.remove('withoutPrevi');
-        });
-    };
-})
+var planetPortWithBackground=null;
+function setPlanetPortWithBackground(){
+    planetPortWithBackground= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.planet"});
+    planetPortWithBackground.onDisconnect.addListener(function(port){ 
+        planetPortWithBackground=null;
+        setPlanetPortWithBackground();
+    })
+
+    planetPortWithBackground.onMessage.addListener((request, sender, sendResponse) => {
+        if(request.type=='planetConfig'){
+            planetConfig=request.message;
+            // if('maxParallelActivation' in planetConfig)
+            //     maxPlanetActivated=planetConfig['maxParallelActivation'];
+            document.querySelectorAll('.planetScenesList').forEach(e=>{
+                if(!planetConfig.Thumbnail) e.classList.add('withoutPrevi');
+                else e.classList.remove('withoutPrevi');
+            });
+        };
+    })
+}
+
+
+
 
 
 function loadConsolePlanetWatcher(){

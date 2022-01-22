@@ -1,7 +1,30 @@
 listOfScript=['isShareable','insertInCE','planetLab','uploadWithManifest','hackEE','EEDarkMode','addCommandS'];
 
-var portWithBackground = chrome.runtime.connect({name: "oeel.extension.lightMode"});
 var lightIsAutomatic=true;
+
+var portWithBackground=null;
+function setPortWithBackground(){
+  portWithBackground= chrome.runtime.connect({name: "oeel.extension.lightMode"});
+  portWithBackground.onDisconnect.addListener(function(port){ 
+    portWithBackground=null;
+    setPortWithBackground();
+  })
+
+  portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.type=='changeLightMode'){
+      if(request.message=='automatic'){
+        if((typeof buttonLight!= 'undefined') && buttonLight)
+          buttonLight.innerHTML='brightness_medium';
+        switch2DarkMode((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),true)
+      }else{
+        switch2DarkMode(request.message,false);
+      }
+    };
+  })
+}
+
+setPortWithBackground();
+
 
 function runOnceLoaded(){
   // const logoPlayer = document.querySelector("#logo");
@@ -65,17 +88,7 @@ chrome.storage.onChanged.addListener(function(dic){
   }
 });
 
-portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
-  if(request.type=='changeLightMode'){
-    if(request.message=='automatic'){
-      if((typeof buttonLight!= 'undefined') && buttonLight)
-        buttonLight.innerHTML='brightness_medium';
-      switch2DarkMode((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),true)
-    }else{
-      switch2DarkMode(request.message,false);
-    }
-  };
-})
+
 
 function setLight(){
   var lightModeElement=document.querySelector('.lightMode');

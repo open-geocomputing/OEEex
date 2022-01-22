@@ -1,4 +1,24 @@
-var portUwM= chrome.runtime.connect(document.currentScript.src.match("([a-z]{32})")[0],{name: "oeel.extension.UwM"});
+var portUwM=null;
+var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
+function setPortUwM(){
+	portUwM= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.UwM"});
+	portUwM.onDisconnect.addListener(function(port){	
+		portUwM=null;
+		setPortUwM();
+	})
+
+	portUwM.onMessage.addListener((request, sender, sendResponse) => {
+		if(request.type=='parallelUpload'){
+			maxParallelGSUpload=request.message;
+		}
+		if(request.type=='parallelDownload'){
+			maxParallelDownload=request.message;
+		}
+	})
+}
+
+setPortUwM();
+
 
 var taskPanel=null;
 var GEEUserAssetRoot=null;
@@ -10,41 +30,91 @@ maxParallelDownload=10;
 parallelDownload=0;
 toDownloadList=[];
 
+var listImAvailable={}
+var listImAvailableTime={}
 
-portUwM.onMessage.addListener((request, sender, sendResponse) => {
-	if(request.type=='parallelUpload'){
-		maxParallelGSUpload=request.message;
+function checkInAvalailable(imName,isPresentCallback,isMissingCallback){
+	if (!('Ingesting' in listImAvailableTime)|| listImAvailableTime['Ingesting']+5*60*1000<Date.now()){
+		// load ingesting value
+		ee.data.listOperations(5000,function(data){
+			listImAvailable['Ingesting']=data.filter(e=>e.metadata.type=="INGEST_IMAGE"&&(e.metadata.state=="PENDING"||e.metadata.state=="RUNNING")).map(e=>e.metadata.description.slice(15,-1))
+		})
+		listImAvailableTime['Ingesting']=Date.now();
 	}
-	if(request.type=='parallelDownload'){
-		maxParallelDownload=request.message;
+	let path=imName.slice(0,imName.lastIndexOf('/'));
+	if (!(path in listImAvailableTime)|| listImAvailableTime[path]+5*60*1000<Date.now()){
+		let newData =[];
+		let loadData=function (nextPageToken){
+			let options={pageSize:10000, view:'BASIC'}
+			if(nextPageToken)
+				options.pageToken=nextPageToken;
+			ee.data.listAssets(path, options, function(data){
+				newData=[...newData,...data.assets.map(e=>e.name)];
+				if(('nextPageToken' in data) && data.nextPageToken){
+					loadData(data.nextPageToken)
+				}else{
+					listImAvailable[path]=newData;
+				}
+			});
+		}
+		loadData(null);
+		listImAvailableTime[path]=Date.now();
 	}
-})
+	if (!(isPresentCallback||isMissingCallback))
+		return;
+	let isPresente=false;
+	if('Ingesting' in listImAvailable){
+		if(listImAvailable['Ingesting'].includes(imName)){
+			isPresent=true;
+			isPresentCallback();
+			return;
+		};
+	}
+	if(path in listImAvailable){
+		if(listImAvailable[path].includes(imName)){
+			isPresent=true;
+			isPresentCallback();
+		}else{
+			isMissingCallback();
+		};
+	}else{
+		setTimeout(checkInAvalailable,100,imName,isPresentCallback,isMissingCallback);
+		// ee.data.getAsset(imName,function(info){
+		// 	if(info)
+		// 	{
+		// 		isPresentCallback();
+		// 	}else{
+		// 		isMissingCallback();
+		// 	}
+		// });
+	}
+}
 
 function simplify_path(main_path) {
-  let parts = main_path.split('/'),
-      new_path = [],
-      length = 0;
-  for (var i = 0; i < parts.length; i++) {
-    let part = parts[i];
-    if (part === '.' || part === '' || part === '..') {
-      if (part === '..' && length > 0) {
-        length--;
-      }
-      continue;
-    }
-    new_path[length++] = part;
-  }
+	let parts = main_path.split('/'),
+	new_path = [],
+	length = 0;
+	for (var i = 0; i < parts.length; i++) {
+		let part = parts[i];
+		if (part === '.' || part === '' || part === '..') {
+			if (part === '..' && length > 0) {
+				length--;
+			}
+			continue;
+		}
+		new_path[length++] = part;
+	}
 
-  if (length === 0) {
-    return '/';
-  }
+	if (length === 0) {
+		return '/';
+	}
 
-  let result = '';
-  for (var i = 0; i < length; i++) {
-    result +=  '/'+new_path[i] ;
-  }
+	let result = '';
+	for (var i = 0; i < length; i++) {
+		result +=  '/'+new_path[i] ;
+	}
 
-  return result;
+	return result;
 }
 
 function addButtonOnAssetPanel(){
@@ -142,6 +212,8 @@ function exploreJson2Upload(jsonData,fileArray){
 	}else{
 		if(typeof jsonData==='object') // is dictionary
 		{
+			if('name' in jsonData)
+				checkInAvalailable(jsonData.name,null,null);
 			for(k in jsonData){
 				if(k=='uris')
 					array=array.concat(uploadFilesInGEE(jsonData[k],fileArray));
@@ -175,8 +247,10 @@ function getUserRoot(){
 }
 
 function ingestInGEE(manifest,successCallback,errorCallback){
+	projectName=manifest.name.match(/^projects\/(.+)\/assets\//)[1];
+	if(!projectName)projectName="earthengine-legacy";
 	let ingestCall=new XMLHttpRequest();
-	ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/image:import',true);
+	ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/'+projectName+'/image:import',true);
 	ingestCall.responseType = 'json';
 	ingestCall.onload = function(e) {
 		if (this.status == 200) {
@@ -313,8 +387,6 @@ function uuidv4() {
 	});
 }
 
-
-
 function addManifestToIngestInGEE(manifest,uploadEvents){
 	let divTask=document.createElement("div");
 	divTask.classList.add('task');
@@ -337,28 +409,22 @@ function addManifestToIngestInGEE(manifest,uploadEvents){
 	}
 	updateDispaly(uploadDic,0);
 
-	ee.data.getAsset(manifest.name,function(info){
-		if(info)
-		{
-			uploadDic.panelTask.querySelector('.content').style.background='#ff5722';
-		}else{
-			for (var i = uploadEvents.length - 1; i >= 0; i--) {
-				if(uploadEvents[i].isLocal){
-					addGSUploadToList(uploadEvents[i]);
-					continue;
-				}
-				// if(uploadEvents[i].responseURL.includes()){
-				// 	addGSUploadToList(uploadEvents[i]);
-				// 	continue;
-				// }
-				//Else
-				{
-					addCommonToDownloadList(uploadEvents[i]);
-					continue;
-				}
+	checkInAvalailable(manifest.name,function(){
+		uploadDic.panelTask.querySelector('.content').style.background='#ff5722';
+	},
+	function(){
+		for (var i = uploadEvents.length - 1; i >= 0; i--) {
+			if(uploadEvents[i].isLocal){
+				addGSUploadToList(uploadEvents[i]);
+				continue;
+			}
+
+			{
+				addCommonToDownloadList(uploadEvents[i]);
+				continue;
 			}
 		}
-	});
+	})
 }
 
 function updateDispaly(uploadDic,chunkSize){
@@ -400,48 +466,49 @@ function isReadyToIngest(jsonData){
 		if(typeof jsonData==='object') // is dictionary
 		{
 			for(k in jsonData){
-				if(k=='uris')
+				if(k=='uris'){
 					for (var i = 0; i < jsonData[k].length; i++) {
 						canBeIngested&=jsonData[k][i].startsWith("gs://");
 						if(!canBeIngested)return canBeIngested;
 					}
-					else{
-						canBeIngested&=isReadyToIngest(jsonData[k]);
-						if(!canBeIngested)return canBeIngested;
-					}
+				}
+				else{
+					canBeIngested&=isReadyToIngest(jsonData[k]);
+					if(!canBeIngested)return canBeIngested;
 				}
 			}
 		}
-		return canBeIngested;
 	}
+	return canBeIngested;
+}
 
-	function checkForImediateIngestion(uploadDic){
-		if(isReadyToIngest(uploadDic.manifest)){
-			ingestInGEE(uploadDic.manifest,function(){
-				uploadDic.panelTask.remove()
-			},function(){
-				uploadDic.panelTask.querySelector('.content').style.background='red';
-			})
-		}
+function checkForImediateIngestion(uploadDic){
+	if(isReadyToIngest(uploadDic.manifest)){
+		ingestInGEE(uploadDic.manifest,function(){
+			uploadDic.panelTask.remove()
+		},function(){
+			uploadDic.panelTask.querySelector('.content').style.background='red';
+		})
 	}
+}
 
 
-	function addCommonToDownloadList(upload, toTheFront=false){
-		if (toTheFront)
-			toDownloadList.unshift(upload);
-		else
-			toDownloadList.push(upload);
-		checkForDownload(false);
+function addCommonToDownloadList(upload, toTheFront=false){
+	if (toTheFront)
+		toDownloadList.unshift(upload);
+	else
+		toDownloadList.push(upload);
+	checkForDownload(false);
+}
+
+function checkForDownload(fromPrevious=false){
+	if(fromPrevious)parallelDownload--;
+	while((toDownloadList.length>0) && (parallelDownload<maxParallelDownload)){
+		parallelDownload++;
+		toDownloadList[0].send();
+		toDownloadList.shift();
 	}
-
-	function checkForDownload(fromPrevious=false){
-		if(fromPrevious)parallelDownload--;
-		while((toDownloadList.length>0) && (parallelDownload<maxParallelDownload)){
-			parallelDownload++;
-			toDownloadList[0].send();
-			toDownloadList.shift();
-		}
-	}
+}
 
 /*
 maxParallelDownload=10;

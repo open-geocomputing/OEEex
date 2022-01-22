@@ -1,17 +1,30 @@
+var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
 var lightIsAutomatic=true;
-var portWithBackground = chrome.runtime.connect(document.currentScript.src.match("([a-z]{32})")[0],{name: "oeel.extension.lightMode"});
+var portWithBackground=null;
+function setPortWithBackground(){
+	portWithBackground= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.lightMode"});
+	portWithBackground.onDisconnect.addListener(function(port){	
+		portWithBackground=null;
+		setPortWithBackground();
+	})
 
-portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
-	if(request.type=='changeLightMode'){
-		if(request.message=='automatic'){
-			if((typeof buttonLight!= 'undefined') && buttonLight)
-				buttonLight.innerHTML='brightness_medium';
-			switch2DarkMode((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),true)
-		}else{
-			switch2DarkMode(request.message,false);
-		}
-	};
-})
+	portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
+		if(request.type=='changeLightMode'){
+			if(request.message=='automatic'){
+				if((typeof buttonLight!= 'undefined') && buttonLight)
+					buttonLight.innerHTML='brightness_medium';
+				switch2DarkMode((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),true)
+			}else{
+				switch2DarkMode(request.message,false);
+			}
+		};
+	})
+}
+
+setPortWithBackground();
+
+
+
 
 function switch2DarkMode(toDark,isAuto=false){
 	lightIsAutomatic=isAuto;
