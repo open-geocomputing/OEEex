@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html> <!-- class='dark' -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net  https://fonts.gstatic.com https://assets9.lottiefiles.com https://api.planet.com https://tiles.planet.com 'unsafe-inline'; ">
+  <title>OEEex options</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <link rel="stylesheet" href="options.css">
+  <script src="3rd_party/lottie-player.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+  rel="stylesheet">
+</head>
+<body>
+  <header>
+    <lottie-player src="images/logo.json" autoplay="true" id='logo' background="transparent"  speed="1"  style="width: 300px; height: 300px;" ></lottie-player>
+  </header>
+  <main>
+    <div class="block">
+      <h2 class="title is-2">Planet computation V2</h2>
+      <div id="orderBlock">
+
+      </div>
+      <p>This extension was originally developed by <a href="http://mgravey.com">Mathieu Gravey</a> as part of the <a href="https://www.open-geocomputing.org">Open Geocumputing</a> to enhance the usage of the <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/">Open Earth Engine Library</a>. Animations on this page were done by <a href="https://www.behance.net/paulineahumada">Pauline Ahumada</a>.</p>
+      <!-- Anyone else contributing, please say what you did, and put your name in the above paragraph -->
+    </div>
+  </main>
+  <template id="planetOrder">
+    <div class="content is-medium">
+      <article class="message">
+        <div class="message-header orderName">
+        </div>
+        <div class="message-body">
+          <table>
+            <tr>
+              <td>Creation:</td>
+              <td><span class="createOn"></span></td>
+            </tr>
+            <tr>
+              <td>Last modification:</td>
+              <td><span class="lastModif"></span></td>
+            </tr>
+            <tr>
+              <td>Status:</td>
+              <td><span class="state"></span></td>
+            </tr>
+            <tr>
+              <td>Item type:</td>
+              <td><span class="item_type"></span></td>
+            </tr>
+            <tr>
+              <td>Product type:</td>
+              <td><span class="product_bundle"></span></td>
+            </tr>
+          </table>
+          <table class="table is-fullwidth">
+          </table>
+        </div>
+      </article>
+    </div>
+  </template>
+</body>
+<script src="planet.js"></script>
+</html>

@@ -33,7 +33,7 @@ header{
 	color: var(--oeel-color);
 }
 
-.dark body{
+.dark body, .dark h2{
 	color: var(--oeel-color);
 }
 
@@ -213,4 +213,17 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 
 #planetApiOptions.v1 .planetApi.v1,#planetApiOptions.v2 .planetApi.v2{
 	display: block;
+}
+
+img.PlanetThumbnail {
+    max-height: 150px;
+}
+
+#orderBlock .table td{
+	  vertical-align: middle;
+    font-size: 1.3em;
+}
+
+#orderBlock .table{
+	  background-color: transparent;
 }
