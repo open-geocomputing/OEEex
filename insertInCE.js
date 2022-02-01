@@ -68,7 +68,7 @@ function loadFunctionSignaturesObserver(){
 		setTimeout(addFunctionSignaturesButtons,0);
 	});
 
-	observer.observe(document.querySelector('ee-docs-list').shadowRoot, {subtree: true, childList: true});
-	
+	if(document.querySelector('ee-docs-list'))
+		observer.observe(document.querySelector('ee-docs-list').shadowRoot, {subtree: true, childList: true});
 }
 loadFunctionSignaturesObserver();

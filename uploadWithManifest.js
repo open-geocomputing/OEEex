@@ -119,6 +119,8 @@ function simplify_path(main_path) {
 
 function addButtonOnAssetPanel(){
 	var topButton=document.querySelector('.top-buttons');
+	if(!topButton)
+		return;
 
 	icon=document.createElement("iron-icon")
 	icon.setAttribute('icon','file-upload');
