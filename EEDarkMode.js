@@ -120,14 +120,36 @@ function addModeSwitch(){
 
 		var eeTaskPaneList=document.getElementsByTagName('ee-task-pane');
 		if(eeTaskPaneList && eeTaskPaneList.length>0){
-			var localRoot=eeTaskPaneList[0].shadowRoot.querySelector('ee-remote-task-list').shadowRoot;
-			var sheet = new CSSStyleSheet
+			let localRoot=eeTaskPaneList[0].shadowRoot.querySelector('ee-remote-task-list').shadowRoot;
+			let sheet = new CSSStyleSheet
 			sheet.replaceSync( '.dark .task.legacy .info{ color:var(--oeel-color); } .dark .task.legacy .info .error-message {color: #e34a4a;}'+
+				'.dark .task.legacy .content {background-color: #545454;}'+
 				'.dark .task.legacy .indicator{filter: invert(1)}  .dark .task.task.submitted-to-backend .indicator, .dark .task.task.running-on-backend .indicator{filter: invert(1) hue-rotate(180deg) brightness(1.5);transform: rotate(180deg);}'+
 				'.dark .task.legacy.failed .indicator{filter: brightness(1.5);} .dark .task.legacy:not(.completed):not(.failed) .content{background-color: rgb(86 86 86);}'+
 				'.dark .task.legacy.type-INGEST_TABLE .content::before{background-image: url(//www.gstatic.com/images/icons/material/system/1x/file_upload_white_24dp.png);}');
 			localRoot.adoptedStyleSheets=[...localRoot.adoptedStyleSheets,sheet];
 			[...localRoot.children].map(e=>listRoot.push(e))
+
+			sheetTaskPan = new CSSStyleSheet
+			sheetTaskPan.replaceSync( '.dark .task.legacy .content {background-color: #545454;}');
+			eeTaskPaneList[0].shadowRoot.adoptedStyleSheets=[...eeTaskPaneList[0].shadowRoot.adoptedStyleSheets,sheetTaskPan];
+			//listRoot.push(eeTaskPaneList[0].shadowRoot)
+			const observer = new MutationObserver(function(mutationsList){
+				console.log(mutationsList)
+				//[...localRoot.children].map(e=>listRoot.push(e))
+				for(var mutation of mutationsList) {
+					console.log(mutation)
+					
+					mutation.addedNodes.forEach(function(e){if(e.tagName=='DIV') listRoot.push(e)})
+					mutation.removedNodes.forEach(function(e){if(e.tagName=='DIV') listRoot.remove(e)})
+
+					if(document.getElementsByTagName('html')[0].classList.contains('dark')){
+						listRoot.map( e => e.classList.add('dark'));
+					}
+				}
+			});
+
+			observer.observe(eeTaskPaneList[0].shadowRoot, {subtree: false, childList: true});
 		}
 	}
 

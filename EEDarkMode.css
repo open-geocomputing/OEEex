@@ -155,7 +155,10 @@ html.dark{
 	filter: invert(1);
 }
 
-.dark .ee-renamer .jfk-textinput{color: white}
+.dark .ee-renamer .jfk-textinput{
+	color: white;
+	background-color: black;
+}
 
 .dark input.jfk-textinput, .dark .modal-dialog-content input
 {background-color: revert}
