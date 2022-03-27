@@ -135,13 +135,18 @@ function addModeSwitch(){
 			eeTaskPaneList[0].shadowRoot.adoptedStyleSheets=[...eeTaskPaneList[0].shadowRoot.adoptedStyleSheets,sheetTaskPan];
 			//listRoot.push(eeTaskPaneList[0].shadowRoot)
 			const observer = new MutationObserver(function(mutationsList){
-				console.log(mutationsList)
+				//cconsole.log(mutationsList)
 				//[...localRoot.children].map(e=>listRoot.push(e))
 				for(var mutation of mutationsList) {
-					console.log(mutation)
+					//cconsole.log(mutation)
 					
 					mutation.addedNodes.forEach(function(e){if(e.tagName=='DIV') listRoot.push(e)})
-					mutation.removedNodes.forEach(function(e){if(e.tagName=='DIV') listRoot.remove(e)})
+					mutation.removedNodes.forEach(function(e){
+						if(e.tagName=='DIV'){
+							if(listRoot.indexOf(e)>0)
+								listRoot.splice(listRoot.indexOf(e))
+						}
+					})
 
 					if(document.getElementsByTagName('html')[0].classList.contains('dark')){
 						listRoot.map( e => e.classList.add('dark'));
