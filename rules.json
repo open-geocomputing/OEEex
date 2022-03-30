@@ -12,7 +12,6 @@
       "regexFilter": "^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)"
     }
   },
-  // why this is needed ?? because Planet API answer with wrong headers
   {
     "id": 2,
     "priority": 1,

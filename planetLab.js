@@ -33,14 +33,20 @@ setPlanetPortWithBackground();
 
 function loadConsolePlanetWatcher(){
     let MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
-    let myObserver          = new MutationObserver(function(){
-        [...document.querySelectorAll("pre.console > div.string:not(.OEEexAddonPlanetAnalysis)")].map(function(e){
-            e.classList.add('OEEexAddonPlanetAnalysis')
-            analysisPlanetAddon(e)
+    let myObserver          = new MutationObserver(function(mutList){
+
+        [...mutList].map(function(mut){
+            [...mut.addedNodes].map(function(e){
+                if(e.classList.contains('OEEexAddonPlanetAnalysis'))
+                    return;
+                e.classList.add('OEEexAddonPlanetAnalysis')
+                analysisPlanetAddon(e)
+            });
         });
     });
     let obsConfig = { childList: true};
-    myObserver.observe(document.querySelector('pre.console'), obsConfig);
+    
+    myObserver.observe(document.querySelector('ee-console'), obsConfig);
 }
 
 function analysisPlanetAddon(val){

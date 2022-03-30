@@ -164,16 +164,22 @@ function confirmManager(code,element){
 }
 
 function loadConsoleWatcher(){
-    var MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
-    var myObserver          = new MutationObserver(function(){
-        [...document.querySelectorAll("pre.console > div.string:not(.OEEexAddonAnalysis)")].map(function(e){
-            e.classList.add('OEEexAddonAnalysis')
-            analysisGeeAddon(e)
+
+    let myObserver          = new MutationObserver(function(mutList){
+
+        [...mutList].map(function(mut){
+            [...mut.addedNodes].map(function(e){
+                if(e.classList.contains('OEEexAddonAnalysis'))
+                    return;
+                e.classList.add('OEEexAddonAnalysis')
+                analysisGeeAddon(e)
+            });
         });
     });
+    
     var obsConfig = { childList: true/*, characterData: true, attributes: true, subtree: true */};
     if(document.querySelector('pre.console'))
-        myObserver.observe(document.querySelector('pre.console'), obsConfig);
+        myObserver.observe(document.querySelector('ee-console'), obsConfig);
     if(document.querySelector('.goog-button.run-button'))
         document.querySelector('.goog-button.run-button').addEventListener('click',function(){listOfAuthorizedConfirm={};})
     if(document.querySelector('.goog-button.reset-button'))
