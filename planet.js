@@ -70,6 +70,20 @@ function displayResult(data){
     clone.querySelector('.state').textContent=localData.state;
     clone.querySelector('.item_type').textContent=localData.products[0].item_type;
     clone.querySelector('.product_bundle').textContent=localData.products[0].product_bundle;
+    
+
+    let mainElement=clone.querySelector('article');
+    let expandButton=clone.querySelector('.expandButton');
+    expandButton.addEventListener('click',function(e){
+      console.log(mainElement)
+      if(mainElement.classList.contains('expended'))
+      {
+        mainElement.classList.remove('expended');
+      }else{
+        mainElement.classList.add('expended');
+      }
+    });
+
     let stateClass="";
     switch(localData.state){
       case "queued":

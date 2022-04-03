@@ -227,3 +227,30 @@ img.PlanetThumbnail {
 #orderBlock .table{
 	  background-color: transparent;
 }
+
+article .message-body
+{
+	  max-height: 0px;
+    padding: 0;
+    overflow: hidden;
+    transition: all 1s cubic-bezier(0, 0, 0, 1);;
+}
+
+article.expended .message-body
+{
+	max-height: 100000px;
+	transition: all 1s cubic-bezier(1, 0, 1, 1);
+}
+
+article .expandButton
+{
+    transition: all 1s cubic-bezier(0.52, 0, 0.89, 1.33);
+}
+
+article.expended .expandButton
+{
+	transform: rotate(180deg);
+	transition: all 1s cubic-bezier(0.52, 0, 0.89, 1.33);
+}
+
+
