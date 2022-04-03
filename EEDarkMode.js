@@ -125,6 +125,7 @@ function addModeSwitch(){
 			sheet.replaceSync( '.dark .task.legacy .info{ color:var(--oeel-color); } .dark .task.legacy .info .error-message {color: #e34a4a;}'+
 				'.dark .task.legacy .content {background-color: #545454;}'+
 				'.dark .task.legacy.failed .content {background-color: rgb(187, 0, 0);}'+
+				'.dark .task.legacy.completed .content {background-color: var(--ee-legacy-blue);}'+
 				'.dark .task.legacy .indicator{filter: invert(1)}  .dark .task.task.submitted-to-backend .indicator, .dark .task.task.running-on-backend .indicator{filter: invert(1) hue-rotate(180deg) brightness(1.5);transform: rotate(180deg);}'+
 				'.dark .task.legacy.failed .indicator{filter: brightness(1.5);} .dark .task.legacy:not(.completed):not(.failed) .content{background-color: rgb(86 86 86);}'+
 				'.dark .task.legacy.type-INGEST_TABLE .content::before{background-image: url(//www.gstatic.com/images/icons/material/system/1x/file_upload_white_24dp.png);}');
