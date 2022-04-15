@@ -54,7 +54,8 @@ function displayResult(data){
 		return;
 	} 
 	
-
+	needToChange=false;
+	nextOrders=data._links.next;
 	data=data.orders;
 
 	// data.sort(function(a, b) {
@@ -87,9 +88,11 @@ function displayResult(data){
 		switch(localData.state){
 			case "queued":
 				stateClass="is-info";
+				needToChange=true;
 				break;
 			case "running":
 				stateClass="is-primary";
+				needToChange=true;
 				break;
 			case "success":
 				stateClass="is-success";
@@ -118,8 +121,8 @@ function displayResult(data){
 
 			let im=document.createElement("img");
 			im.classList.add('PlanetThumbnail')
+			im.setAttribute('loading','lazy');
 			im.src="https://tiles.planet.com/data/v1/item-types/"+localData.products[0].item_type+"/items/"+products[j]+"/thumb";
-			//im.src="https://tiles.planet.com/data/v1/item-types/PSScene4Band/items/20220116_094758_86_2455/thumb";
 			td=document.createElement("td");
 			td.appendChild(im);
 			tr.appendChild(td);
@@ -129,6 +132,16 @@ function displayResult(data){
 		block.appendChild(clone);
 	}
 
+	if(nextOrders && needToChange){
+		let PlanetOrders=new XMLHttpRequest();
+		PlanetOrders.open("GET",nextOrders,true);
+		PlanetOrders.responseType = 'json';
+		PlanetOrders.onload = function(e) {
+		 displayResult(this.response)
+		}
+		
+		PlanetOrders.send();
+	}
 
 }
 

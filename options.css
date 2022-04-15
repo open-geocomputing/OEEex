@@ -253,4 +253,8 @@ img.PlanetThumbnail {
 	transition: all 1s cubic-bezier(0.52, 0, 0.89, 1.33);
 }
 
+#orderBlock article table.planetImages tr
+{
+	height: 180px;
+}
 
