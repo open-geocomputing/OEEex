@@ -55,3 +55,8 @@ select.planetScenesList{
     background-color: #1a1a46;
 }
 
+button.loadAllPlanetImages{
+    opacity: 0.75;
+}
+}
+

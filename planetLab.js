@@ -257,7 +257,7 @@ planetSearch.sendPlanetWhenPossible(JSON.stringify(researchData),true);
 }
 
 
-function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
+function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail,complete=false){
     let head=document.querySelector('#randId_'+randomId+' .planetScenesList');
     if(!head)return;
     if(!planetConfig.Thumbnail)head.classList.add('withoutPrevi');
@@ -385,8 +385,8 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail){
       if (this.status == 200) {
         let alreadyAvailable=this.response.result;
         listImage2add=listImage2add.filter(e=> !alreadyAvailable.includes(e.getAttribute('value')));
-        if(((features.length==alreadyAvailable.length) && (features.length>0)) || alreadyAvailable.length>150){
-            let event = new Event('loadMore');
+        if(((features.length==alreadyAvailable.length) && (features.length>0)) || alreadyAvailable.length>150 || !complete){
+            let event = new CustomEvent('loadMore',{detail: { complete: complete }});
             head.dispatchEvent(event);
         }else{
             loadMore=false;
@@ -420,6 +420,7 @@ function displayResult(val,result,assetConfig,item_type){
     //htmlCode+='<button type="button" id="toggleAllImages_'+randomId+'">Toggle</button>'
     //htmlCode+='<button type="button" id="loadMore_'+randomId+'">Load more</button>'
     htmlCode+='<span id="selectAmount_'+randomId+'" class="selectedAmount" style="white-space:nowrap;"></span>'
+    htmlCode+='<button type="button" class="loadAllPlanetImages" id="loadAllPlanetImages_'+randomId+'">Load All</button>'
     htmlCode+='<select multiple="multiple" class="planetScenesList">'
     htmlCode+='</select>'
     htmlCode+='</div>'
@@ -435,13 +436,24 @@ function displayResult(val,result,assetConfig,item_type){
     //   this.focus();
     // }
 
-    val.querySelector('#satckToActivatePlanetImages_'+randomId).addEventListener('click',function(){planetDownloadSelected(randomId,assetConfig,item_type);});
+    val.querySelector('#satckToActivatePlanetImages_'+randomId).addEventListener('click',function(){
+        planetDownloadSelected(randomId,assetConfig,item_type);});
+    
 
-    let loadMoreImage=function(e){
+    let loadMoreImage=function(e,complete=false){
+        if ('detail' in e) {
+             if ('complete' in e.detail) {
+                complete=e.detail.complete
+            }
+        }
 
-        let nextLink=e.target.getAttribute('linkMore');
+        if ('target' in e) {
+            e=e.target;
+        }
+
+        let nextLink=e.getAttribute('linkMore');
         if(!nextLink || nextLink=='null') return;
-        e.target.parentNode.parentNode.classList.add('loading');
+        e.parentNode.parentNode.classList.add('loading');
         loadMore=true;
         let planetSearch=new XMLHttpRequest();
         planetSearch.open("GET",nextLink,true);
@@ -450,8 +462,13 @@ function displayResult(val,result,assetConfig,item_type){
         planetSearch.onload = function(result) {
             if (this.status == 200) {
                 let result=this.response;
-                e.target.setAttribute('linkMore',result._links._next)
-                addSceneInConsole(randomId,result.features,assetConfig,item_type,true);
+                e.setAttribute('linkMore',result._links._next)
+                if(complete)
+                {
+                    let event = new CustomEvent('loadMore',{detail: { complete: complete }});
+                    e.dispatchEvent(event);
+                }
+                addSceneInConsole(randomId,result.features,assetConfig,item_type,true,complete);
                 return;
             }
             if(this.status ==429){
@@ -474,6 +491,11 @@ function displayResult(val,result,assetConfig,item_type){
             e.target.dispatchEvent(event);
         }
     })
+
+    val.querySelector('#loadAllPlanetImages_'+randomId).addEventListener('click',function(e){
+        loadMoreImage(e.target.parentNode.querySelector('.planetScenesList'),true);
+        e.target.remove();
+    });
 
     let updateCounts=function(e){
         let str='('+[...val.querySelectorAll('option:checked')].length+'/'+[...val.querySelectorAll('option')].length+')';
