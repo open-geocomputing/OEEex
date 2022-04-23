@@ -167,6 +167,12 @@ function PlanetPortConnection(port) {
     port.onDisconnect.addListener(function() {
         listPlanetPort= listPlanetPort.filter(function(el) { return el !== port});
     });
+    port.onMessage.addListener((request, sender, sendResponse) => {
+        if(request.type=='setPlanetConfig'){
+            chrome.storage.local.set({planetConfig: request.message});
+            sendPlanetConfig(listPlanetPort);
+        }
+    });
 }
 }
 

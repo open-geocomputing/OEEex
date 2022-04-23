@@ -516,71 +516,180 @@ function planetDownloadSelected(randomId,a){
     if(planetConfig && planetConfig.apiVersion==2)
     {
         let imageIDs=listImageElement.map(e=> e.value);
-        let batchSize=planetConfig.batchSize
-        let arrayOfNode=[];
-        let numberOfChunck=Math.ceil(imageIDs.length/batchSize);
-        for (let i=0; i<numberOfChunck; i++ ){
-            arrayOfNode[i]=imageIDs.slice(i*batchSize,Math.min((i+1)*batchSize,imageIDs.length));
-        }
+        let batchSize=planetConfig.batchSize;
 
+        let SAJson=JSON.parse(planetConfig.serviceAccount);
+        if(Array.isArray(SAJson)){ //Multi SA
+            for (var i = SAJson.length - 1; i >= 0; i--) {
+                if(!SAJson[i].limit)SAJson[i].limit=3000;
+            }
+            SAJson.sort(function(a, b){return b.limit-a.limit});
 
-        for (let i = 0; i < arrayOfNode.length; i++) {
-
-            let reg=/^projects\/(.+)\/assets\/(.*$)/
-            let matches=reg.exec(planetConfig.collectionPath);
-
-            if(matches.length!=3){
-                alert('Inavalide collection path! Update it in the option page')
-                return
+            //compute potential
+            let potential=0;
+            for (var i = SAJson.length - 1; i >= 0; i--) {
+                potential+=SAJson[i].limit;
             }
 
-            requestData={
-                "name": "Planet->GEE",
-                "products":
-                [
-                {
-                    "item_ids": arrayOfNode[i],
-                    "item_type": item_type,
-                    "product_bundle": assetConfig
+            if(imageIDs.length>potential){
+                alert('Request the download of '+imageIDs.length+'images, but only '+potential+' can be added. Select less images');
+                return 
+            }
+            // howmany accounts
+            let numberOfSA=SAJson.length;
+            let leftover=Math.floor((potential-imageIDs.length)/numberOfSA)
+            while(((SAJson[numberOfSA-1].limit-leftover)<0) && numberOfSA>1){
+                numberOfSA-=1;
+                potential-=SAJson[numberOfSA].limit;
+                leftover=Math.floor((potential-imageIDs.length)/numberOfSA)
+            }
+
+            let imageForEachAccount=[];
+            chunkIndex=0;
+            for (var i = 0; i <numberOfSA; i++) {
+                imageForEachAccount[i]=[];
+                let end=Math.min(chunkIndex+SAJson[i].limit-leftover,imageIDs.length)
+                let imageForLocalAccount=imageIDs.slice(chunkIndex,end);
+                chunkIndex=end;
+                let localChunk=0;
+                for (var j = 0; j < Math.ceil(imageForLocalAccount.length/batchSize); j++) {
+                    imageForEachAccount[i].push(imageForLocalAccount.slice(j*batchSize,Math.min((j+1)*batchSize,imageForLocalAccount.length)));
                 }
-                ],
-                "delivery":
-                {
-                    "google_earth_engine":
-                    {
-                        "project": matches[1],
-                        "collection": matches[2],
+                
+            }
+            
+            for (var j = 0;j <imageForEachAccount[0].length; j++) {
+                 for (var i = 0; i <imageForEachAccount.length; i++) {
+                    let localJ=imageForEachAccount[i].length-j-1;
+                    if(localJ>=0){
+                        let reg=/^projects\/(.+)\/assets\/(.*$)/
+                        let matches=reg.exec(planetConfig.collectionPath);
+
+                        if(matches.length!=3){
+                            alert('Inavalide collection path! Update it in the option page')
+                            return
+                        }
+
+                        requestData={
+                            "name": "Planet->GEE",
+                            "products":
+                            [
+                            {
+                                "item_ids": imageForEachAccount[i][localJ],
+                                "item_type": item_type,
+                                "product_bundle": assetConfig
+                            }
+                            ],
+                            "delivery":
+                            {
+                                "google_earth_engine":
+                                {
+                                    "project": matches[1],
+                                    "collection": matches[2],
+                                }
+                            }
+                        }
+
+                        if(planetConfig.serviceAccount && planetConfig.serviceAccount!=''){
+                            requestData.delivery.google_earth_engine['credentials']=btoa(JSON.stringify(SAJson[i].credential));
+                            SAJson[i].limit-=imageForEachAccount[i][localJ].length;
+                        }
+
+
+                        let imageRequest=new XMLHttpRequest();
+                        imageRequest.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
+                        //imageRequest.responseType = 'json';
+                        imageRequest.setRequestHeader("Content-Type", "application/json");
+                        imageRequest.onload = function(e) {
+                            if (this.status == 200) {
+                                alert(this.response["_links"]["_self"])
+                                return;
+                            }
+                            if(this.status ==429){
+                                this.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
+                                this.sendPlanetWhenPossible(JSON.stringify(requestData),true);
+                                return;
+                            }
+                            if (this.status >=400) {
+                                alert(JSON.stringify(this.response))
+                                return;
+                            }
+                        }
+                        imageRequest.sendPlanetWhenPossible(JSON.stringify(requestData),false);
                     }
                 }
             }
+            planetConfig.serviceAccount=JSON.stringify(SAJson);
+            planetPortWithBackground.postMessage({type:"setPlanetConfig",message:planetConfig});
 
-            if(planetConfig.serviceAccount && planetConfig.serviceAccount!=''){
-                requestData.delivery.google_earth_engine['credentials']=btoa(planetConfig.serviceAccount);
+        }else{
+
+            let arrayOfNode=[];
+            let numberOfChunck=Math.ceil(imageIDs.length/batchSize);
+            for (let i=0; i<numberOfChunck; i++ ){
+                arrayOfNode[i]=imageIDs.slice(i*batchSize,Math.min((i+1)*batchSize,imageIDs.length));
             }
 
 
-            let imageRequest=new XMLHttpRequest();
-            imageRequest.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
-            //imageRequest.responseType = 'json';
-            imageRequest.setRequestHeader("Content-Type", "application/json");
-            imageRequest.onload = function(e) {
-                if (this.status == 200) {
-                    alert(this.response["_links"]["_self"])
-                    return;
+            for (let i = 0; i < arrayOfNode.length; i++) {
+
+                let reg=/^projects\/(.+)\/assets\/(.*$)/
+                let matches=reg.exec(planetConfig.collectionPath);
+
+                if(matches.length!=3){
+                    alert('Inavalide collection path! Update it in the option page')
+                    return
                 }
-                if(this.status ==429){
-                    this.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
-                    this.sendPlanetWhenPossible(JSON.stringify(requestData),true);
-                    return;
+
+                requestData={
+                    "name": "Planet->GEE",
+                    "products":
+                    [
+                    {
+                        "item_ids": arrayOfNode[i],
+                        "item_type": item_type,
+                        "product_bundle": assetConfig
+                    }
+                    ],
+                    "delivery":
+                    {
+                        "google_earth_engine":
+                        {
+                            "project": matches[1],
+                            "collection": matches[2],
+                        }
+                    }
                 }
-                if (this.status >=400) {
-                    alert(JSON.stringify(this.response))
-                    return;
+
+                if(planetConfig.serviceAccount && planetConfig.serviceAccount!=''){
+                    requestData.delivery.google_earth_engine['credentials']=btoa(planetConfig.serviceAccount);
                 }
+
+
+                let imageRequest=new XMLHttpRequest();
+                imageRequest.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
+                //imageRequest.responseType = 'json';
+                imageRequest.setRequestHeader("Content-Type", "application/json");
+                imageRequest.onload = function(e) {
+                    if (this.status == 200) {
+                        alert(this.response["_links"]["_self"])
+                        return;
+                    }
+                    if(this.status ==429){
+                        this.open("POST",'https://api.planet.com/compute/ops/orders/v2',true);
+                        this.sendPlanetWhenPossible(JSON.stringify(requestData),true);
+                        return;
+                    }
+                    if (this.status >=400) {
+                        alert(JSON.stringify(this.response))
+                        return;
+                    }
+                }
+                imageRequest.sendPlanetWhenPossible(JSON.stringify(requestData),false);
             }
-            imageRequest.sendPlanetWhenPossible(JSON.stringify(requestData),false);
-            listImageElement.map((e)=>e.remove())
+            
         }
+        listImageElement.map((e)=>e.remove())
     }
 
     if(planetConfig && planetConfig.apiVersion==1){
