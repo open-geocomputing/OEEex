@@ -385,7 +385,7 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail,co
       if (this.status == 200) {
         let alreadyAvailable=this.response.result;
         listImage2add=listImage2add.filter(e=> !alreadyAvailable.includes(e.getAttribute('value')));
-        if(((features.length==alreadyAvailable.length) && (features.length>0)) || alreadyAvailable.length>150 || !complete){
+        if((((features.length==alreadyAvailable.length) && (features.length>0)) || alreadyAvailable.length>150) && !complete){
             let event = new CustomEvent('loadMore',{detail: { complete: complete }});
             head.dispatchEvent(event);
         }else{
@@ -425,7 +425,7 @@ function displayResult(val,result,assetConfig,item_type){
     htmlCode+='</select>'
     htmlCode+='</div>'
     val.innerHTML=htmlCode;
-    addSceneInConsole(randomId,result.features,assetConfig,item_type,true);
+    addSceneInConsole(randomId,result.features,assetConfig,item_type,false);
     val.classList.remove('loading');
     val.querySelector('.planetScenesList').setAttribute('linkMore',result._links._next)
     // val.querySelector('.planetScenesList').onmousedown = function(e) {
@@ -472,7 +472,8 @@ function displayResult(val,result,assetConfig,item_type){
                 return;
             }
             if(this.status ==429){
-                //loadMoreImage(e);
+                let event = new CustomEvent('loadMore',{detail: { complete: complete }});
+                e.dispatchEvent(event);
                 return;
             }
             if (this.status >=400) {
