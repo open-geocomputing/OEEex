@@ -1,6 +1,13 @@
 var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
 var lightIsAutomatic=true;
 var portWithBackground=null;
+
+if(typeof OEEexEscape == 'undefined'){
+	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
+	  createHTML: (string, sink) => string
+	});
+}
+
 function setPortWithBackground(){
 	portWithBackground= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.lightMode"});
 	
@@ -9,7 +16,7 @@ function setPortWithBackground(){
 		if(request.type=='changeLightMode'){
 			if(request.message=='automatic'){
 				if((typeof buttonLight!= 'undefined') && buttonLight)
-					buttonLight.innerHTML='brightness_medium';
+					buttonLight.innerHTML=OEEexEscape.createHTML('brightness_medium');
 				switch2DarkMode((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),true)
 			}else{
 				switch2DarkMode(request.message,false);
@@ -54,12 +61,12 @@ function switch2DarkMode(toDark,isAuto=false){
 		editor.setTheme('ace/theme/'+theme)
 		
 		if(!isAuto){
-			buttonLight.innerHTML=buttonMode;
+			buttonLight.innerHTML=OEEexEscape.createHTML(buttonMode);
 		}
 	}
 
 	// fix a weird bug when changing color
-	setTimeout("[...document.getElementsByClassName('goog-tab goog-tab-selected')].map(e => e.click())",10);
+	//setTimeout("[...document.getElementsByClassName('goog-tab goog-tab-selected')].map(e => e.click())",10);
 };
 
 var listRoot=[];
@@ -80,9 +87,9 @@ function addModeSwitch(){
 	fontLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons"
 
 	let button=document.createElement('ee-menu-button');
-	button.innerHTML='<span id="toogleModeButton"  slot="button"'+
+	button.innerHTML=OEEexEscape.createHTML('<span id="toogleModeButton"  slot="button"'+
 	' class="material-icons" style="font-family: &quot;Material Icons&quot; ; color: rgba(115, 115, 115, 0.7);'+
-	'  font-size: 0px; padding: 0 0 0 7px; vertical-align: bottom;">brightness_medium</span>';
+	'  font-size: 0px; padding: 0 0 0 7px; vertical-align: bottom;">brightness_medium</span>');
 	button.setAttribute('align',"right");
 
 

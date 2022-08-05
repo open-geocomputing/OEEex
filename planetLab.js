@@ -3,6 +3,12 @@ var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
 planetConfig=null;
 var OEEex_version='1.0'
 
+if(typeof OEEexEscape == 'undefined'){
+    OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
+      createHTML: (string, sink) => string
+    });
+}
+
 const maxPlanetActivated=10;
 var planetActivated=0; 
 
@@ -181,7 +187,7 @@ function genreateFilter(filter){
 function runPlanetSearch(consoleCode,val){
     // autoUpdate=true;
     val.classList.add('loading');
-    val.innerHTML='Planet search';
+    val.innerHTML=OEEexEscape.createHTML('Planet search');
     let searchRequest=consoleCode.slice(consolePlanetExtensionPrefix.length+1+'ee.ImageCollection('.length,-1);
     let jsonData=JSON.parse(searchRequest);
     // let assetConfig;
@@ -265,7 +271,7 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail,co
     let listImage2add=[];
     for (let i = 0; i < features.length; i++) {
         let im = document.createElement("option");
-        im.innerHTML=features[i].id;
+        im.innerHTML=OEEexEscape.createHTML(features[i].id);
         im.setAttribute('value',features[i].id);
         im.setAttribute('data-forDownload',JSON.stringify({assetLink:features[i]._links.assets,assetType:assetConfig,itemType:item_type}));
         let t1='Date: '+features[i].properties.acquired;
@@ -424,7 +430,7 @@ function displayResult(val,result,assetConfig,item_type){
     htmlCode+='<select multiple="multiple" class="planetScenesList">'
     htmlCode+='</select>'
     htmlCode+='</div>'
-    val.innerHTML=htmlCode;
+    val.innerHTML=.createHTML(htmlCode);
     addSceneInConsole(randomId,result.features,assetConfig,item_type,false);
     val.classList.remove('loading');
     val.querySelector('.planetScenesList').setAttribute('linkMore',result._links._next)
@@ -500,7 +506,7 @@ function displayResult(val,result,assetConfig,item_type){
 
     let updateCounts=function(e){
         let str='('+[...val.querySelectorAll('option:checked')].length+'/'+[...val.querySelectorAll('option')].length+')';
-        val.querySelector('span.selectedAmount').innerHTML=str;
+        val.querySelector('span.selectedAmount').innerHTML=.createHTML(str);
     }
     val.querySelector('.planetScenesList').addEventListener('updateSelected',updateCounts);
     val.querySelector('.planetScenesList').addEventListener('click',function(e){

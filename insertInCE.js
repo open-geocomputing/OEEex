@@ -1,3 +1,9 @@
+if(typeof OEEexEscape == 'undefined'){
+	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
+	  createHTML: (string, sink) => string
+	});
+}
+
 function injectFunctionSignature(event){
 	event.stopPropagation();
 
@@ -45,7 +51,7 @@ function addFunctionSignaturesButtons(){
 	.map((e)=>[...e.querySelectorAll('ee-node-summary')]).flat())].forEach(e=>{
 		let span=document.createElement('span');
 		span.classList.add('insertInCEButton','material-icons')
-		span.innerHTML="keyboard_tab";
+		span.innerHTML=OEEexEscape.createHTML("keyboard_tab");
 		e.shadowRoot.lastChild.appendChild(span);
 
 		span.addEventListener('click',injectFunctionSignature);

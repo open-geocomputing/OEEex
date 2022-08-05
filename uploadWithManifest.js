@@ -1,5 +1,12 @@
 var portUwM=null;
 var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
+
+if(typeof OEEexEscape == 'undefined'){
+	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
+	  createHTML: (string, sink) => string
+	});
+}
+
 function setPortUwM(){
 	portUwM= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.UwM"});
 	portUwM.onDisconnect.addListener(function(port){	
@@ -396,7 +403,7 @@ function addManifestToIngestInGEE(manifest,uploadEvents){
 	divTask.classList.add('type-INGEST_IMAGE');
 	let divContent=document.createElement("div");
 	divContent.classList.add('content');
-	divContent.innerHTML=manifest.name;
+	divContent.innerHTML=OEEexEscape.createHTML(manifest.name);
 	divTask.appendChild(divContent);
 	taskPanel.insertBefore(divTask,taskPanel.firstChild);
 

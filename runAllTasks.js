@@ -1,5 +1,10 @@
 oeex_submitTaskInterval=null;
 
+if(typeof OEEexEscape == 'undefined'){
+	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
+	  createHTML: (string, sink) => string
+	});
+}
 
 function addRunAllTaskButton(){
 	let taskPanel=document.querySelector('#task-pane').shadowRoot;
@@ -13,7 +18,7 @@ function addRunAllTaskButton(){
 					runAllButton.classList.add('run-button')
 					runAllButton.setAttribute('type', 'action');
 					runAllButton.setAttribute('style', 'height: 0px; right: -4px; float: right; bottom: 30px; position: relative; line-height: 6px; font-weight: 700;');
-					runAllButton.innerHTML="Run all!";
+					runAllButton.innerHTML=OEEexEscape.createHTML("Run all!");
 					taskPanel.insertBefore(runAllButton,taskPanel.firstChild);
 					runAllButton.addEventListener("click",function(event){
 						if(oeex_submitTaskInterval){
