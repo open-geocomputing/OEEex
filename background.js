@@ -10,7 +10,8 @@ chrome.runtime.onInstalled.addListener(function() {
         hackEE:true,
         EEDarkMode:true,
         addCommandS:navigator.platform.toLowerCase().includes('mac'),
-        runAllTasks:true
+        runAllTasks:true,
+        addPlotly:true
     });
 });
 

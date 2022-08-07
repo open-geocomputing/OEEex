@@ -14,7 +14,7 @@
     }]
   },
   "web_accessible_resources": [{
-    "resources": ["isShareable.js","insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEE.js","addCommandS.js","runAllTasks.js"],
+    "resources": ["isShareable.js","insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEE.js","addCommandS.js","runAllTasks.js","addPlotly.js"],
     "matches": ["https://code.earthengine.google.com/*"]
   },{
     "resources":["options.html","planet.html"],
