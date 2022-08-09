@@ -1,7 +1,7 @@
 {
   "name": "Open Earth Engine extension",
   "description": "An unofficel extension to enhance Google Earth Engine, and Open Earth Engine experience.",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"
@@ -14,7 +14,7 @@
     }]
   },
   "web_accessible_resources": [{
-    "resources": ["isShareable.js","insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEE.js","addCommandS.js","runAllTasks.js"],
+    "resources": ["isShareable.js","insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEE.js","addCommandS.js","runAllTasks.js","addPlotly.js"],
     "matches": ["https://code.earthengine.google.com/*"]
   },{
     "resources":["options.html","planet.html"],

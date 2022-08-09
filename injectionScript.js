@@ -1,4 +1,4 @@
-listOfScript=['isShareable','insertInCE','planetLab','uploadWithManifest','hackEE','EEDarkMode','addCommandS','runAllTasks'];
+listOfScript=['isShareable','insertInCE','planetLab','uploadWithManifest','hackEE','EEDarkMode','addCommandS','runAllTasks','addPlotly'];
 
 chrome.storage.local.get(listOfScript, function(result){
 	for (var i = listOfScript.length - 1; i >= 0; i--) {
