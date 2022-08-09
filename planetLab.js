@@ -187,6 +187,7 @@ function genreateFilter(filter){
 function runPlanetSearch(consoleCode,val){
     // autoUpdate=true;
     val.classList.add('loading');
+    val.classList.add('explorer');
     val.innerHTML=OEEexEscape.createHTML('Planet search');
     let searchRequest=consoleCode.slice(consolePlanetExtensionPrefix.length+1+'ee.ImageCollection('.length,-1);
     let jsonData=JSON.parse(searchRequest);
@@ -460,6 +461,7 @@ function displayResult(val,result,assetConfig,item_type){
         let nextLink=e.getAttribute('linkMore');
         if(!nextLink || nextLink=='null') return;
         e.parentNode.parentNode.classList.add('loading');
+        e.parentNode.parentNode.classList.add('explorer');
         loadMore=true;
         let planetSearch=new XMLHttpRequest();
         planetSearch.open("GET",nextLink,true);
