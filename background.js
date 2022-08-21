@@ -2,6 +2,7 @@
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.set({lightMode: 'automatic'});
+    chrome.storage.local.set({dynamicPlotly: false});
     chrome.storage.local.set({
         isShareable:true,
         insertInCE:true,
@@ -11,6 +12,7 @@ chrome.runtime.onInstalled.addListener(function() {
         EEDarkMode:true,
         addCommandS:navigator.platform.toLowerCase().includes('mac'),
         runAllTasks:true,
+        oeelCache:true,
         addPlotly:true
     });
 });
@@ -93,6 +95,99 @@ chrome.runtime.onConnectExternal.addListener(UwMPortConnection);
 chrome.runtime.onConnect.addListener(UwMPortConnection);
 
 
+// dynamic plotly
+
+listPlotlyPort=[];
+
+function addListnerPlotlyConfig(ports=listPlotlyPort){
+    if(!Array.isArray(ports)){
+        ports=[ports];
+    }
+
+    ports.map((port)=>port.onMessage.addListener((request, sender, sendResponse) => {
+        if(request.type=='getDynamicPlotly'){
+            chrome.storage.local.get(['dynamicPlotly'], function(mode) {
+                if('dynamicPlotly' in mode)
+                    sender.postMessage({ type:'setDynamicPlotly', message: mode['dynamicPlotly'] });
+            });
+        }
+
+        if(request.type=='setDynamicPlotly'){
+            chrome.storage.local.set({dynamicPlotly: request.message});
+            for (var i = listPort.length - 1; i >= 0; i--) {
+                listPlotlyPort[i].postMessage({ type:'setDynamicPlotly', message: request.message });
+            }
+        }
+    }));
+}
+
+chrome.storage.onChanged.addListener(function(dic){
+    if( "dynamicPlotly" in dic){
+        for (var i = listPort.length - 1; i >= 0; i--) {
+            console.log(listPlotlyPort[i])
+            if(listPlotlyPort[i]) listPlotlyPort[i].postMessage({ type:'setDynamicPlotly', message: dic["dynamicPlotly"].newValue });
+        }
+    } 
+    if( "oeelCache" in dic){
+        setOeelCache(dic["oeelCache"].newValue);
+    } 
+});
+
+
+function plotlyPortConnection(port) {
+  if(port.name === "oeel.extension.plotly"){
+    listPlotlyPort.push(port);
+    addListnerPlotlyConfig(port);
+    port.onDisconnect.addListener(function() {
+        listPlotlyPort= listPlotlyPort.filter(function(el) { return el !== port});
+    });
+}
+}
+
+chrome.storage.onChanged.addListener(function(){addListnerPlotlyConfig();});
+chrome.runtime.onConnectExternal.addListener(plotlyPortConnection);
+chrome.runtime.onConnect.addListener(plotlyPortConnection);
+
+
+
+//oeel cache
+
+function setOeelCache(active){
+
+    let future;
+    if(active){
+        future=fetch('https://proxy-oeel-code.open-geocomputing.org:47849/OpenEarthEngineLibrary/loadAll')
+    }else{
+        future=Promise.reject(new Error('oeelCacheDisabled'));
+    }
+
+    future.then(function(){
+        //sucess
+        chrome.declarativeNetRequest.updateDynamicRules(
+         {addRules:[{
+            "id": 1,
+            "priority": 1,
+            "action": {
+              "type": "redirect",
+              "redirect": {
+                "regexSubstitution": "https://proxy-oeel-code.open-geocomputing.org:47849/OpenEarthEngineLibrary/\\1"
+              }
+            },
+            "condition": {
+              "regexFilter": "^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)"
+            }}],
+            removeRuleIds: [1]
+        })
+    }).catch(function(){
+        chrome.declarativeNetRequest.updateDynamicRules(
+         {
+            removeRuleIds: [1]
+        })
+    })
+        
+}
+
+chrome.storage.local.get(['oeelCache'], function(dict){setOeelCache(dic["oeelCache"]);});
 
 
 // Planet

@@ -1,7 +1,27 @@
 //https://code.earthengine.google.com/d33816b63fc18684c744b1fcbac56b25
-
+var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
 const consolePlotlyExtensionPrefix='OEEex_AddonPlotly';
 var plotPosition=0;
+
+var dynamicPlotly=false;
+
+if(typeof OEEexEscapeURL == 'undefined'){
+    OEEexEscapeURL = trustedTypes.createPolicy("OEEexEscapeURL", {
+      createScriptURL: (string, sink) => string
+    });
+}
+
+if(typeof OEEexEscape == 'undefined'){
+    OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
+      createHTML: (string, sink) => string
+    });
+}
+
+
+function htmlDecode(input) {
+  var doc = new DOMParser().parseFromString(input, "text/html");
+  return doc.documentElement.textContent;
+}
 
 const plotlyDarkTemplate = {
     "data": {
@@ -826,17 +846,24 @@ const plotlyDarkTemplate = {
     }
 }
 
-if(typeof OEEexEscapeURL == 'undefined'){
-	OEEexEscapeURL = trustedTypes.createPolicy("OEEexEscapeURL", {
-	  createScriptURL: (string, sink) => string
-	});
+function setPlotlyComWithBackground(){
+    plotlyComWithBackground= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.plotly"});
+
+    plotlyComWithBackground.onMessage.addListener((request, sender, sendResponse) => {
+        if(request.type=='setDynamicPlotly'){
+            dynamicPlotly=request.message;
+        };
+    })
+    plotlyComWithBackground.onDisconnect.addListener(function(port){ 
+        plotlyComWithBackground=null;
+        setPlotlyComWithBackground();
+    })
+
+    plotlyComWithBackground.postMessage({type:"getDynamicPlotly"});
 }
 
-if(typeof OEEexEscape == 'undefined'){
-    OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
-      createHTML: (string, sink) => string
-    });
-}
+setPlotlyComWithBackground();
+
 
 function injectPlotly(){
 	var s = document.createElement('script');
@@ -927,9 +954,9 @@ function addPlotlyPlot(consoleCode,val){
     val.innerHTML=OEEexEscape.createHTML('Plotly: Computing');
     let plot=ee.Deserializer.fromJSON(consoleCode)
     let locPlotPosition=plotPosition++;
-    var test=explorAllJSON(plot)
-    Promise.all(test.promises).then(function(){
-    	plot=test.ud
+    var plotEval=explorAllJSON(plot)
+    Promise.all(plotEval.promises).then(function(){
+    	plot=plotEval.ud
 
     	if(!plot.layout){
     	plot.layout={}
@@ -968,6 +995,10 @@ function addPlotlyPlot(consoleCode,val){
 		if(plot.exportScale){
 			imageExportScale=plot.exportScale;
 		}
+        if(plot.annotations){
+            if(!plot.layout)plot.layout={};
+            plot.layout.annotations=plot.annotations;
+        }
 
 	    let config={
 	    	displaylogo: false,
@@ -984,6 +1015,16 @@ function addPlotlyPlot(consoleCode,val){
 
 	    val.innerHTML=OEEexEscape.createHTML('');
 	    Plotly.newPlot( val, plot.data, plot.layout,config )
+
+        if(plot.onClick && dynamicPlotly)
+        {
+            let obj={};
+            if(plot.annotations){
+                obj.annotations=annotations;
+            }
+            let userFunction=new Function("return ("+htmlDecode(plot.onClick)+")")();
+            val.on('plotly_click', function(data){userFunction(val,obj,data)});
+        }
 	    val.addEventListener('refreshDraw', function(e) {
 			if(document.getElementsByTagName('html')[0].classList.contains('dark')){
 				plot.layout.template=plotlyDarkTemplate;

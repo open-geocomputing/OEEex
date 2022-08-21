@@ -1,4 +1,4 @@
-listOfScript=['isShareable','insertInCE','planetLab','uploadWithManifest','hackEE','EEDarkMode','addCommandS'];
+listOfScript=['isShareable','insertInCE','planetLab','uploadWithManifest','hackEE','EEDarkMode','addCommandS','oeelCache','addPlotly','dynamicPlotly'];
 
 var lightIsAutomatic=true;
 
@@ -75,7 +75,6 @@ function setSatus(key,value,isInit){
       player.play();
     }
   }
-  
 }
 
 chrome.storage.onChanged.addListener(function(dic){

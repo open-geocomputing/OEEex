@@ -50,7 +50,7 @@ div.lock{
 	position: relative;
 }
 
-.lightMode{
+.lightMode, .dynamicPlotlyMode{
     border: solid 2px #3e8ed0;
     border-radius: calc(1em + 3px);
     right: 1em;
@@ -61,10 +61,10 @@ div.lock{
     background-color: #3e8ed033;
 }
 
-.lightMode span{
+.lightMode span, .dynamicPlotlyMode span{
 	color: gray;
 }
-.lightMode span.active{
+.lightMode span.active,.dynamicPlotlyMode span.active{
 	text-shadow: #3e8ed0 0px 0px 7px;
 	color: #3e8ed0;
 }
