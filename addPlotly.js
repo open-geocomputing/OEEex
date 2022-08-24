@@ -1020,7 +1020,7 @@ function addPlotlyPlot(consoleCode,val){
         {
             let obj={};
             if(plot.annotations){
-                obj.annotations=annotations;
+                obj.annotations=plot.annotations;
             }
             let userFunction=new Function("return ("+htmlDecode(plot.onClick)+")")();
             val.on('plotly_click', function(data){userFunction(val,obj,data)});
