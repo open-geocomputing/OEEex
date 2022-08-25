@@ -187,7 +187,7 @@ function setOeelCache(active){
         
 }
 
-chrome.storage.local.get(['oeelCache'], function(dict){setOeelCache(dic["oeelCache"]);});
+chrome.storage.local.get(['oeelCache'], function(dict){setOeelCache(dict["oeelCache"]);});
 
 
 // Planet
