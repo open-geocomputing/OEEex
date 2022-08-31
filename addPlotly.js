@@ -983,7 +983,7 @@ function addPlotlyPlot(consoleCode,val,inApp){
     let plot=ee.Deserializer.fromJSON(consoleCode)
     let locPlotPosition=plotPosition++;
     var plotEval=explorAllJSON(plot)
-    /*Promise.all(plotEval.promises).then(function(){
+    Promise.all(plotEval.promises).then(function(){
     	plot=plotEval.ud
 
     	if(!plot.layout){
@@ -1070,7 +1070,7 @@ function addPlotlyPlot(consoleCode,val,inApp){
 		}, false);
 	    val.classList.remove('loading');
 	    listPlot.push(val)
-    })*/
+    })
 }
 
 let darkPlotlyObserver = new MutationObserver(function(mutations) {
