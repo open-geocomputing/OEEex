@@ -880,21 +880,45 @@ function loadConsolePlotlyWatcher(){
     let MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
     let myObserver          = new MutationObserver(function(mutList){
 
-        [...mutList].map(function(mut){
-            [...mut.addedNodes].map(function(e){
-                if(e.classList.contains('OEEexPlotlyAnalysis'))
-                    return;
-                e.classList.add('OEEexPlotlyAnalysis')
-                analysisPlotlyAddon(e)
-            });
-        });
+        // [...mutList].map(function(mut){
+        //     [...mut.addedNodes].map(function(e){
+        //         if(e.classList.contains('OEEexPlotlyAnalysis'))
+        //             return;
+        //         e.classList.add('OEEexPlotlyAnalysis')
+        //         analysisPlotlyAddon(e)
+        //     });
+        // });
+        console.log(mutList)
     });
     let obsConfig = { childList: true};
     
     myObserver.observe(document.querySelector('ee-console'), obsConfig);
 
+    let myObserver2= new MutationObserver(function(mutList){
+
+        let cleaned=[...mutList].map(e=> [...e.addedNodes]).flat().filter(f=> (f.classList &&
+                                                                          f.classList.contains('ui-label') &&
+                                                                          ! f.classList.contains('OEEexPlotlyAnalysis') &&
+                                                                          f.textContent &&
+                                                                          f.textContent.startsWith(consolePlotlyExtensionPrefix+':')&&
+                                                                          document.body.contains(f)))
+
+        cleaned=cleaned.filter(function(value, index, self) {
+              return self.indexOf(value) === index;
+            });
+
+        cleaned.map(function(e){
+            e.classList.add('OEEexPlotlyAnalysis')
+            addPlotlyPlot(e.textContent.slice((consolePlotlyExtensionPrefix+':').length),e,true);
+        });
+
+    });
+    let obsConfig2 = { childList: true, subtree:true};
+    myObserver2.observe(document.querySelector('.main > .goog-splitpane > .goog-splitpane-second-container'), obsConfig2);
+
+
     let resizeObserver= new ResizeObserver(function(newSize,element){
-		document.querySelectorAll('.js-plotly-plot').forEach(function(e){
+		document.querySelectorAll('.js-plotly-plot:not(.ui-label)').forEach(function(e){
 			Plotly.relayout(e,{width: newSize[0].contentRect.width-5})
 		})
     });
@@ -911,7 +935,7 @@ function analysisPlotlyAddon(val){
     val.querySelectorAll('.trivial').forEach(function(obj){
 	    let consoleCode=obj.innerHTML;
 	    if(consoleCode.startsWith(consolePlotlyExtensionPrefix+':')){
-	        addPlotlyPlot(consoleCode.slice((consolePlotlyExtensionPrefix+':').length),obj);
+	        addPlotlyPlot(consoleCode.slice((consolePlotlyExtensionPrefix+':').length),obj,false);
 	        return; 
 	    }
     });
@@ -948,14 +972,18 @@ function explorAllJSON(input){
 listPlot=[];
 
 
-function addPlotlyPlot(consoleCode,val){
+function addPlotlyPlot(consoleCode,val,inApp){
+    if(inApp)
+    {
+        val.style.padding=0;
+    }
     val.classList.add('loading');
     val.classList.add('explorer');
     val.innerHTML=OEEexEscape.createHTML('Plotly: Computing');
     let plot=ee.Deserializer.fromJSON(consoleCode)
     let locPlotPosition=plotPosition++;
     var plotEval=explorAllJSON(plot)
-    Promise.all(plotEval.promises).then(function(){
+    /*Promise.all(plotEval.promises).then(function(){
     	plot=plotEval.ud
 
     	if(!plot.layout){
@@ -963,9 +991,16 @@ function addPlotlyPlot(consoleCode,val){
 	    }
 	    if(!plot.layout.width){
 	    	plot.layout.width=getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).width.slice(0,-2)-12;
+            if(inApp && val.style.width){
+                plot.layout.width=val.style.width.slice(0,-2);
+            }
 	    }
 	    if(!plot.layout.height){
 	    	plot.layout.height=Math.max(Math.min(getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).height.slice(0,-2)-12,500),250);
+            if(inApp && val.style.height)
+            { 
+                plot.layout.height=val.style.height.slice(0,-2);
+            }
 	    }
 	    if(!plot.layout.margin){
 			plot.layout.margin={
@@ -1035,7 +1070,7 @@ function addPlotlyPlot(consoleCode,val){
 		}, false);
 	    val.classList.remove('loading');
 	    listPlot.push(val)
-    })
+    })*/
 }
 
 let darkPlotlyObserver = new MutationObserver(function(mutations) {
