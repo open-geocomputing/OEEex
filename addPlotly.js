@@ -847,6 +847,8 @@ const plotlyDarkTemplate = {
 }
 
 function setPlotlyComWithBackground(){
+    if(window.location.origin!="https://code.earthengine.google.com")
+        return;
     plotlyComWithBackground= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.plotly"});
 
     plotlyComWithBackground.onMessage.addListener((request, sender, sendResponse) => {
@@ -892,7 +894,8 @@ function loadConsolePlotlyWatcher(){
     });
     let obsConfig = { childList: true};
     
-    myObserver.observe(document.querySelector('ee-console'), obsConfig);
+    if(document.querySelector('ee-console'))
+        myObserver.observe(document.querySelector('ee-console'), obsConfig);
 
     let myObserver2= new MutationObserver(function(mutList){
 
@@ -914,7 +917,8 @@ function loadConsolePlotlyWatcher(){
 
     });
     let obsConfig2 = { childList: true, subtree:true};
-    myObserver2.observe(document.querySelector('.main > .goog-splitpane > .goog-splitpane-second-container'), obsConfig2);
+    if(document.querySelector('.ui-root'))
+        myObserver2.observe(document.querySelector('.ui-root'), obsConfig2);
 
 
     let resizeObserver= new ResizeObserver(function(newSize,element){
@@ -923,7 +927,8 @@ function loadConsolePlotlyWatcher(){
 		})
     });
     
-    resizeObserver.observe(document.querySelectorAll('.goog-splitpane-second-container')[1]);
+    if(document.querySelectorAll('.goog-splitpane-second-container').length>1)
+        resizeObserver.observe(document.querySelectorAll('.goog-splitpane-second-container')[1]);
 
     if(document.querySelector('.goog-button.run-button'))
 		document.querySelector('.goog-button.run-button').addEventListener('click',function(){plotPosition=0;})
@@ -990,13 +995,15 @@ function addPlotlyPlot(consoleCode,val,inApp){
     	plot.layout={}
 	    }
 	    if(!plot.layout.width){
-	    	plot.layout.width=getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).width.slice(0,-2)-12;
+            if(document.querySelectorAll('.goog-splitpane-second-container').length>1)
+	    	  plot.layout.width=getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).width.slice(0,-2)-12;
             if(inApp && val.style.width){
                 plot.layout.width=val.style.width.slice(0,-2);
             }
 	    }
 	    if(!plot.layout.height){
-	    	plot.layout.height=Math.max(Math.min(getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).height.slice(0,-2)-12,500),250);
+            if(document.querySelectorAll('.goog-splitpane-second-container').length>1)
+	    	  plot.layout.height=Math.max(Math.min(getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).height.slice(0,-2)-12,500),250);
             if(inApp && val.style.height)
             { 
                 plot.layout.height=val.style.height.slice(0,-2);
@@ -1019,7 +1026,9 @@ function addPlotlyPlot(consoleCode,val,inApp){
 	    }
 
 	    let imageExportFormat='png';// one of png, svg, jpeg, webp
-		let imageExportName="EE_plotly_chart_"+document.querySelectorAll('.goog-splitpane-second-container .panel.editor-panel .header > span')[0].textContent.replace('/', '_')+'_'+locPlotPosition;
+		let imageExportName="EE_plotly_chart";
+        if(document.querySelectorAll('.goog-splitpane-second-container .panel.editor-panel .header > span').length>0)
+            imageExportName="EE_plotly_chart_"+document.querySelectorAll('.goog-splitpane-second-container .panel.editor-panel .header > span')[0].textContent.replace('/', '_')+'_'+locPlotPosition;
 		let imageExportScale=4;
 		if(plot.exportFormat){
 			imageExportFormat=plot.exportFormat;
