@@ -882,15 +882,14 @@ function loadConsolePlotlyWatcher(){
     let MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
     let myObserver          = new MutationObserver(function(mutList){
 
-        // [...mutList].map(function(mut){
-        //     [...mut.addedNodes].map(function(e){
-        //         if(e.classList.contains('OEEexPlotlyAnalysis'))
-        //             return;
-        //         e.classList.add('OEEexPlotlyAnalysis')
-        //         analysisPlotlyAddon(e)
-        //     });
-        // });
-        console.log(mutList)
+        [...mutList].map(function(mut){
+            [...mut.addedNodes].map(function(e){
+                if(e.classList.contains('OEEexPlotlyAnalysis'))
+                    return;
+                e.classList.add('OEEexPlotlyAnalysis')
+                analysisPlotlyAddon(e)
+            });
+        });
     });
     let obsConfig = { childList: true};
     
