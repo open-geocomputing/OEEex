@@ -56,7 +56,7 @@ function checkInAvalailable(imName,isPresentCallback,isMissingCallback){
 			if(nextPageToken)
 				options.pageToken=nextPageToken;
 			ee.data.listAssets(path, options, function(data){
-				newData=[...newData,...data.assets.map(e=>e.name)];
+				newData=[...newData,...(data.assets ? data.assets.map(e=>e.name) : [] )];
 				if(('nextPageToken' in data) && data.nextPageToken){
 					loadData(data.nextPageToken)
 				}else{
