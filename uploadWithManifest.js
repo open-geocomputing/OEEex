@@ -150,6 +150,8 @@ function addButtonOnAssetPanel(){
 				var entry = items[i].webkitGetAsEntry();
 				if(entry.isDirectory)
 					uploadTreeFolder(entry)
+				if(entry.isFile)
+					manageGeoJSON(entry)
 			}
 		}
 
@@ -172,6 +174,8 @@ function uploadTreeFolder(item,path){
 			if(entries[i].isFile){
 				if(entries[i].name.toLowerCase()=="manifest.json"){
 					manifest=entries[i];
+				}else if(entries[i].name.toLowerCase().endsWith('.json') || entries[i].name.toLowerCase().endsWith('.geojson')){
+					manageGeoJSON(entries[i]);
 				}else{
 					fileArray[simplify_path(entries[i].name)]=entries[i];
 				}
@@ -543,3 +547,45 @@ function checkForGSUpload(fromPrevious=false){
 }
 
 setTimeout(addButtonOnAssetPanel,0);
+
+/************** support for GeoJSON ************/
+
+function manageGeoJSON(entrie){
+	console.log(entrie)
+	entrie.file(function(file){
+		var reader = new FileReader();
+		reader.onloadend = function(e) {
+			var result = JSON.parse(this.result);
+			
+			const observer = new MutationObserver(function(elements){
+				elements[0].addedNodes[0].style.visibility='hidden';
+				shpwrite.zip(result).then(function(val){
+					let fileInput=elements[0].addedNodes[0].querySelector('ee-upload-dialog').shadowRoot
+					.querySelector('#asset-upload-dialog');
+					//fileInput.style.display='none';
+					fileInput.shadowRoot.querySelector('h2').innerText='Upload a new GeoJSON asset'
+					fileInput.querySelector('#drag-and-drop-field').style.display='none';
+					const dataTransfer = new DataTransfer()
+					const file = new File([val], entrie.name.split('.').slice(0,-1).join('.')+'.zip')
+					dataTransfer.items.add(file)
+					console.log(fileInput)
+					const dropEvent = new DragEvent("drop", { dataTransfer:dataTransfer });
+					fileInput.dispatchEvent(dropEvent);
+					elements[0].addedNodes[0].style.removeProperty('visibility');
+				})
+				
+				// Later, you can stop observing
+				observer.disconnect();
+			});
+
+			// Start observing the target node for configured mutations
+			observer.observe(document.querySelector('body'), {childList:true});
+
+			[...document.querySelector("ee-new-asset-menu").shadowRoot.querySelector('ee-menu-button').shadowRoot.querySelectorAll('paper-item')]
+				.filter(e=>e.innerText.includes('.shp'))[0].click()
+
+		};
+		reader.readAsText(file);
+	});
+}
+
