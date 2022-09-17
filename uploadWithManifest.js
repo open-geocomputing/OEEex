@@ -551,7 +551,6 @@ setTimeout(addButtonOnAssetPanel,0);
 /************** support for GeoJSON ************/
 
 function manageGeoJSON(entrie){
-	console.log(entrie)
 	entrie.file(function(file){
 		var reader = new FileReader();
 		reader.onloadend = function(e) {
