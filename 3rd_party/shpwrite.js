@@ -18587,7 +18587,7 @@ module.exports.write = function writePoints(coordinates, extent, shpView, shxVie
         // HEADER
         // 4 record number
         // 4 content length in 16-bit words (20/2)
-        shpView.setInt32(shpI, i);
+        shpView.setInt32(shpI, i+1);
         shpView.setInt32(shpI + 4, 10);
 
         // record
@@ -18845,7 +18845,7 @@ function write(rows, geometry_type, geometries, callback) {
         TYPE);
 
     shpView.setInt32(24, shpLength / 2);
-    shxView.setInt32(24, (50 + geometries.length * 4));
+    shxView.setInt32(24, (50 + parts * 4));
 
     var dbfBuf = dbf.structure(rows);
 

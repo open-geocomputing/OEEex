@@ -560,6 +560,12 @@ function manageGeoJSON(entrie){
 			const observer = new MutationObserver(function(elements){
 				elements[0].addedNodes[0].style.visibility='hidden';
 				shpwrite.zip(result).then(function(val){
+					// url = window.URL.createObjectURL(val);
+					// var a = document.createElement("a");
+					// a.href = url;
+					// a.download = entrie.name.split('.').slice(0,-1).join('.')+'.zip';
+					// a.click();
+					// window.URL.revokeObjectURL(url);
 					let fileInput=elements[0].addedNodes[0].querySelector('ee-upload-dialog').shadowRoot
 					.querySelector('#asset-upload-dialog');
 					//fileInput.style.display='none';
@@ -568,7 +574,6 @@ function manageGeoJSON(entrie){
 					const dataTransfer = new DataTransfer()
 					const file = new File([val], entrie.name.split('.').slice(0,-1).join('.')+'.zip')
 					dataTransfer.items.add(file)
-					console.log(fileInput)
 					const dropEvent = new DragEvent("drop", { dataTransfer:dataTransfer });
 					fileInput.dispatchEvent(dropEvent);
 					elements[0].addedNodes[0].style.removeProperty('visibility');
