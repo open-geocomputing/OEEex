@@ -13,6 +13,7 @@ chrome.runtime.onInstalled.addListener(function() {
         addCommandS:navigator.platform.toLowerCase().includes('mac'),
         runAllTasks:true,
         oeelCache:true,
+        addCopyJSON:true,
         addPlotly:true
     });
 });

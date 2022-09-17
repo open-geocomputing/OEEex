@@ -14,7 +14,7 @@
     }]
   },
   "web_accessible_resources": [{
-    "resources": ["isShareable.js","insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEE.js","addCommandS.js","runAllTasks.js","addPlotly.js","3rd_party/shpwrite.js"],
+    "resources": ["isShareable.js","insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEE.js","addCommandS.js","runAllTasks.js","addPlotly.js","3rd_party/shpwrite.js","addCopyJSON.js"],
     "matches": ["https://code.earthengine.google.com/*"]
   },{
     "resources": ["addPlotly.js"],
