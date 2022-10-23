@@ -242,6 +242,10 @@ function uploadFilesInGEE(arrayOfUris,fileArray){
 	let array=[];
 	for (var i = 0; i < arrayOfUris.length; i++) {
 		var localIndex=i;
+		if(arrayOfUris[localIndex] instanceof Blob){
+			array.push(uploadFromBlob(localIndex,arrayOfUris,arrayOfUris[localIndex],true));
+			continue;
+		}
 		if(arrayOfUris[localIndex].startsWith("gs://")) continue;
 		if(arrayOfUris[localIndex].startsWith("http://") || arrayOfUris[localIndex].startsWith("https://"))
 			array.push(uploadFromRemote(localIndex,arrayOfUris));
@@ -263,7 +267,13 @@ function ingestInGEE(manifest,successCallback,errorCallback){
 	projectName=manifest.name.match(/^projects\/(.+)\/assets\//)[1];
 	if(!projectName)projectName="earthengine-legacy";
 	let ingestCall=new XMLHttpRequest();
-	ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/'+projectName+'/image:import',true);
+	if(manifest.table){
+		ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/'+projectName+'/table:import',true);
+	}
+	else{
+		ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/'+projectName+'/image:import',true);
+	}
+	
 	ingestCall.responseType = 'json';
 	ingestCall.onload = function(e) {
 		if (this.status == 200) {
@@ -293,10 +303,21 @@ function ingestInGEE(manifest,successCallback,errorCallback){
 		}
 	}
 
-	ingestCall.send(JSON.stringify({"imageManifest": manifest,
+
+	if(manifest.table){
+		delete manifest.table
+		ingestCall.send(JSON.stringify({"tableManifest": manifest,
 		"requestId": uuidv4(),
 					"overwrite": false //maybe doing something for this
 				}));
+	}else{
+		ingestCall.send(JSON.stringify({"imageManifest": manifest,
+			"requestId": uuidv4(),
+						"overwrite": false //maybe doing something for this
+				}));
+	}
+
+	
 }
 
 function uploadFromLocal(index,uris,fileEntry){
@@ -337,7 +358,7 @@ function uploadFromLocal(index,uris,fileEntry){
 	return uploadImage;
 }
 
-function uploadFromBlob(index,uris,blob){
+function uploadFromBlob(index,uris,blob,asZip=false){
 	let uploadImage=new XMLHttpRequest();
 	uploadImage.open("GET",'https://code.earthengine.google.com/assets/upload/geturl',true);
 	uploadImage.responseType = 'json';
@@ -346,7 +367,11 @@ function uploadFromBlob(index,uris,blob){
 		if (this.status == 200) {
 			let uploadAddresObject=this.response;
 			var uploadFormData = new FormData();
-			uploadFormData.append("data", blob,'uploadImage.tif');
+			if(asZip){
+				uploadFormData.append("data", blob,'table.zip');				
+			}else{
+				uploadFormData.append("data", blob,'uploadImage.tif');
+			}
 			let uploadImageToGS=new XMLHttpRequest();
 			uploadImageToGS.open("POST",uploadAddresObject.url,true);
 			uploadImageToGS.responseType = 'json';
@@ -481,6 +506,9 @@ function isReadyToIngest(jsonData){
 			for(k in jsonData){
 				if(k=='uris'){
 					for (var i = 0; i < jsonData[k].length; i++) {
+						if(typeof(jsonData[k][i])!== "string"){
+							return false;
+						}
 						canBeIngested&=jsonData[k][i].startsWith("gs://");
 						if(!canBeIngested)return canBeIngested;
 					}
@@ -558,23 +586,68 @@ function manageGeoJSON(entrie){
 			
 			const observer = new MutationObserver(function(elements){
 				elements[0].addedNodes[0].style.visibility='hidden';
-				shpwrite.zip(result).then(function(val){
-					// url = window.URL.createObjectURL(val);
-					// var a = document.createElement("a");
-					// a.href = url;
-					// a.download = entrie.name.split('.').slice(0,-1).join('.')+'.zip';
-					// a.click();
-					// window.URL.revokeObjectURL(url);
+				Promise.all(shpwrite.zip(result)).then(function(zipFiles){
 					let fileInput=elements[0].addedNodes[0].querySelector('ee-upload-dialog').shadowRoot
-					.querySelector('#asset-upload-dialog');
-					//fileInput.style.display='none';
+						.querySelector('#asset-upload-dialog');
+					fileInput.querySelector('#table-advanced-options').shadowRoot.children[1].style.display='none';
 					fileInput.shadowRoot.querySelector('h2').innerText='Upload a new GeoJSON asset'
 					fileInput.querySelector('#drag-and-drop-field').style.display='none';
-					const dataTransfer = new DataTransfer()
-					const file = new File([val], entrie.name.split('.').slice(0,-1).join('.')+'.zip')
-					dataTransfer.items.add(file)
-					const dropEvent = new DragEvent("drop", { dataTransfer:dataTransfer });
-					fileInput.dispatchEvent(dropEvent);
+					fileInput.querySelector('#asset-id-trailer').shadowRoot.querySelector('#paper-input').value=entrie.name.split('.').slice(0,-1)
+
+					fileInput.shadowRoot.querySelector('.ok-button').disabled=false;
+					fileInput.shadowRoot.querySelector('.ok-button').addEventListener('click', function(event) {
+						event.stopPropagation();
+						// create manifest and submit manifest
+
+						let prop={}
+
+						let propertyList=fileInput.querySelector('#property-list').shadowRoot.querySelectorAll('.property-row');
+
+						propertyList.forEach(function(e){prop[e.querySelector('.property').value]=e.querySelector('.value').value})
+
+						let manifest={
+							table:true,
+							"name": fileInput.querySelector('#root-id-select').shadowRoot.children[0].shadowRoot.querySelector('#input').innerText+
+									fileInput.querySelector('#asset-id-trailer').shadowRoot.querySelector('#paper-input').value,
+							"properties": prop,
+							"sources": []
+						}
+
+						if(prop["system:time_start"]){
+							manifest["startTime"]=prop["system:time_start"];
+							delete prop["system:time_start"];
+						}
+
+						if(prop["system:time_end"]){
+							manifest["endTime"]=prop["system:time_end"];
+							delete prop["system:time_end"];
+						}
+
+						let maxError=fileInput.querySelector('#table-advanced-options').shadowRoot.children[1].querySelector('paper-input').shadowRoot.querySelector('input').value;
+						let maxVertices=-1;
+						if(fileInput.querySelector('#table-advanced-options').shadowRoot.children[2].querySelector('paper-checkbox').getAttribute('aria-checked')=='true'){
+							maxVertices=fileInput.querySelector('#table-advanced-options').shadowRoot.children[3].querySelector('paper-input').shadowRoot.querySelector('input').value;
+						}
+
+						for (var i = zipFiles.length - 1; i >= 0; i--) {
+							let el={
+								"charset": "UTF-8",
+								"maxErrorMeters": maxError,
+								"uris": [
+									zipFiles[i]
+								]
+							}
+							if(maxVertices>0){
+								el["maxVertices"]= maxVertices;
+							}
+							manifest["sources"].push(el);
+						}
+						console.log(manifest);
+						let ue=exploreJson2Upload(manifest,[]);
+						addManifestToIngestInGEE(manifest,ue);
+
+						fileInput.shadowRoot.querySelector('.cancel-button').dispatchEvent(new Event('click'))
+					}, true);
 					elements[0].addedNodes[0].style.removeProperty('visibility');
 				})
 				
