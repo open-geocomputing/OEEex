@@ -167,6 +167,20 @@ function addModeSwitch(){
 		}
 	}
 
+	// console section 
+
+	var eeConsole=document.getElementsByTagName('ee-console');
+	if(eeConsole && eeConsole.length>0){
+		let localRoot=eeConsole[0].shadowRoot;
+		let sheet = new CSSStyleSheet
+		sheet.replaceSync( '.dark.intro-message.console-message{ color: hsl(0deg 0% 0% / 78%);');
+		localRoot.adoptedStyleSheets=[...localRoot.adoptedStyleSheets,sheet];
+		[...localRoot.children].map(e=>listRoot.push(e))
+	}
+
+
+
+
 	// task page
 	
 	var eeTaskPaneList=document.getElementsByTagName('ee-task-manager-app');
