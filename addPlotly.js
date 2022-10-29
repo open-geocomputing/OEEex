@@ -2,6 +2,9 @@
 var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
 const consolePlotlyExtensionPrefix='OEEex_AddonPlotly';
 var plotPosition=0;
+var EECache={};
+
+const listPlotlyEvent=["plotly_click","plotly_hover","plotly_unhover","plotly_selecting","plotly_selected","plotly_legendclick","plotly_legenddoubleclick","plotly_restyle","plotly_relayout","plotly_deselect","plotly_doubleclick","plotly_redraw","plotly_animated"];
 
 var dynamicPlotly=false;
 
@@ -17,6 +20,23 @@ if(typeof OEEexEscape == 'undefined'){
     });
 }
 
+function isPromise(p) {
+  if (typeof p === 'object' && typeof p.then === 'function') {
+    return true;
+  }
+
+  return false;
+}
+
+function hashCode(str) {
+    let hash = 0;
+    for (let i = 0, len = str.length; i < len; i++) {
+        let chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
 
 function htmlDecode(input) {
   var doc = new DOMParser().parseFromString(input, "text/html");
@@ -903,6 +923,12 @@ function loadConsolePlotlyWatcher(){
                                                                           ! f.classList.contains('OEEexPlotlyAnalysis') &&
                                                                           f.textContent &&
                                                                           f.textContent.startsWith(consolePlotlyExtensionPrefix+':')&&
+                                                                          document.body.contains(f))
+                                                                                ||
+                                                                                (f.classList &&
+                                                                          f.classList.contains('ui-textbox') &&
+                                                                          ! f.classList.contains('OEEexPlotlyAnalysis') &&
+                                                                          f.querySelector('input').placeholder=="OEEex_Active_AddonPlotly" &&
                                                                           document.body.contains(f)))
 
         cleaned=cleaned.filter(function(value, index, self) {
@@ -910,8 +936,23 @@ function loadConsolePlotlyWatcher(){
             });
 
         cleaned.map(function(e){
-            e.classList.add('OEEexPlotlyAnalysis')
-            addPlotlyPlot(e.textContent.slice((consolePlotlyExtensionPrefix+':').length),e,true);
+            e.style.padding=0;
+            if(e.classList.contains('ui-textbox'))
+            {
+                e.classList.add('OEEexPlotlyAnalysis')
+                let input=e.querySelector('input');
+                input.style.display='none';
+                let plotDiv=document.createElement('div');
+                plotDiv.style.margin=0;
+                e.appendChild(plotDiv);
+                if(input.placeholder=="OEEex_Active_AddonPlotly"){
+                    addPlotlyPlot(input.value,plotDiv,true,input);
+                }
+            }
+            else{
+                e.classList.add('OEEexPlotlyAnalysis')
+                addPlotlyPlot(e.textContent.slice((consolePlotlyExtensionPrefix+':').length),e,true);
+            }
         });
 
     });
@@ -921,7 +962,7 @@ function loadConsolePlotlyWatcher(){
 
 
     let resizeObserver= new ResizeObserver(function(newSize,element){
-		document.querySelectorAll('.js-plotly-plot:not(.ui-label)').forEach(function(e){
+		document.querySelectorAll('.js-plotly-plot:not(.inApp)').forEach(function(e){
 			Plotly.relayout(e,{width: newSize[0].contentRect.width-5})
 		})
     });
@@ -943,6 +984,16 @@ function analysisPlotlyAddon(val){
 	        return; 
 	    }
     });
+
+    val.querySelectorAll('.ui-widget.ui-textbox').forEach(function(obj){
+        let input=obj.querySelector('input');
+        let plotDiv=document.createElement('div');
+        obj.appendChild(plotDiv);
+        input.style.display='none';
+        if(input.placeholder=="OEEex_Active_AddonPlotly"){
+            addPlotlyPlot(input.value,plotDiv,false,input);
+        }
+    });
     
 }
 
@@ -954,14 +1005,26 @@ function explorAllJSON(input){
 		for (let idx=0; idx< keys.length; idx++) {
 			let key=keys[idx];
 			if(input[key] && input[key].toString && input[key].toString().slice(0,3)=="ee."){
-				let prom=new Promise((resolve, reject) => {
-					input[key].evaluate(function(eeCompute){
-						resolve(eeCompute);
-						input[key]=eeCompute;
-					})
-				})
+                let keyCache=hashCode(ee.Serializer.toJSON(input[key]))
+                if(keyCache in EECache){
+                    if(isPromise(EECache[keyCache])){
+                        EECache[keyCache].then(function(eeCompute){
+                            input[key]=eeCompute;
+                        })
+                    }else{
+                        input[key]=EECache[keyCache];
+                    }
+                }else{
 
-				promisesArray.push(prom)
+    				let prom=new Promise((resolve, reject) => {
+                        input[key].evaluate(function(eeCompute){
+    						resolve(eeCompute);
+    						input[key]=eeCompute;
+                            EECache[keyCache]=eeCompute
+    					})
+    				})
+                    promisesArray.push(prom)
+                }
 				continue;
 			}
 
@@ -973,14 +1036,68 @@ function explorAllJSON(input){
 	return {ud:input,promises:promisesArray}
 }
 
+function updatePlot(plotDiv,plot){
+    plotDiv.classList.add('loading');
+    var plotEval=explorAllJSON(plot)
+    Promise.all(plotEval.promises).then(function(){
+        let plot=configPlot(plotEval.ud,plotDiv,plotDiv.classList.contains('inApp'));
+        Plotly.react(plotDiv,plot.data,plot.layout);
+        plotDiv.classList.remove('loading');
+    })
+}
+
 listPlot=[];
 
+function configPlot(plot,val,inApp){
 
-function addPlotlyPlot(consoleCode,val,inApp){
-    if(inApp)
-    {
-        val.style.padding=0;
+
+    if(!plot.layout){
+        plot.layout={}
     }
+    if(!plot.layout.width){
+        if(!inApp && document.querySelectorAll('.goog-splitpane-second-container').length>1)
+          plot.layout.width=getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).width.slice(0,-2)-12;
+        if(inApp && val.style.width){
+            plot.layout.width=val.style.width.slice(0,-2);
+        }
+    }
+    if(!plot.layout.height){
+        if(!inApp && document.querySelectorAll('.goog-splitpane-second-container').length>1)
+          plot.layout.height=Math.max(Math.min(getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).height.slice(0,-2)-12,500),250);
+        if(inApp && val.style.height)
+        { 
+            plot.layout.height=val.style.height.slice(0,-2);
+        }
+    }
+    if(!plot.layout.margin){
+        plot.layout.margin={
+            l: 50,
+            r: 50,
+            b: 50,
+            t: 50,
+            pad: 4
+        }
+    }
+
+    if(plot.transparent)
+    {
+        plot.layout.paper_bgcolor="#0000";
+        plot.layout.plot_bgcolor="#0000";
+    }
+
+    if(plot.annotations){
+        if(!plot.layout)plot.layout={};
+        plot.layout.annotations=plot.annotations;
+    }
+
+    if(document.getElementsByTagName('html')[0].classList.contains('dark')){
+        plot.layout.template=plotlyDarkTemplate;
+    }
+
+    return plot
+}
+
+function addPlotlyPlot(consoleCode,val,inApp,input){
     val.classList.add('loading');
     val.classList.add('explorer');
     val.innerHTML=OEEexEscape.createHTML('Plotly: Computing');
@@ -988,42 +1105,9 @@ function addPlotlyPlot(consoleCode,val,inApp){
     let locPlotPosition=plotPosition++;
     var plotEval=explorAllJSON(plot)
     Promise.all(plotEval.promises).then(function(){
-    	plot=plotEval.ud
+    	plot=configPlot(plotEval.ud,val, inApp);
 
-    	if(!plot.layout){
-    	plot.layout={}
-	    }
-	    if(!plot.layout.width){
-            if(document.querySelectorAll('.goog-splitpane-second-container').length>1)
-	    	  plot.layout.width=getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).width.slice(0,-2)-12;
-            if(inApp && val.style.width){
-                plot.layout.width=val.style.width.slice(0,-2);
-            }
-	    }
-	    if(!plot.layout.height){
-            if(document.querySelectorAll('.goog-splitpane-second-container').length>1)
-	    	  plot.layout.height=Math.max(Math.min(getComputedStyle(document.querySelectorAll('.goog-splitpane-second-container')[1]).height.slice(0,-2)-12,500),250);
-            if(inApp && val.style.height)
-            { 
-                plot.layout.height=val.style.height.slice(0,-2);
-            }
-	    }
-	    if(!plot.layout.margin){
-			plot.layout.margin={
-				l: 50,
-				r: 50,
-				b: 50,
-				t: 50,
-				pad: 4
-			}
-	    }
-
-	    if(plot.transparent)
-	    {
-	    	plot.layout.paper_bgcolor="#0000";
-        	plot.layout.plot_bgcolor="#0000";
-	    }
-
+        //for config
 	    let imageExportFormat='png';// one of png, svg, jpeg, webp
 		let imageExportName="EE_plotly_chart";
         if(document.querySelectorAll('.goog-splitpane-second-container .panel.editor-panel .header > span').length>0)
@@ -1038,10 +1122,6 @@ function addPlotlyPlot(consoleCode,val,inApp){
 		if(plot.exportScale){
 			imageExportScale=plot.exportScale;
 		}
-        if(plot.annotations){
-            if(!plot.layout)plot.layout={};
-            plot.layout.annotations=plot.annotations;
-        }
 
 	    let config={
 	    	displaylogo: false,
@@ -1052,14 +1132,61 @@ function addPlotlyPlot(consoleCode,val,inApp){
 			}
 	    }
 
-	    if(document.getElementsByTagName('html')[0].classList.contains('dark')){
-	    	plot.layout.template=plotlyDarkTemplate;
-	    }
 
 	    val.innerHTML=OEEexEscape.createHTML('');
+        // if(val.parentElement.parentElement.classList.contains('layout-flow')){
+        //     val.parentElement.style.margin=0;
+        //     if(val.parentElement.parentElement.classList.contains('layout-flow-vertical')){
+        //         val.parentElement.style.width='100%'
+        //     }
+        //     if(val.parentElement.parentElement.classList.contains('layout-flow-horizontal')){
+        //         val.parentElement.style.height='100%'
+        //     }
+        // }
 	    Plotly.newPlot( val, plot.data, plot.layout,config )
 
-        if(plot.onClick && dynamicPlotly)
+        if(inApp)
+        {
+            val.classList.add('inApp')
+        }
+
+        if(input){
+            const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+            Object.defineProperty(input, "value", {
+                get: desc.get,
+                set: function(v) {
+                    try{
+                        let payload=ee.Deserializer.fromJSON(v)
+                        if(payload.toEE===false){
+                            updatePlot(val,payload)
+                        }
+                    }catch(e){
+
+                    }
+                    desc.set.call(this, v);
+                }
+            });
+
+            function allEvent(type, input, data){
+                let payload={toEE:true, type:type, plotlyData:data,time:Date.now()}
+                try{
+                    input.value=JSON.stringify(payload,function(key,val){return (key.startsWith('_')|| ['targetLinks','sourceLinks','links','data','fullData'].includes(key) ?undefined:val)})
+                    input.dispatchEvent(new Event('change'))
+                }catch(e){
+                    console.error(e)
+                }
+            }
+
+            for (var i = listPlotlyEvent.length - 1; i >= 0; i--) {
+                let eventType=listPlotlyEvent[i];
+                val.on(eventType, function(data){allEvent(eventType,input,data)});
+            }
+
+        }
+
+
+
+        /*if(plot.onClick && dynamicPlotly)
         {
             let obj={};
             if(plot.annotations){
@@ -1067,7 +1194,7 @@ function addPlotlyPlot(consoleCode,val,inApp){
             }
             let userFunction=new Function("return ("+htmlDecode(plot.onClick)+")")();
             val.on('plotly_click', function(data){userFunction(val,obj,data)});
-        }
+        }*/
 	    val.addEventListener('refreshDraw', function(e) {
 			if(document.getElementsByTagName('html')[0].classList.contains('dark')){
 				plot.layout.template=plotlyDarkTemplate;
@@ -1076,7 +1203,9 @@ function addPlotlyPlot(consoleCode,val,inApp){
 			}
 			Plotly.relayout(val,plot.layout)
 		}, false);
+
 	    val.classList.remove('loading');
+        [...document.querySelectorAll('.gm-style')].forEach(e=> e.dispatchEvent(new Event('resize')))
 	    listPlot.push(val)
     })
 }
