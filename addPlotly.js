@@ -1043,6 +1043,14 @@ function updatePlot(plotDiv,plot){
         let plot=configPlot(plotEval.ud,plotDiv,plotDiv.classList.contains('inApp'));
         Plotly.react(plotDiv,plot.data,plot.layout);
         plotDiv.classList.remove('loading');
+        plotDiv.addEventListener('refreshDraw', function(e) {
+            if(document.getElementsByTagName('html')[0].classList.contains('dark')){
+                plot.layout.template=plotlyDarkTemplate;
+            }else{
+                delete plot.layout.template;
+            }
+            Plotly.relayout(plotDiv,plot.layout)
+        }, false);
     })
 }
 
