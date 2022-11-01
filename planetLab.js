@@ -431,7 +431,7 @@ function displayResult(val,result,assetConfig,item_type){
     htmlCode+='<select multiple="multiple" class="planetScenesList">'
     htmlCode+='</select>'
     htmlCode+='</div>'
-    val.innerHTML=.createHTML(htmlCode);
+    val.innerHTML=OEEexEscape.createHTML(htmlCode);
     addSceneInConsole(randomId,result.features,assetConfig,item_type,false);
     val.classList.remove('loading');
     val.querySelector('.planetScenesList').setAttribute('linkMore',result._links._next)
@@ -508,7 +508,7 @@ function displayResult(val,result,assetConfig,item_type){
 
     let updateCounts=function(e){
         let str='('+[...val.querySelectorAll('option:checked')].length+'/'+[...val.querySelectorAll('option')].length+')';
-        val.querySelector('span.selectedAmount').innerHTML=.createHTML(str);
+        val.querySelector('span.selectedAmount').innerHTML=OEEexEscape.createHTML(str);
     }
     val.querySelector('.planetScenesList').addEventListener('updateSelected',updateCounts);
     val.querySelector('.planetScenesList').addEventListener('click',function(e){
