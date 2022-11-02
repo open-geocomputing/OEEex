@@ -14,6 +14,7 @@ chrome.runtime.onInstalled.addListener(function() {
         runAllTasks:true,
         oeelCache:true,
         addCopyJSON:true,
+        openScriptNewTab:true,
         addPlotly:true
     });
 });
