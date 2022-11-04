@@ -17,6 +17,7 @@
 		"resources": [
 			"isShareable.js",
 			"insertInCE.js",
+			"2022-04-20.json",
 			"planetLab.js",
 			"EEDarkMode.js",
 			"uploadWithManifest.js",
