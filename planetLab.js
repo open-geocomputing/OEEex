@@ -3,6 +3,8 @@ var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
 planetConfig=null;
 var OEEex_version='1.0'
 
+var conversionInfoPlanet=null;
+
 if(typeof OEEexEscape == 'undefined'){
     OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
       createHTML: (string, sink) => string
@@ -184,7 +186,38 @@ function genreateFilter(filter){
     return result;
 }
 
+
+
 function runPlanetSearch(consoleCode,val){
+
+    if(!conversionInfoPlanet){
+
+        let planetInfo=new XMLHttpRequest();
+        planetInfo.open("GET",'chrome-extension://'+OEEexidString+'/2022-04-20.json',true);
+        //planetInfo.open("GET",'https://developers.planet.com/theme/js/2022-04-20.json',true);
+        planetInfo.responseType = 'json';
+        planetInfo.setRequestHeader("Content-Type", "application/json");
+        planetInfo.onload = function(e) {
+          if (this.status == 200) {
+                conversionInfoPlanet=this.response;
+                runPlanetSearch(consoleCode,val);
+                return;
+            }
+            // if(this.status ==429){
+            //     planetInfo.open("GET",'chrome-extension://'+OEEexidString+'/2022-04-20.json',true);
+            //     //planetInfo.open("GET",'https://developers.planet.com/theme/js/2022-04-20.json',true);
+            //     this.sendPlanetWhenPossible(null,true);
+            //     return;
+            // }
+            if (this.status >=400) {
+                alert("Error loading data from transform data.")
+                return;
+            }
+        }
+        planetInfo.send(null,true);
+        return;
+    }
+
     // autoUpdate=true;
     val.classList.add('loading');
     val.classList.add('explorer');
@@ -224,8 +257,8 @@ function runPlanetSearch(consoleCode,val){
     }
 
     listFilter.push({  
-        "type":"PermissionFilter",
-        "config":[ "assets"+( typeof assetConfig !== 'undefined' ? "."+assetConfig.slice(0,indexUdmSlice) : "")+":download"]
+        "type":"AssetFilter",
+        "config":[conversionInfoPlanet["bundles"][assetConfig]["assets"][item_type][0]]
     });
     assetConfig=( typeof assetConfig !== 'undefined' ? assetConfig : "");
 
