@@ -2,9 +2,7 @@ var oee_dbclickScriptTimeout=null;
 
 
 function addScriptPath(targetNode){
-// document.querySelector(".tree-manager.repo-manager").querySelectorAll('.file-type-file .tree-item-name')[0].closest('ee-zippy').parentElement.closest('ee-zippy, .zippy')
-// 	[...targetNode.querySelectorAll('zippy')]
-// .map(e => console.log(e))
+
 
 	function constructPath(e,start){
 		let parent=e.parentElement.closest('ee-zippy, .zippy')

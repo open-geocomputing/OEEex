@@ -3,7 +3,7 @@ var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
 
 if(typeof OEEexEscape == 'undefined'){
 	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
-	  createHTML: (string, sink) => string
+		createHTML: (string, sink) => string
 	});
 }
 
@@ -307,14 +307,14 @@ function ingestInGEE(manifest,successCallback,errorCallback){
 	if(manifest.table){
 		delete manifest.table
 		ingestCall.send(JSON.stringify({"tableManifest": manifest,
-		"requestId": uuidv4(),
+			"requestId": uuidv4(),
 					"overwrite": false //maybe doing something for this
 				}));
 	}else{
 		ingestCall.send(JSON.stringify({"imageManifest": manifest,
 			"requestId": uuidv4(),
 						"overwrite": false //maybe doing something for this
-				}));
+					}));
 	}
 
 	
@@ -588,7 +588,7 @@ function manageGeoJSON(entrie){
 				elements[0].addedNodes[0].style.visibility='hidden';
 				Promise.all(shpwrite.zip(result)).then(function(zipFiles){
 					let fileInput=elements[0].addedNodes[0].querySelector('ee-upload-dialog').shadowRoot
-						.querySelector('#asset-upload-dialog');
+					.querySelector('#asset-upload-dialog');
 					fileInput.querySelector('#table-advanced-options').shadowRoot.children[1].style.display='none';
 					fileInput.shadowRoot.querySelector('h2').innerText='Upload a new GeoJSON asset'
 					fileInput.querySelector('#drag-and-drop-field').style.display='none';
@@ -608,7 +608,7 @@ function manageGeoJSON(entrie){
 						let manifest={
 							table:true,
 							"name": fileInput.querySelector('#root-id-select').shadowRoot.children[0].shadowRoot.querySelector('#input').innerText+
-									fileInput.querySelector('#asset-id-trailer').shadowRoot.querySelector('#paper-input').value,
+							fileInput.querySelector('#asset-id-trailer').shadowRoot.querySelector('#paper-input').value,
 							"properties": prop,
 							"sources": []
 						}
@@ -634,7 +634,7 @@ function manageGeoJSON(entrie){
 								"charset": "UTF-8",
 								"maxErrorMeters": maxError,
 								"uris": [
-									zipFiles[i]
+								zipFiles[i]
 								]
 							}
 							if(maxVertices>0){
@@ -659,7 +659,7 @@ function manageGeoJSON(entrie){
 			observer.observe(document.querySelector('body'), {childList:true});
 
 			[...document.querySelector("ee-new-asset-menu").shadowRoot.querySelector('ee-menu-button').shadowRoot.querySelectorAll('paper-item')]
-				.filter(e=>e.innerText.includes('.shp'))[0].click()
+			.filter(e=>e.innerText.includes('.shp'))[0].click()
 
 		};
 		reader.readAsText(file);

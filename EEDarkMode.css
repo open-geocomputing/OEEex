@@ -51,7 +51,7 @@ html.dark{
 }
 
 .dark .docs-list .docs-method-header:hover, .dark .docs-list-popup .docs-method-header {
-    background: #0f0f0f;
+	background: #0f0f0f;
 }
 
 .dark .docs-list-popup {
@@ -60,11 +60,11 @@ html.dark{
 }
 
 .dark .tree-manager .tree-file:not(.drag-and-drop):before, .dark .tree-drag-clone.tree-file:not(.drag-and-drop):before, .dark .zippy>.header:before, .dark ee-zippy>.header:before{
-    filter: invert(1) hue-rotate(180deg);
+	filter: invert(1) hue-rotate(180deg);
 }
 
 .dark .tree-manager .tree-file:hover, .dark .tree-manager .tree-file.tree-item-selected{
-    background: var(--color-hover-bg);
+	background: var(--color-hover-bg);
 }
 
 .dark ::selection {
@@ -100,8 +100,8 @@ html.dark{
 }
 
 .dark .goog-splitpane-handle {
-    background-color: #535151;
-    filter: invert(1) brightness(1.7);
+	background-color: #535151;
+	filter: invert(1) brightness(1.7);
 }
 
 .dark .editor-panel>.header, .dark .tab-panel>.header .goog-tab-bar{
@@ -110,25 +110,25 @@ html.dark{
 
 
 .dark .ace_numeric {
-    color: #4685ea !important;
+	color: #4685ea !important;
 }
 
 .dark input{
 	background-color:var(--oeel-background-color) ;
 }
 .dark input.ace_search_field{
-    background-color: revert;
+	background-color: revert;
 } 
 
 .dark .ee-search .search-textbox, .dark .search, .dark .repo-manager .search{
 	color: var(--oeel-color);
 	border-color: #242424;
-    border-top-color: #404040;
+	border-top-color: #404040;
 }
 
 .dark .repo-manager .search{
-    border-color: #2f2f2f;
-    border-top-color: #5b5a5a;
+	border-color: #2f2f2f;
+	border-top-color: #5b5a5a;
 }
 
 /*:host(.dark) .user-box {
@@ -136,9 +136,9 @@ html.dark{
 }*/
 
 .dark .tab-panel>.header .goog-tab-selected {
-    background: var(--oeel-background-color);
-    color: white;
-    border-bottom-color: var(--oeel-background-color);
+	background: var(--oeel-background-color);
+	color: white;
+	border-bottom-color: var(--oeel-background-color);
 }
 
 .dark .task.legacy .info{
@@ -146,9 +146,9 @@ html.dark{
 }
 
 .dark .panel .explorer.loading:before {
-    filter: invert(1) hue-rotate(180deg) brightness(1.5);
-    transform-origin: 8px 8px;
-    transform: rotate(180deg);
+	filter: invert(1) hue-rotate(180deg) brightness(1.5);
+	transform-origin: 8px 8px;
+	transform: rotate(180deg);
 }
 
 .dark .env-entry .env-entry-delete{
@@ -166,7 +166,7 @@ html.dark{
 
 .dark .tree-manager .tree-folder>ee-zippy>.header:hover,
 .dark .repo-manager .repo-list>ee-zippy>.header:hover {
-    background: black;
+	background: black;
 }
 
 .dark .tree-manager .button {

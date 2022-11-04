@@ -1,67 +1,79 @@
 {
-  "name": "Open Earth Engine extension",
-  "description": "An unofficel extension to enhance Google Earth Engine, and Open Earth Engine experience.",
-  "version": "1.3.2",
-  "manifest_version": 3,
-  "background": {
-    "service_worker": "background.js"
-  },
-  "declarative_net_request" : {
-    "rule_resources" : [{
-      "id": "ruleset",
-      "enabled": true,
-      "path": "rules.json"
-    }]
-  },
-  "web_accessible_resources": [{
-    "resources": ["isShareable.js","insertInCE.js","planetLab.js","EEDarkMode.js","uploadWithManifest.js","hackEE.js","addCommandS.js","runAllTasks.js",
-                  "addPlotly.js","3rd_party/shpwrite.js","addCopyJSON.js","openScriptNewTab.js"],
-    "matches": ["https://code.earthengine.google.com/*"]
-  },{
-    "resources": ["addPlotly.js"],
-    "matches": ["https://*.earthengine.app/*"]
-  },{
-    "resources":["options.html","planet.html"],
-    "matches":["https://www.open-geocomputing.org/*"]
-  }],
-  "host_permissions": [
-    "https://code.earthengine.google.com/repo/file/load?*",
-    "https://api.planet.com/*",
-    "https://link.planet.com/*",
-    "https://tiles.planet.com/*"
-  ],
-  "permissions": [
-    "activeTab",
-    "storage",
-    "declarativeNetRequest"
-  ],
-  "content_scripts": [
-    {
-      "matches": ["https://code.earthengine.google.com/*"], 
-      "js": ["injectionScript.js"],
-      "css" : ["EEDarkMode.css","OEEex.css","planetLab.css"]
-    },{
-      "matches": ["https://*.earthengine.app/*"], 
-      "js": ["injectionScriptApp.js"],
-      "css" : ["EEDarkMode.css","OEEex.css"]
-    }
-  ],
-  "action": {
-    "default_icon": {
-      "16": "/images/logo_white_OEEex_open_16.png",
-      "32": "/images/logo_white_OEEex_open_32.png",
-      "48": "/images/logo_white_OEEex_open_48.png",
-      "128": "/images/logo_white_OEEex_open_128.png"
-    }
-  },
-  "icons": {
-    "16": "/images/logo_white_OEEex_open_16.png",
-    "32": "/images/logo_white_OEEex_open_32.png",
-    "48": "/images/logo_white_OEEex_open_48.png",
-    "128": "/images/logo_white_OEEex_open_128.png"
-  },
-  "options_page": "options.html",
-  "externally_connectable": {
-    "matches": ["https://code.earthengine.google.com/*"]
-  }
+	"name": "Open Earth Engine extension",
+	"description": "An unofficel extension to enhance Google Earth Engine, and Open Earth Engine experience.",
+	"version": "1.3.2",
+	"manifest_version": 3,
+	"background": {
+		"service_worker": "background.js"
+	},
+	"declarative_net_request" : {
+		"rule_resources" : [{
+			"id": "ruleset",
+			"enabled": true,
+			"path": "rules.json"
+		}]
+	},
+	"web_accessible_resources": [{
+		"resources": [
+			"isShareable.js",
+			"insertInCE.js",
+			"planetLab.js",
+			"EEDarkMode.js",
+			"uploadWithManifest.js",
+			"hackEE.js",
+			"addCommandS.js",
+			"runAllTasks.js",
+			"addPlotly.js",
+			"3rd_party/shpwrite.js",
+			"addCopyJSON.js",
+			"openScriptNewTab.js"
+		],
+		"matches": ["https://code.earthengine.google.com/*"]
+	},{
+		"resources": ["addPlotly.js"],
+		"matches": ["https://*.earthengine.app/*"]
+	},{
+		"resources":["options.html","planet.html"],
+		"matches":["https://www.open-geocomputing.org/*"]
+	}],
+	"host_permissions": [
+		"https://code.earthengine.google.com/repo/file/load?*",
+		"https://api.planet.com/*",
+		"https://link.planet.com/*",
+		"https://tiles.planet.com/*"
+	],
+	"permissions": [
+		"activeTab",
+		"storage",
+		"declarativeNetRequest"
+	],
+	"content_scripts": [
+		{
+			"matches": ["https://code.earthengine.google.com/*"], 
+			"js": ["injectionScript.js"],
+			"css" : ["EEDarkMode.css","OEEex.css","planetLab.css"]
+		},{
+			"matches": ["https://*.earthengine.app/*"], 
+			"js": ["injectionScriptApp.js"],
+			"css" : ["EEDarkMode.css","OEEex.css"]
+		}
+	],
+	"action": {
+		"default_icon": {
+			"16": "/images/logo_white_OEEex_open_16.png",
+			"32": "/images/logo_white_OEEex_open_32.png",
+			"48": "/images/logo_white_OEEex_open_48.png",
+			"128": "/images/logo_white_OEEex_open_128.png"
+		}
+	},
+	"icons": {
+		"16": "/images/logo_white_OEEex_open_16.png",
+		"32": "/images/logo_white_OEEex_open_32.png",
+		"48": "/images/logo_white_OEEex_open_48.png",
+		"128": "/images/logo_white_OEEex_open_128.png"
+	},
+	"options_page": "options.html",
+	"externally_connectable": {
+		"matches": ["https://code.earthengine.google.com/*"]
+	}
 }

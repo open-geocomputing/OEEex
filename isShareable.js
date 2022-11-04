@@ -75,10 +75,10 @@ function chekForAssets(){
 				}
 				if((error.length+warning.length)>0)alert(message)
 			}
-		}
 	}
+}
 
-	getAssetAvailability.send(new URLSearchParams({assetIDs:JSON.stringify(listAssets)}).toString());
+getAssetAvailability.send(new URLSearchParams({assetIDs:JSON.stringify(listAssets)}).toString());
 
 }
 

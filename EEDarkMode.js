@@ -4,7 +4,7 @@ var portWithBackground=null;
 
 if(typeof OEEexEscape == 'undefined'){
 	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
-	  createHTML: (string, sink) => string
+		createHTML: (string, sink) => string
 	});
 }
 
@@ -88,8 +88,8 @@ function addModeSwitch(){
 
 	let button=document.createElement('ee-menu-button');
 	button.innerHTML=OEEexEscape.createHTML('<span id="toogleModeButton"  slot="button"'+
-	' class="material-icons" style="font-family: &quot;Material Icons&quot; ; color: rgba(115, 115, 115, 0.7);'+
-	'  font-size: 0px; padding: 0 0 0 7px; vertical-align: bottom;">brightness_medium</span>');
+		' class="material-icons" style="font-family: &quot;Material Icons&quot; ; color: rgba(115, 115, 115, 0.7);'+
+		'  font-size: 0px; padding: 0 0 0 7px; vertical-align: bottom;">brightness_medium</span>');
 	button.setAttribute('align',"right");
 
 
