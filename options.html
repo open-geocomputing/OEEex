@@ -1,316 +1,330 @@
 <!DOCTYPE html>
 <html> <!-- class='dark' -->
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net  https://fonts.gstatic.com https://assets9.lottiefiles.com https://api.planet.com 'unsafe-inline'; ">
-  <title>OEEex options</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <link rel="stylesheet" href="options.css">
-  <script src="3rd_party/lottie-player.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-  rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net  https://fonts.gstatic.com https://assets9.lottiefiles.com https://api.planet.com 'unsafe-inline'; ">
+	<title>OEEex options</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+	<link rel="stylesheet" href="options.css">
+	<script src="3rd_party/lottie-player.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
 </head>
 <body>
-  <header>
-    <lottie-player src="images/logo.json" autoplay="true" id='logo' background="transparent"  speed="1"  style="width: 300px; height: 300px;" ></lottie-player>
-  </header>
-  <main>
-    <div class="block param darkMode">
-      <div class="content is-medium EEDarkMode">
-        <article class="message is-info">
-          <div class="message-header">
-            Night mode
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            Select the light mode
-            <span class="lightMode">
-              <span class="material-icons isDark">
-                brightness_4
-              </span>
-              <span class="material-icons">
-                linear_scale
-              </span>
-              <span class="material-icons isAutomatic">
-                brightness_6
-              </span>
-              <span class="material-icons">
-                linear_scale
-              </span>
-              <span class="material-icons isLight">
-                brightness_7
-              </span>
-            </span> 
-          </div>
-        </article>
-      </div>
-      <div class="content is-medium addCommandS">
-        <article class="message is-info">
-          <div class="message-header">
-            macOS shortcuts
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            This add the support of ⌘+S as save shortcut
-          </div>
-        </article>
-      </div>
-       <div class="content is-medium oeelCache">
-        <article class="message is-info">
-          <div class="message-header">
-            OEEL Cache
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            This add cache for faster OEEL loading
-          </div>
-        </article>
-      </div>
-       <div class="content is-medium addPlotly">
-        <article class="message is-info">
-          <div class="message-header">
-            Plotly
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            This enable plotly for nice and intercative plots in the console
-            <br>
-            <div class="message is-danger mt-3 dynamicPlotly">
-              <div class="message-header">
-                <p class="mt-3">Interactive mode</p>
-                <div>
-                  <div class="lock">
-                    <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-                  </div>
-                </div>
-                </span>
-              </div>
-              <div class="message-body is-four-fifths">
-                The interactive mode should only be used on trusted code. Standard GEE code run in a sandbox, this code run directly in the browser and therefore could lead to the execution of malicious code. (by default disabled)
-              </div>
-            </div> 
-          </div>
-        </article>
-      </div>
-      <div class="content is-medium hackEE">
-        <article class="message is-info">
-          <div class="message-header">
-            EE task manager
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            The EE manager allow to send request for computaion to GEE. In particular, for image collection export.
-            Furthure more it include a confirm manager allows overwriting the normal confirm behavior. This is useful to use the <code>ee.data.*</code> function. In particular to automatically create / fill / delete collections.
-          </div>
-        </article>
-      </div>
-      <div class="content is-medium insertInCE">
-        <article class="message is-info">
-          <div class="message-header">
-            Insert function in code editor
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            This allow to automatically insert a function signature from documentation to the code editor.
-          </div>
-        </article>
-      </div>
-      <div class="content is-medium isShareable">
-        <article class="message is-info">
-          <div class="message-header">
-            Check if scripts are shareable
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            This allows to automatically check if a script shared with "get link or "copy script path" is shareable. It checks resources and script path.
-            Your scripts are not transferred, however a list of all assets contained in the script is transferred to an external server to check general availability.
-          </div>
-        </article>
-      </div>
-      <div class="content is-medium uploadWithManifest">
-        <article class="message is-info">
-          <div class="message-header">
-            Upload images with manifest
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            This add support for image upload using manifests
-            <div class="subsection box mt-2">
-              <h5>Parallel upload</h5>
-              <div class="range-wrap">
-                <div class="range-value" id="rangeParallelUpload"></div>
-                <input type="range" id="parallelUpload" name="batchSize" min="1" max="20" step="1" value="5">
-              </div>
-              <h5>Parallel downlaod (for transfer)</h5>
-              <div class="range-wrap">
-                <div class="range-value" id="rangeParallelDownload"></div>
-                <input type="range" id="parallelDownload" name="batchSize" min="1" max="20" step="1" value="5">
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div class="content is-medium planetLab">
-        <article class="message is-info">
-          <div class="message-header">
-            Planet <span class="icon has-text-warning">⚠️</span>
-            <div class="lock">
-              <lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-            </div>
-          </div>
-          <div class="message-body">
-            All the options regarding PlanetLab integration.
-            <div class="subsection box mt-2">
-              <h3>Settings</h3>
-              <h4>API key</h4>
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input id="planetApiKey" class="input" placeholder="API Key">
-                  <span class="icon is-small is-left">
-                    <span class="material-icons">key</span>
-                  </span>
-                </p>
-              </div>
-              <hr class="hr-text" data-content="OR">
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input id="planetEmail" class="input" type="email" placeholder="Email">
-                  <span class="icon is-small is-left">
-                    <span class="material-icons">email</span>
-                  </span>
-                </p>
-              </div>
-              <div class="field">
-                <p class="control has-icons-left">
-                  <input id="planetPwd" class="input" type="password" placeholder="Password">
-                  <span class="icon is-small is-left">
-                    <span class="material-icons">lock</span>
-                  </span>
-                </p>
-              </div>
-              <div class="field">
-                <p class="control">
-                  <button id='planetLogin' class="button is-success">
-                    Login
-                  </button>
-                </p>
-              </div>
-              <hr class="hr-big">
-              <h4>Collection path in Earth Engine</h4>
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input id="PlanetPathInGEE" class="input" placeholder="ImageCollection path">
-                  <span class="icon is-small is-left">
-                    <span class="material-icons">account_tree</span>
-                  </span>
-                </p>
-              </div>
-              <hr class="hr-big">
-              <h4>Search result</h4>
-              <label class="checkbox">
-                <input id='PlanetThumbnail' type="checkbox" name="thumbnail">
-                Show thumbnail
-              </label>
-              
-              <hr class="hr-big">
-              <div class="columns">
-                <h4 class="column m-0">API version</h4>
-                <div class="buttons has-addons is-3 is-gapless">
-                  <button class="planetApi button v1 is-info is-outlined">V1</button>
-                  <button class="planetApi button v2 is-info is-outlined">V2</button>
-                </div>
-              </div>
-              <div id="planetApiOptions">
-                <div class="subsection box planetApi v1">
-                  <h4>API V1</h4>
-                  <h5>Band nomenclature</h5>
-                  <div class="control columns">
-                    <label class="radio column radio-list">
-                      <input type="radio" name="PlanetBandNaming" value="default" checked>
-                      <ol>
-                        <li>B1</li>
-                        <li>B2</li>
-                        <li>B3</li>
-                        <li>B4</li>
-                        <li>Q1</li>
-                        <li>Q2</li>
-                      </ol>
-                    </label>
-                    <label class="radio column radio-list">
-                      <input type="radio" name="PlanetBandNaming" value="trueName">
-                      <ol>
-                        <li>Blue</li>
-                        <li>Green</li>
-                        <li>Red</li>
-                        <li>NIR</li>
-                        <li>Cloud</li>
-                        <li>Snow</li>
-                      </ol>
-                    </label>
-                    <label class="radio column radio-list">
-                      <input type="radio" name="PlanetBandNaming" value="hybrid">
-                      <ol>
-                        <li>B1_Blue</li>
-                        <li>B2_Green</li>
-                        <li>B3_Red</li>
-                        <li>B4_NIR</li>
-                        <li>Q1_Clear</li>
-                        <li>Q2_Snow</li>
-                      </ol>
-                    </label>
-                  </div>
-                  <h5>Maximum parallel activations</h5>
-                  <div class="range-wrap">
-                    <div class="range-value" id="rangePlanetParallelActivation"></div>
-                    <input type="range" id="PlanetParallelActivation" name="batchSize" min="1" max="500" step="1">
-                  </div>
-                </div>
-                <div class="subsection box planetApi v2">
-                  <h4>API V2</h4>
-                  <h5>Batch size</h5>
-                  <div class="range-wrap">
-                    <div class="range-value" id="rangePlanetBatchSize"></div>
-                    <input type="range" id="PlanetBatchSize" name="batchSize" min="1" max="500" step="1">
-                  </div>
-                  
-                  <h5>Service account</h5>
-                  <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                      <input id="PlanetServiceAccount" class="input" type="email" placeholder="service account">
-                      <span class="icon is-small is-left">
-                        <span class="material-icons">alternate_email</span>
-                      </span>
-                    </p>
-                  </div>
-                  <h5>Orders</h5>
-                  <a href="/planet.html"><button class="button is-info">Check orders</button></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-      <p>This extension was originally developed by <a href="http://mgravey.com">Mathieu Gravey</a> as part of the <a href="https://www.open-geocomputing.org">Open Geocumputing</a> to enhance the usage of the <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/">Open Earth Engine Library</a>. Animations on this page were done by <a href="https://www.behance.net/paulineahumada">Pauline Ahumada</a>.</p>
-      <!-- Anyone else contributing, please say what you did, and put your name in the above paragraph -->
-    </div>
-  </main>
+	<header>
+		<lottie-player src="images/logo.json" autoplay="true" id='logo' background="transparent"  speed="1"  style="width: 300px; height: 300px;" ></lottie-player>
+	</header>
+	<main>
+		<div class="block param darkMode">
+			<div class="content is-medium EEDarkMode">
+				<article class="message is-info">
+					<div class="message-header">
+						Night mode
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						Select the light mode
+						<span class="lightMode">
+							<span class="material-icons isDark">
+								brightness_4
+							</span>
+							<span class="material-icons">
+								linear_scale
+							</span>
+							<span class="material-icons isAutomatic">
+								brightness_6
+							</span>
+							<span class="material-icons">
+								linear_scale
+							</span>
+							<span class="material-icons isLight">
+								brightness_7
+							</span>
+						</span> 
+					</div>
+				</article>
+			</div>
+			<div class="content is-medium addCommandS">
+				<article class="message is-info">
+					<div class="message-header">
+						macOS shortcuts
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						This add the support of ⌘+S as save shortcut
+					</div>
+				</article>
+			</div>
+
+			<div class="content is-medium openScriptNewTab">
+				<article class="message is-info">
+					<div class="message-header">
+						Open scripts in new tab 
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						Allow to open a script in a new tab by double clicking on it
+					</div>
+				</article>
+			</div>
+
+			<div class="content is-medium addCopyJSON">
+				<article class="message is-info">
+					<div class="message-header">
+						Copy JSON
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						Allow to copy JSON data by double clicking on "json" in the console 
+					</div>
+				</article>
+			</div>
+			
+			<div class="content is-medium oeelCache">
+				<article class="message is-info">
+					<div class="message-header">
+						OEEL Cache
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						This add cache for faster OEEL loading
+					</div>
+				</article>
+			</div>
+			<div class="content is-medium addPlotly">
+				<article class="message is-info">
+					<div class="message-header">
+						Plotly
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						This enable plotly for nice and intercative plots in the console, panels and maps. Work on EE App too.
+					</div>
+				</article>
+			</div>
+			<div class="content is-medium hackEE">
+				<article class="message is-info">
+					<div class="message-header">
+						EE task manager (deprecated use "Run All")
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						The EE manager allow to send request for computaion to GEE. In particular, for image collection export.
+						Furthure more it include a confirm manager allows overwriting the normal confirm behavior. This is useful to use the <code>ee.data.*</code> function. In particular to automatically create / fill / delete collections.
+					</div>
+				</article>
+			</div>
+			<div class="content is-medium insertInCE">
+				<article class="message is-info">
+					<div class="message-header">
+						Insert function in code editor
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						This allow to automatically insert a function signature from documentation to the code editor.
+					</div>
+				</article>
+			</div>
+			<div class="content is-medium isShareable">
+				<article class="message is-info">
+					<div class="message-header">
+						Check if scripts are shareable
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						This allows to automatically check if a script shared with "get link or "copy script path" is shareable. It checks resources and script path.
+						Your scripts are not transferred, however a list of all assets contained in the script is transferred to an external server to check general availability.
+					</div>
+				</article>
+			</div>
+			<div class="content is-medium uploadWithManifest">
+				<article class="message is-info">
+					<div class="message-header">
+						Upload images with manifest
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						This add support for image upload using manifests
+						<div class="subsection box mt-2">
+							<h5>Parallel upload</h5>
+							<div class="range-wrap">
+								<div class="range-value" id="rangeParallelUpload"></div>
+								<input type="range" id="parallelUpload" name="batchSize" min="1" max="20" step="1" value="5">
+							</div>
+							<h5>Parallel downlaod (for transfer)</h5>
+							<div class="range-wrap">
+								<div class="range-value" id="rangeParallelDownload"></div>
+								<input type="range" id="parallelDownload" name="batchSize" min="1" max="20" step="1" value="5">
+							</div>
+						</div>
+					</div>
+				</article>
+			</div>
+			<div class="content is-medium planetLab">
+				<article class="message is-info">
+					<div class="message-header">
+						Planet <span class="icon has-text-warning">⚠️</span>
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						All the options regarding PlanetLab integration.
+						<div class="subsection box mt-2">
+							<h3>Settings</h3>
+							<h4>API key</h4>
+							<div class="field">
+								<p class="control has-icons-left has-icons-right">
+									<input id="planetApiKey" class="input" placeholder="API Key">
+									<span class="icon is-small is-left">
+										<span class="material-icons">key</span>
+									</span>
+								</p>
+							</div>
+							<hr class="hr-text" data-content="OR">
+							<div class="field">
+								<p class="control has-icons-left has-icons-right">
+									<input id="planetEmail" class="input" type="email" placeholder="Email">
+									<span class="icon is-small is-left">
+										<span class="material-icons">email</span>
+									</span>
+								</p>
+							</div>
+							<div class="field">
+								<p class="control has-icons-left">
+									<input id="planetPwd" class="input" type="password" placeholder="Password">
+									<span class="icon is-small is-left">
+										<span class="material-icons">lock</span>
+									</span>
+								</p>
+							</div>
+							<div class="field">
+								<p class="control">
+									<button id='planetLogin' class="button is-success">
+										Login
+									</button>
+								</p>
+							</div>
+							<hr class="hr-big">
+							<h4>Collection path in Earth Engine</h4>
+							<div class="field">
+								<p class="control has-icons-left has-icons-right">
+									<input id="PlanetPathInGEE" class="input" placeholder="ImageCollection path">
+									<span class="icon is-small is-left">
+										<span class="material-icons">account_tree</span>
+									</span>
+								</p>
+							</div>
+							<hr class="hr-big">
+							<h4>Search result</h4>
+							<label class="checkbox">
+								<input id='PlanetThumbnail' type="checkbox" name="thumbnail">
+								Show thumbnail
+							</label>
+
+							<hr class="hr-big">
+							<div class="columns">
+								<h4 class="column m-0">API version</h4>
+								<div class="buttons has-addons is-3 is-gapless">
+									<button class="planetApi button v1 is-info is-outlined">V1</button>
+									<button class="planetApi button v2 is-info is-outlined">V2</button>
+								</div>
+							</div>
+							<div id="planetApiOptions">
+								<div class="subsection box planetApi v1">
+									<h4>API V1</h4>
+									<h5>Band nomenclature</h5>
+									<div class="control columns">
+										<label class="radio column radio-list">
+											<input type="radio" name="PlanetBandNaming" value="default" checked>
+											<ol>
+												<li>B1</li>
+												<li>B2</li>
+												<li>B3</li>
+												<li>B4</li>
+												<li>Q1</li>
+												<li>Q2</li>
+											</ol>
+										</label>
+										<label class="radio column radio-list">
+											<input type="radio" name="PlanetBandNaming" value="trueName">
+											<ol>
+												<li>Blue</li>
+												<li>Green</li>
+												<li>Red</li>
+												<li>NIR</li>
+												<li>Cloud</li>
+												<li>Snow</li>
+											</ol>
+										</label>
+										<label class="radio column radio-list">
+											<input type="radio" name="PlanetBandNaming" value="hybrid">
+											<ol>
+												<li>B1_Blue</li>
+												<li>B2_Green</li>
+												<li>B3_Red</li>
+												<li>B4_NIR</li>
+												<li>Q1_Clear</li>
+												<li>Q2_Snow</li>
+											</ol>
+										</label>
+									</div>
+									<h5>Maximum parallel activations</h5>
+									<div class="range-wrap">
+										<div class="range-value" id="rangePlanetParallelActivation"></div>
+										<input type="range" id="PlanetParallelActivation" name="batchSize" min="1" max="500" step="1">
+									</div>
+								</div>
+								<div class="subsection box planetApi v2">
+									<h4>API V2</h4>
+									<h5>Batch size</h5>
+									<div class="range-wrap">
+										<div class="range-value" id="rangePlanetBatchSize"></div>
+										<input type="range" id="PlanetBatchSize" name="batchSize" min="1" max="500" step="1">
+									</div>
+
+									<h5>Service account</h5>
+									<div class="field">
+										<p class="control has-icons-left has-icons-right">
+											<input id="PlanetServiceAccount" class="input" type="email" placeholder="service account">
+											<span class="icon is-small is-left">
+												<span class="material-icons">alternate_email</span>
+											</span>
+										</p>
+									</div>
+									<h5>Orders</h5>
+									<a href="/planet.html"><button class="button is-info">Check orders</button></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</article>
+			</div>
+			<p>This extension was originally developed by <a href="http://mgravey.com">Mathieu Gravey</a> as part of the <a href="https://www.open-geocomputing.org">Open Geocumputing</a> to enhance the usage of the <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/">Open Earth Engine Library</a>. Animations on this page were done by <a href="https://www.behance.net/paulineahumada">Pauline Ahumada</a>.</p>
+			<!-- Anyone else contributing, please say what you did, and put your name in the above paragraph -->
+		</div>
+	</main>
 </body>
 <script src="options.js"></script>
 </html>

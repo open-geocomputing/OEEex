@@ -1,62 +1,62 @@
 .planetScenesList option{
-    height: 150px;
-    background: var(--bg-text) no-repeat, var(--bg-image) no-repeat,#eeeeee;
-    background-position: left,right;
-    background-size: auto,contain;
+	height: 150px;
+	background: var(--bg-text) no-repeat, var(--bg-image) no-repeat,#eeeeee;
+	background-position: left,right;
+	background-size: auto,contain;
 }
 
 .planetScenesList.withoutPrevi option{
-    background-image: var(--bg-text);
-    background-position: left bottom;
-    height: 78px;
-    background-size: auto;
+	background-image: var(--bg-text);
+	background-position: left bottom;
+	height: 78px;
+	background-size: auto;
 }
 
 select.planetScenesList{
-    font-size: 18px;
-    width: 100%;
-    height: 350px;
+	font-size: 18px;
+	width: 100%;
+	height: 350px;
 }
 .dark select.planetScenesList{
-    background-color: #1d1f21;
-    color: #c5c8c6;
+	background-color: #1d1f21;
+	color: #c5c8c6;
 }
 
 .planetScenesList option:nth-child(2n){
-    background-color: #c8c7c7;
+	background-color: #c8c7c7;
 }
 
 .dark .planetScenesList option{
-    background-color: #1d1f21;
-    background-image: var(--bg-text-dark), var(--bg-image);
-    background-position: left, right;
-    background-size: auto,contain;
+	background-color: #1d1f21;
+	background-image: var(--bg-text-dark), var(--bg-image);
+	background-position: left, right;
+	background-size: auto,contain;
 }
 
 .dark .planetScenesList.withoutPrevi option{
-    background-color: #1d1f21;
-    background-image: var(--bg-text-dark);
-    background-position: left bottom;
-    background-size: auto;
+	background-color: #1d1f21;
+	background-image: var(--bg-text-dark);
+	background-position: left bottom;
+	background-size: auto;
 }
 
 .dark .planetScenesList option:nth-child(2n),.dark .planetScenesList.withoutPrevi option:nth-child(2n){
-    background-color: #333333;
+	background-color: #333333;
 }
 
 .dark .planetScenesList option::selection{
-    background-image: var(--bg-text);
+	background-image: var(--bg-text);
 }
 
 .planetScenesList option:checked{
-    background-color: #b8b8e5;
+	background-color: #b8b8e5;
 }
 .dark .planetScenesList option:checked{
-    background-color: #1a1a46;
+	background-color: #1a1a46;
 }
 
 button.loadAllPlanetImages{
-    opacity: 0.75;
+	opacity: 0.75;
 }
 }
 

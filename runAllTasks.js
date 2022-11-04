@@ -2,7 +2,7 @@ oeex_submitTaskInterval=null;
 
 if(typeof OEEexEscape == 'undefined'){
 	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
-	  createHTML: (string, sink) => string
+		createHTML: (string, sink) => string
 	});
 }
 

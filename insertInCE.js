@@ -1,6 +1,6 @@
 if(typeof OEEexEscape == 'undefined'){
 	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
-	  createHTML: (string, sink) => string
+		createHTML: (string, sink) => string
 	});
 }
 
@@ -48,33 +48,33 @@ function addFunctionSignaturesButtons(){
 	}
 
 	[...new Set([...document.querySelector('ee-docs-list').shadowRoot.querySelectorAll('ee-zippy'),document.querySelector('ee-docs-list').shadowRoot]
-	.map((e)=>[...e.querySelectorAll('ee-node-summary')]).flat())].forEach(e=>{
-		let span=document.createElement('span');
-		span.classList.add('insertInCEButton','material-icons')
-		span.innerHTML=OEEexEscape.createHTML("keyboard_tab");
-		e.shadowRoot.lastChild.appendChild(span);
+		.map((e)=>[...e.querySelectorAll('ee-node-summary')]).flat())].forEach(e=>{
+			let span=document.createElement('span');
+			span.classList.add('insertInCEButton','material-icons')
+			span.innerHTML=OEEexEscape.createHTML("keyboard_tab");
+			e.shadowRoot.lastChild.appendChild(span);
 
-		span.addEventListener('click',injectFunctionSignature);
+			span.addEventListener('click',injectFunctionSignature);
 
-		var style = document.createElement('style');
-		style.innerText = '.docs-method-header{position:relative;padding-right: 25px;} .docs-method-header span { content:"keyboard_tab"; font-family: "Material Icons"; position: absolute; right: 0px; font-size: 1.5em;} .docs-method-header span:hover{color:#0062ff;}';
-		e.shadowRoot.appendChild(style)
-	})
-}
+			var style = document.createElement('style');
+			style.innerText = '.docs-method-header{position:relative;padding-right: 25px;} .docs-method-header span { content:"keyboard_tab"; font-family: "Material Icons"; position: absolute; right: 0px; font-size: 1.5em;} .docs-method-header span:hover{color:#0062ff;}';
+			e.shadowRoot.appendChild(style)
+		})
+	}
 
-function loadFunctionSignaturesObserver(){
-	let fontLink = document.createElement('link');
-	fontLink.type = 'text/css';
-	fontLink.rel = 'stylesheet';
-	(document.head || document.documentElement).appendChild(fontLink);
-	fontLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons"
+	function loadFunctionSignaturesObserver(){
+		let fontLink = document.createElement('link');
+		fontLink.type = 'text/css';
+		fontLink.rel = 'stylesheet';
+		(document.head || document.documentElement).appendChild(fontLink);
+		fontLink.href = "https://fonts.googleapis.com/icon?family=Material+Icons"
 
-	const observer = new MutationObserver(function(){
-		this.disconnect();
-		setTimeout(addFunctionSignaturesButtons,0);
-	});
+		const observer = new MutationObserver(function(){
+			this.disconnect();
+			setTimeout(addFunctionSignaturesButtons,0);
+		});
 
-	if(document.querySelector('ee-docs-list'))
-		observer.observe(document.querySelector('ee-docs-list').shadowRoot, {subtree: true, childList: true});
-}
-loadFunctionSignaturesObserver();
+		if(document.querySelector('ee-docs-list'))
+			observer.observe(document.querySelector('ee-docs-list').shadowRoot, {subtree: true, childList: true});
+	}
+	loadFunctionSignaturesObserver();

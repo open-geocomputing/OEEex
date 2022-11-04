@@ -75,10 +75,10 @@ function chekForAssets(){
 				}
 				if((error.length+warning.length)>0)alert(message)
 			}
-		}
 	}
+}
 
-	getAssetAvailability.send(new URLSearchParams({assetIDs:JSON.stringify(listAssets)}).toString());
+getAssetAvailability.send(new URLSearchParams({assetIDs:JSON.stringify(listAssets)}).toString());
 
 }
 
@@ -101,7 +101,7 @@ function locationChangeEvent(e) {
 		getRepoParam.responseType = 'json';
 		getRepoParam.onload = function(e) {
 			if (this.status == 200) {
-				if(this.response.all_users_can_read){
+				if(!this.response.all_users_can_read){
 					alert('This uses: '+match[1]+', a non public repository!')
 				}
 			}
