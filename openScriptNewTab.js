@@ -23,7 +23,8 @@ function addScriptPath(targetNode){
 	nodesToExplore.map(e=>{
 		let path=constructPath(e,e.querySelector('.tree-item-name').innerText)
 		e.addEventListener('click',event=>{
-			if(!event.detail?.timeoutClick){
+			console.log()
+			if(!event.detail?.timeoutClick && event.target.classList.contains("tree-item-name")){
 				event.preventDefault();
 				event.stopPropagation();
 
