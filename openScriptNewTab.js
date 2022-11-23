@@ -18,7 +18,7 @@ function addScriptPath(targetNode){
 		}
 	}
 
-	let nodesToExplore=targetNode.map(e=>e.addedNodes[0]).filter(e=> e.classList.contains('file-type-file'));
+	let nodesToExplore=targetNode.map(e=>e.addedNodes[0]).filter(e=> e.classList?.contains('file-type-file'));
 
 	nodesToExplore.map(e=>{
 		let path=constructPath(e,e.querySelector('.tree-item-name').innerText)
