@@ -11,16 +11,22 @@ function initEditorSettings(){
 
 	let root = document.documentElement;
 	
+	function removeOriginalFontInCE(){
+		try{
+			[...document.querySelector("div.ace_editor").parentElement.childNodes].
+			map(e=>e.setAttribute('style',(e.getAttribute('style')?e.getAttribute('style'):"")+
+				"font-family: var(--editorFontFamily, 'Menlo','Monaco','DejaVu Sans Mono','Bitstream Vera Sans Mono','Consolas','source-code-pro',monospace )!important;font-size: var(--editorFontSize, 13px)!important"));
+		}catch(e){
+			setTimeout(removeOriginalFontInCE,10)
+		}
+	}
 
-	setTimeout(function(){
-		[...document.querySelector("div.ace_editor").parentElement.childNodes].
-		map(e=>e.setAttribute('style',(e.getAttribute('style')?e.getAttribute('style'):"")+"font-family: var(--editorFontFamily, 'Menlo','Monaco','DejaVu Sans Mono','Bitstream Vera Sans Mono','Consolas','source-code-pro',monospace )!important;font-size: var(--editorFontSize, 13px)!important"));
-	},10)
+	removeOriginalFontInCE();
+	
 
 	let portWithBackground=null;
 
 	function setPortWithBackground(){
-
 		portWithBackground= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.editorSettings"});
 		portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
 			if(request.type=='changeFont'){
