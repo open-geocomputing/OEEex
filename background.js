@@ -14,6 +14,9 @@ chrome.runtime.onInstalled.addListener(function() {
 		oeelCache:true,
 		addCopyJSON:true,
 		openScriptNewTab:true,
+		editorSettings:true,
+		ESfontSize:13,
+		ESfontFamily:"default",
 		addPlotly:true
 	});
 });
@@ -94,6 +97,35 @@ chrome.storage.onChanged.addListener(function(){sendUwMConfig();});
 
 chrome.runtime.onConnectExternal.addListener(UwMPortConnection);
 chrome.runtime.onConnect.addListener(UwMPortConnection);
+
+
+//editor Settings
+
+listEditorPort=[]
+function sendESConfig(ports=listEditorPort){
+	if(!Array.isArray(ports)){
+		ports=[ports];
+	}
+
+	chrome.storage.local.get(['ESfontSize','ESfontFamily'], function(data) {
+		ports.map((sender)=>sender.postMessage({ type:'changeFont', message: data }));
+	});
+}
+
+function ESPortConnection(port) {
+	if(port.name === "oeel.extension.editorSettings"){
+		listEditorPort.push(port);
+		sendESConfig(port);
+		port.onDisconnect.addListener(function() {
+			listEditorPort= listEditorPort.filter(function(el) { return el !== port});
+		});
+	}
+}
+
+chrome.storage.onChanged.addListener(function(){sendESConfig();});
+
+chrome.runtime.onConnectExternal.addListener(ESPortConnection);
+chrome.runtime.onConnect.addListener(ESPortConnection);
 
 
 //oeel cache

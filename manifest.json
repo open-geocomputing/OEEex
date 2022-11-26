@@ -27,6 +27,7 @@
 			"addPlotly.js",
 			"3rd_party/shpwrite.js",
 			"addCopyJSON.js",
+			"editorSettings.js",
 			"openScriptNewTab.js"
 		],
 		"matches": ["https://code.earthengine.google.com/*"]
