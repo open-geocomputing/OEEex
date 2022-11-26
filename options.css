@@ -258,3 +258,12 @@ img.PlanetThumbnail {
 	height: 180px;
 }
 
+.editorSettings input, .editorSettings select{
+	position: absolute;
+	right: 1em;
+}
+
+.editorSettings select{
+	margin-top: 4px;
+}
+

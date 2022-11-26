@@ -9,6 +9,7 @@ listOfScript=['isShareable',
 	'addPlotly',
 	'3rd_party/shpwrite',
 	'addCopyJSON',
+	'editorSettings',
 	'openScriptNewTab'
 ];
 chrome.storage.local.get(listOfScript,
