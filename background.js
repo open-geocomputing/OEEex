@@ -17,6 +17,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		editorSettings:true,
 		ESfontSize:13,
 		ESfontFamily:"default",
+		surveyMessage:true,
 		addPlotly:true
 	});
 });

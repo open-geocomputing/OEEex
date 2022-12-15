@@ -10,6 +10,7 @@ listOfScript=['isShareable',
 	'3rd_party/shpwrite',
 	'addCopyJSON',
 	'editorSettings',
+	'surveyMessage',
 	'openScriptNewTab'
 ];
 chrome.storage.local.get(listOfScript,
