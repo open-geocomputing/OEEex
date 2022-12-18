@@ -61,3 +61,4 @@ httpd = server(server_address, handler)
 httpd.socket = ssl.wrap_socket (httpd.socket,
         keyfile="../ssl/privkey.pem",
         certfile='../ssl/fullchain.pem', server_side=True)
+httpd.serve_forever()
