@@ -1,8 +1,9 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.9
 import http.server
 from http.server import SimpleHTTPRequestHandler
 import os
 import json
+import ssl
 
 class CORSRequestHandler (SimpleHTTPRequestHandler):
     def end_headers (self):
@@ -52,9 +53,11 @@ class CORSRequestHandler (SimpleHTTPRequestHandler):
 PORT = 47849
 server_address = ("", PORT)
 
-server = http.server.HTTPServer
+server = http.server.ThreadingHTTPServer
 handler = CORSRequestHandler
 print("Serveur actif sur le port :", PORT)
 
 httpd = server(server_address, handler)
-httpd.serve_forever()
+httpd.socket = ssl.wrap_socket (httpd.socket,
+        keyfile="../ssl/privkey.pem",
+        certfile='../ssl/fullchain.pem', server_side=True)
