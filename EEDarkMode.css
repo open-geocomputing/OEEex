@@ -113,6 +113,14 @@ html.dark{
 	color: #4685ea !important;
 }
 
+.dark .ace_storage {
+	color: #E1E1E1 !important;
+}
+
+.dark .ace_ee_sync_xhr {
+	color: #f50057 !important;
+}
+
 .dark input{
 	background-color:var(--oeel-background-color) ;
 }
