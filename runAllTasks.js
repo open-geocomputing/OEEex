@@ -7,7 +7,7 @@ if(typeof OEEexEscape == 'undefined'){
 }
 
 function addRunAllTaskButton(){
-	let taskPanel=document.querySelector('#task-pane').shadowRoot;
+	let taskPanel=document.querySelector('#task-pane').shadowRoot.querySelector(".container");
 	const observer = new MutationObserver(function(mutationsList){
 		if(mutationsList.length>0 && mutationsList[0].addedNodes.length>0){
 			for (var i = mutationsList[0].addedNodes.length - 1; i >= 0; i--) {
