@@ -44,7 +44,7 @@ function chekForAssets(){
 	//request check of assets
 
 	let getAssetAvailability=new XMLHttpRequest();
-	getAssetAvailability.open("POST","https://asset-check-oee.open-geocomputing.org:47850/checkAcces",true);
+	getAssetAvailability.open("POST","https://asset-check-oee.open-geocomputing.org/checkAcces",true);
 	getAssetAvailability.setRequestHeader("Content-Type", "application/json");
 	getAssetAvailability.responseType = 'json';
 	getAssetAvailability.onload = function(e) {

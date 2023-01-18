@@ -149,7 +149,7 @@ function setOeelCache(active){
 				"action": {
 					"type": "redirect",
 					"redirect": {
-						"regexSubstitution": "https://proxy-oeel-code.open-geocomputing.org:47849/OpenEarthEngineLibrary/\\1"
+						"regexSubstitution": "https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/\\1"
 					}
 				},
 				"condition": {
