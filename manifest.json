@@ -31,7 +31,9 @@
 			"surveyMessage.js",
 			"3rd_party/lottie-player.js",
 			"images/logo.json",
-			"openScriptNewTab.js"
+			"openScriptNewTab.js",
+			"externalConenctingfix.js",
+			"3rd_party/trustedtypes.api_only.build.js"
 		],
 		"matches": ["https://code.earthengine.google.com/*"]
 	},{
