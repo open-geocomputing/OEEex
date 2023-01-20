@@ -4,7 +4,7 @@
 	"version": "1.4.3",
 	"manifest_version": 3,
 	"background": {
-		"service_worker": "background.js"
+		"scripts": ["background.js"]
 	},
 	"declarative_net_request" : {
 		"rule_resources" : [{
@@ -43,6 +43,10 @@
 		"resources":["options.html","planet.html"],
 		"matches":["https://www.open-geocomputing.org/*"]
 	}],
+	"options_ui": {
+		"page": "options.html",
+		"browser_style": false
+	},
 	"host_permissions": [
 		"https://code.earthengine.google.com/repo/file/load?*",
 		"https://api.planet.com/*",
@@ -52,7 +56,8 @@
 	"permissions": [
 		"activeTab",
 		"storage",
-		"declarativeNetRequest"
+		"webRequest",
+		"webRequestBlocking"
 	],
 	"content_scripts": [
 		{
@@ -78,9 +83,5 @@
 		"32": "/images/logo_white_OEEex_open_32.png",
 		"48": "/images/logo_white_OEEex_open_48.png",
 		"128": "/images/logo_white_OEEex_open_128.png"
-	},
-	"options_page": "options.html",
-	"externally_connectable": {
-		"matches": ["https://code.earthengine.google.com/*"]
 	}
 }
