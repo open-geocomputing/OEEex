@@ -45,7 +45,7 @@
 	}],
 	"options_ui": {
 		"page": "options.html",
-		"browser_style": false
+		"browser_style": true
 	},
 	"host_permissions": [
 		"https://code.earthengine.google.com/repo/file/load?*",
