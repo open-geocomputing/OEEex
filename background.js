@@ -135,35 +135,58 @@ function setOeelCache(active){
 
 	let future;
 	if(active){
-		future=fetch('https://proxy-oeel-code.open-geocomputing.org:47849/OpenEarthEngineLibrary/loadAll')
+		future=fetch('https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/loadAll')
 	}else{
 		future=Promise.reject(new Error('oeelCacheDisabled'));
 	}
 
-	future.then(function(){
-		//sucess
-		chrome.declarativeNetRequest.updateDynamicRules(
-			{addRules:[{
-				"id": 1,
-				"priority": 1,
-				"action": {
-					"type": "redirect",
-					"redirect": {
-						"regexSubstitution": "https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/\\1"
-					}
-				},
-				"condition": {
-					"regexFilter": "^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)"
-				}}],
+	if(!chrome.declarativeNetRequest){ //firefox
+		var oeel_redirect2Cache=true; 
+		future.then(function(){
+			oeel_redirect2Cache=true;
+		}).catch(function(){
+			oeel_redirect2Cache=false;
+		})
+
+		function redirect(requestDetails) {
+			let newUrl="https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/"+
+					requestDetails.url.match("^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)")[1];
+			return {
+				redirectUrl: newUrl
+			};
+		}
+
+		browser.webRequest.onBeforeRequest.addListener(
+			redirect,
+			{urls:["https://code.earthengine.google.com/repo/file/load?repo=users%2FOEEL%2Flib&path=*"], types:["xmlhttprequest"]},
+			["blocking"]
+		);
+		
+	}else{
+		future.then(function(){
+			//sucess
+			chrome.declarativeNetRequest.updateDynamicRules(
+				{addRules:[{
+					"id": 1,
+					"priority": 1,
+					"action": {
+						"type": "redirect",
+						"redirect": {
+							"regexSubstitution": "https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/\\1"
+						}
+					},
+					"condition": {
+						"regexFilter": "^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)"
+					}}],
+					removeRuleIds: [1]
+				})
+		}).catch(function(){
+			chrome.declarativeNetRequest.updateDynamicRules(
+			{
 				removeRuleIds: [1]
 			})
-	}).catch(function(){
-		chrome.declarativeNetRequest.updateDynamicRules(
-		{
-			removeRuleIds: [1]
 		})
-	})
-
+	}
 }
 
 chrome.storage.local.get(['oeelCache'], function(dict){setOeelCache(dict["oeelCache"]);});

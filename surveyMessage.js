@@ -1,4 +1,4 @@
-var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
+var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 window.addEventListener("load", function(){
     let start=new Date('2022-12-13');
     let end=new Date('2022-12-23');

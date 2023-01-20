@@ -1,5 +1,5 @@
 const consolePlanetExtensionPrefix='OEEex_AddonPlanetSearch';
-var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
+var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 planetConfig=null;
 var OEEex_version='1.0'
 

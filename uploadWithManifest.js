@@ -1,5 +1,5 @@
 var portUwM=null;
-var OEEexidString=document.currentScript.src.match("([a-z]{32})")[0];
+var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 
 if(typeof OEEexEscape == 'undefined'){
 	OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
