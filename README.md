@@ -1,5 +1,5 @@
 # OEEex
-A chrome extension to enhance Google Earth Engine code editor
+A Chrome and Firefox web browser extension to enhance the Google Earth Engine code editor.
 
 ## The Confirm Manager
 The confirm manager allows overloading the default confirm function and return 'ok' for any message containing a given key.
