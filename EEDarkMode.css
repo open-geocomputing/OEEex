@@ -185,3 +185,18 @@ html.dark{
 	background-color:rgb(29, 31, 33) ;
 	color: #C5C8C6;
 }
+
+/* Modal Content */
+.dark .oeeex.diag .content {
+	background-color: var(--oeel-background-color);
+	color:var(--oeel-color) ;
+	box-shadow: 0px 5px 10px 3px #bbb8;
+}
+
+.dark .oeeex.diag .content textarea{
+	color: var(--oeel-color);
+}
+
+.dark .oeeex.diag .content .logo img{
+	filter: invert(1) drop-shadow(2px 4px 6px white);
+}

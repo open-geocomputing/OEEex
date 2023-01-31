@@ -31,3 +31,151 @@
 .OEEexUploadButton.dragover iron-icon{
 	color: blueviolet;
 }
+
+/* The animation code */
+@keyframes annimationAIButtonShow {
+	from {opacity: 0}
+	to {opacity: 1;}
+}
+
+.editor-panel>.header button.ai-button {
+	width: 23px;
+	padding: 0;
+	animation-name: annimationAIButtonShow;
+	animation-duration: 1s;
+}
+
+.ai-button span{
+	font-size: 18px;
+}
+
+/* The Modal (background) */
+.oeeex.diag.container{
+	display: block; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 10; /* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.oeeex.diag .content {
+    box-shadow: 0px 5px 10px 3px #3338;
+	background-color: #fefefe;
+	transform: translate(calc( 50vw - 50% ), calc( 50vh - 50% ) );
+	border: 1px solid #888;
+	width: 40%;
+	min-width: 500px;
+	padding: 10px;
+	text-align: right;
+}
+
+.oeeex.diag .content .header{
+	text-align: right;
+}
+
+.oeeex.diag .content h2{
+	text-align: center;
+	margin-bottom: -15px;
+}
+
+.oeeex.diag .content .requestBox{
+	width: calc(100% - 6px);
+	text-align: left;
+	height: 300px;
+}
+
+.oeeex.diag .content button{
+	text-align: center;
+	padding: 5px;
+	background-color: #AF4C4D; /* Green */
+	border: none;
+	color: white;
+	padding: 8px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	border-radius: 5px;
+}
+
+.oeeex.diag .content .cancel{
+	background-color: #AF4C4D; /* red */
+	float: left;
+}
+
+.oeeex.diag .content .submit{
+	background-color: #4CAF50; /* Green */
+	float: right;
+}
+
+.oeeex.diag .content.running .submit,.oeeex.diag .content.running .cancel{
+	background-color: #888; /* Green */
+}
+
+
+
+
+.oeeex.diag .content hr{
+	margin: 5px 0px;
+}
+
+.oeeex.diag .content textarea{
+	background-color: #0000;
+	font-size: 18px;
+}
+
+.oeeex.diag .content .mainDiv{
+	z-index: 1;
+	position: relative;
+}
+/*.oeeex.diag .content{
+	background-image: url(https://www.svgrepo.com/download/306500/openai.svg);
+	background-repeat: no-repeat;
+	background-attachment:fixed;
+	background-position:center;
+	background-size: contain;
+	background-origin: content-box, content-box;
+}
+*/
+
+.oeeex.diag .content div.logo{
+	opacity: 0.2;
+	position: absolute;
+	display: grid;
+	height: 100%;
+	z-index: 0;
+}
+
+.oeeex.diag .content .logo img{
+	width: 35%;
+	margin: auto;
+	filter: drop-shadow(2px 4px 6px black);
+}
+
+
+.oeeex.diag .content.running .logo{
+  animation-name: rotateOAI;
+  animation-duration:0.7s;
+  animation-iteration-count:infinite;
+  animation-timing-function:linear;
+}
+
+@keyframes rotateOAI {
+  from {transform:rotate(0deg);}
+  to {  transform:rotate(-60deg);}
+}
+
+
+.oeeex.diag .content .errorBox{
+	text-align: center;
+	color: red;
+	vertical-align: middle;
+	margin: 13px 15% 5px;
+	font-size: 16px;
+}

@@ -12,6 +12,7 @@ function injectScripts(){
 		'addCopyJSON',
 		'editorSettings',
 		'surveyMessage',
+		'aiCodeGeneration',
 		'openScriptNewTab',
 	];
 
