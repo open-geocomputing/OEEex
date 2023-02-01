@@ -980,8 +980,8 @@ function analysisPlotlyAddon(val){
 		let input=obj.querySelector('input');
 		let plotDiv=document.createElement('div');
 		obj.appendChild(plotDiv);
-		input.style.display='none';
 		if(input.placeholder=="OEEex_Active_AddonPlotly"){
+			input.style.display='none';
 			addPlotlyPlot(input.value,plotDiv,false,input);
 		}
 	});
