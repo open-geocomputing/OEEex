@@ -31,3 +31,29 @@
 .OEEexUploadButton.dragover iron-icon{
 	color: blueviolet;
 }
+
+ee-console-log.OEEexTerminal{
+	position: absolute;
+	bottom: -30px;
+	width: 98%;
+}
+
+ee-console-log.OEEexTerminal div{
+	display: inline-grid;
+	width: calc( 99% - 18px);
+	margin: 0!important;
+	background-color: transparent!important;
+}
+
+ee-console-log.OEEexTerminal input.jfk-textinput{
+	border: none;
+	background-color: transparent;
+}
+
+ee-console-log.OEEexTerminal input::placeholder{
+	color: transparent;
+}
+
+ee-tab-panel ee-tab:nth-child(2){
+	height: calc(100% - 45px);
+}
