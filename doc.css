@@ -382,4 +382,19 @@ div.header-button-container .button.is-primary{
 	justify-content: left;
 }
 
+.documentation-menu .deprecated{
+	text-decoration: line-through;
+}
+
+h3.deprecated{
+	text-decoration: line-through;
+	text-decoration-color: gray;
+}
+
+h4.deprecated{
+	color: red;
+	font-weight: bold;
+
+}
+
 
