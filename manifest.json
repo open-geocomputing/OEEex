@@ -32,6 +32,7 @@
 			"3rd_party/lottie-player.js",
 			"images/logo.json",
 			"openScriptNewTab.js",
+			"addTerminal.js",
 			"externalConenctingfix.js",
 			"3rd_party/trustedtypes.api_only.build.js"
 		],
