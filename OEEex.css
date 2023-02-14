@@ -50,6 +50,10 @@ ee-console-log.OEEexTerminal input.jfk-textinput{
 	background-color: transparent;
 }
 
+ee-console-log.OEEexTerminal input.jfk-textinput:focus{
+	box-shadow: none;
+}
+
 ee-console-log.OEEexTerminal input::placeholder{
 	color: transparent;
 }
