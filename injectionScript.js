@@ -11,6 +11,7 @@ function injectScripts(){
 		'3rd_party/shpwrite',
 		'addCopyJSON',
 		'editorSettings',
+		'addTerminal',
 		'surveyMessage',
 		'aiCodeGeneration',
 		'openScriptNewTab',
