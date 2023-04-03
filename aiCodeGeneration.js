@@ -104,15 +104,19 @@ function openAiAssistanceInterface(){
 		aiRequest.responseType = 'json';
 		aiRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		aiRequest.onload = function(e) {
-			diag.classList.add("running");
+			diag.classList.remove("running");
 			textarea.disabled=false;
 			if (this.status == 200) {
 				editor.setValue(this.response.choices[0].text);
 				body.removeChild(diagContainer);
 			}
+			if (this.response && this.response.error) {
+				errorBox.textContent="Error: "+this.response.error.message;
+			}
+			
 		}
-		aiRequest.error = function(e) {
-			diag.classList.add("running");
+		aiRequest.onerror = function(e) {
+			diag.classList.remove("running");
 			textarea.disabled=false;
 			if (this.response && this.response.error) {
 				errorBox.textContent="Error: "+this.response.error.message;
