@@ -49,7 +49,8 @@
 		"https://code.earthengine.google.com/repo/file/load?*",
 		"https://api.planet.com/*",
 		"https://link.planet.com/*",
-		"https://tiles.planet.com/*"
+		"https://tiles.planet.com/*",
+		"https://api.openai.com/*"
 	],
 	"permissions": [
 		"activeTab",

@@ -88,7 +88,7 @@ function openAiAssistanceInterface(){
 			return;
 		}
 
-		let oaiURL='https://oeeex-ai-assistant.open-geocomputing.org';
+		let oaiURL='https://api.openai.com/';
 
 		let aiObject={
 			model: "code-davinci-edit-001",
@@ -100,7 +100,7 @@ function openAiAssistanceInterface(){
 			aiObject.input=editor.getValue();
 
 		let aiRequest=new XMLHttpRequest();
-		aiRequest.open("POST",oaiURL);
+		aiRequest.open("POST",oaiURL+"v1/edits");
 		aiRequest.responseType = 'json';
 		aiRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		aiRequest.onload = function(e) {

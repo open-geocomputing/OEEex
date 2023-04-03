@@ -17,7 +17,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		editorSettings:true,
 		ESfontSize:13,
 		ESfontFamily:"default",
-		aiCodeGeneration:true,
+		aiCodeGeneration:false,
 		addTerminal:true,
 		surveyMessage:true,
 		addPlotly:true
@@ -227,7 +227,7 @@ function loadPlanetApiKey(dic){
 	}
 }
 
-function checkDependances(dic){
+function checkPlanetDependances(dic){
 	if('planetLab' in dic){
 		if(dic['planetLab']['newValue'])
 		{
@@ -243,7 +243,7 @@ function checkDependances(dic){
 }
 
 chrome.storage.onChanged.addListener(loadPlanetApiKey);
-chrome.storage.onChanged.addListener(checkDependances);
+chrome.storage.onChanged.addListener(checkPlanetDependances);
 chrome.storage.local.get(['planetConfig'], loadPlanetApiKey);
 
 
@@ -281,3 +281,78 @@ chrome.storage.onChanged.addListener(function(){sendPlanetConfig();});
 
 chrome.runtime.onConnectExternal.addListener(PlanetPortConnection);
 chrome.runtime.onConnect.addListener(PlanetPortConnection);
+
+
+// OpenAI
+const openAIRulesId=11;
+function setOpenAI_ApiKey(openAI_Key){
+	if(openAI_Key)
+		console.log(openAI_Key)
+		chrome.declarativeNetRequest.updateSessionRules(
+			{addRules:[{
+				"id": openAIRulesId,
+				"priority": 1,
+				"action":{
+					type: 'modifyHeaders',// as RuleActionType,
+					requestHeaders: [
+					{ 
+						header: 'Authorization', 
+						operation: 'set',// as HeaderOperation, 
+						value: 'Bearer '+openAI_Key
+					},
+					],
+				},
+				"condition": { "regexFilter": "^https://api\\.openai\\.com/"}}
+				],
+				removeRuleIds: [openAIRulesId]
+			},
+			)
+}
+function loadOpenAI_ApiKey(dic){ 
+	if('openAIConfig' in dic){
+		console.log(dic)
+		openAIParam=dic['openAIConfig'];
+		if('newValue' in openAIParam) openAIParam=openAIParam['newValue'];
+		setOpenAI_ApiKey(openAIParam["apiKey"]);
+	}
+}
+
+
+chrome.storage.onChanged.addListener(loadOpenAI_ApiKey);
+chrome.storage.local.get(['openAIConfig'], loadOpenAI_ApiKey);
+
+
+listOpenAIPort=[];
+
+function sendOpenAIConfig(ports=listOpenAIPort){
+	if(!Array.isArray(ports)){
+		ports=[ports];
+	}
+
+	chrome.storage.local.get(['openAIConfig'], function(data) {
+		if('openAIConfig' in data){
+			ports.map((sender)=>sender.postMessage({ type:'openAIConfig', message: data['openAIConfig'] }));
+		}
+	});
+}
+
+function openAIPortConnection(port) {
+	if(port.name === "oeel.extension.openAI"){
+		listOpenAIPort.push(port);
+		sendOpenAIConfig(port);
+		port.onDisconnect.addListener(function() {
+			listOpenAIPort= listOpenAIPort.filter(function(el) { return el !== port});
+		});
+		port.onMessage.addListener((request, sender, sendResponse) => {
+			if(request.type=='setOpenAIConfig'){
+				chrome.storage.local.set({openAIConfig: request.message});
+				sendOpenAIConfig(listOpenAIPort);
+			}
+		});
+	}
+}
+
+chrome.storage.onChanged.addListener(function(){sendOpenAIConfig();});
+
+chrome.runtime.onConnectExternal.addListener(openAIPortConnection);
+chrome.runtime.onConnect.addListener(openAIPortConnection);

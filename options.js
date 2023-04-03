@@ -9,7 +9,8 @@ listOfScript=['isShareable',
 	'addPlotly',
 	'openScriptNewTab',
 	'editorSettings',
-	'addCopyJSON'
+	'addCopyJSON',
+	'aiCodeGeneration'
 ];
 
 var lightIsAutomatic=true;
@@ -318,25 +319,25 @@ chrome.storage.onChanged.addListener(setPlanetConfig);
 
 function setPlanetConfig(dic){
 	if('planetConfig' in dic){
-		planetParam=dic['planetConfig'];
-		if('newValue' in planetParam) planetParam=planetParam['newValue'];
-		document.getElementById('planetApiKey').value=planetParam["apiKey"];
-		document.getElementById('PlanetPathInGEE').value=planetParam["collectionPath"];
-		document.getElementById('PlanetThumbnail').checked=planetParam["Thumbnail"];
-		planetApiV=planetParam["apiVersion"];
+		openAIParam=dic['planetConfig'];
+		if('newValue' in openAIParam) openAIParam=openAIParam['newValue'];
+		document.getElementById('planetApiKey').value=openAIParam["apiKey"];
+		document.getElementById('PlanetPathInGEE').value=openAIParam["collectionPath"];
+		document.getElementById('PlanetThumbnail').checked=openAIParam["Thumbnail"];
+		planetApiV=openAIParam["apiVersion"];
 		document.getElementById('planetApiOptions').classList=['v'+planetApiV];
 		document.querySelectorAll('.planetApi.button').forEach((e)=>e.classList.add('is-outlined'));
 		document.querySelectorAll('.planetApi.button').forEach((e)=>e.classList.add('is-outlined'));
 		document.querySelector('.planetApi.button.v'+planetApiV).classList.remove('is-outlined');
-		document.querySelector('input[name="PlanetBandNaming"][value='+planetParam["bandNomenclature"]+']').checked=true;;
-		document.getElementById('PlanetBatchSize').value=planetParam["batchSize"];
+		document.querySelector('input[name="PlanetBandNaming"][value='+openAIParam["bandNomenclature"]+']').checked=true;;
+		document.getElementById('PlanetBatchSize').value=openAIParam["batchSize"];
 		document.getElementById('PlanetBatchSize').dispatchEvent(new Event('input'));
-		document.getElementById('PlanetParallelActivation').value=planetParam["maxParallelActivation"];
+		document.getElementById('PlanetParallelActivation').value=openAIParam["maxParallelActivation"];
 		document.getElementById('PlanetParallelActivation').dispatchEvent(new Event('input'));
-		document.getElementById('PlanetServiceAccount').value=planetParam["serviceAccount"];
+		document.getElementById('PlanetServiceAccount').value=openAIParam["serviceAccount"];
 
 		document.querySelector('.content.planetLab.available').classList.remove('somethingMissing');
-		if(!planetParam["apiKey"] || !planetParam["collectionPath"] || !planetParam["apiVersion"] ){
+		if(!openAIParam["apiKey"] || !openAIParam["collectionPath"] || !openAIParam["apiVersion"] ){
 			document.querySelector('.content.planetLab.available').classList.add('somethingMissing');
 		}
 	}
@@ -437,4 +438,38 @@ function addPlanetListner(){
 
 addPlanetListner();
 
-//stroke-width
+//OpenAI
+
+
+chrome.storage.onChanged.addListener(setOpenAIConfig);
+
+function setOpenAIConfig(dic){
+	if('openAIConfig' in dic){
+		openAIParam=dic['openAIConfig'];
+		if('newValue' in openAIParam) openAIParam=openAIParam['newValue'];
+		document.getElementById('openAIApiKey').value=openAIParam["apiKey"];
+		
+		document.querySelector('.content.aiCodeGeneration.available').classList.remove('somethingMissing');
+		if( !openAIParam["apiKey"] ){
+			document.querySelector('.content.aiCodeGeneration.available').classList.add('somethingMissing');
+		}
+	}
+}
+
+function constructOpenAIConfig(){
+	return{
+		apiKey:document.getElementById('openAIApiKey').value,
+	}
+}
+
+function saveNewOpenAIParam(event=false){
+	chrome.storage.local.set({openAIConfig:constructOpenAIConfig()});
+}
+
+function addOpenAIListner(){
+
+	chrome.storage.local.get(['openAIConfig'],setOpenAIConfig);
+	document.getElementById('openAIApiKey').addEventListener('change', saveNewOpenAIParam);
+}
+
+addOpenAIListner();
