@@ -198,7 +198,7 @@ chrome.storage.local.get(['oeelCache'], function(dict){setOeelCache(dict["oeelCa
 const PlanetRulesId=10;
 function setPlanetApiKey(planetKey){
 	if(planetKey)
-		chrome.declarativeNetRequest.updateSessionRules(
+		chrome.declarativeNetRequest.updateDynamicRules(
 			{addRules:[{
 				"id": PlanetRulesId,
 				"priority": 1,
@@ -288,7 +288,7 @@ const openAIRulesId=11;
 function setOpenAI_ApiKey(openAI_Key){
 	if(openAI_Key)
 		console.log(openAI_Key)
-		chrome.declarativeNetRequest.updateSessionRules(
+		chrome.declarativeNetRequest.updateDynamicRules(
 			{addRules:[{
 				"id": openAIRulesId,
 				"priority": 1,
