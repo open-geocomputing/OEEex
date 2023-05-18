@@ -7,8 +7,8 @@ if(typeof OEEexEscape == 'undefined'){
 function injectFunctionSignature(event){
 	event.stopPropagation();
 
-	let functionInfo=this.getRootNode().host.__node
-
+	let ho=this.getRootNode().host;
+	let functionInfo=ho[Object.getOwnPropertySymbols(ho)[1]];
 	event.stopPropagation();
 	let text='';
 	for (var i = (functionInfo.isStatic ? 0 : 1); i < functionInfo.signature.args.length; i++) {
