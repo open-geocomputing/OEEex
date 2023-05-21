@@ -18,6 +18,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		ESfontSize:13,
 		ESfontFamily:"default",
 		addTerminal:true,
+		pythonCE:true,
 		surveyMessage:true,
 		addPlotly:true
 	});

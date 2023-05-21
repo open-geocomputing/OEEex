@@ -14,6 +14,7 @@ function injectScripts(){
 		'addTerminal',
 		'surveyMessage',
 		'openScriptNewTab',
+		'pythonCE',
 	];
 
 	chrome.storage.local.get(listOfScript,
