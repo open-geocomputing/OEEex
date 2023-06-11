@@ -36,6 +36,7 @@
 			"pythonCE.js",
 			"externalConenctingfix.js",
 			"earthengine-api.tar.gz",
+			"OEE_Interface.py",
 			"3rd_party/trustedtypes.api_only.build.js"
 		],
 		"matches": ["https://code.earthengine.google.com/*"]
