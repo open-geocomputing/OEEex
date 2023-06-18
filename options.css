@@ -294,3 +294,8 @@ img.PlanetThumbnail {
 	margin-top: 4px;
 }
 
+.editorSettings .EC_SC_Setting{
+	width:250px;
+	text-align: right;
+}
+
