@@ -22,7 +22,7 @@
 			"EEDarkMode.js",
 			"uploadWithManifest.js",
 			"hackEE.js",
-			"addCommandS.js",
+			"consoleError.js",
 			"runAllTasks.js",
 			"addPlotly.js",
 			"3rd_party/shpwrite.js",
