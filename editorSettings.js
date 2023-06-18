@@ -13,8 +13,6 @@ function setECSettings(request,root){
 	clearTimeout(oeel_ECSet);
 	oeel_ECSet=null;
 	if(request.type=='EditorSetting'){
-
-		console.log(request.message)
 		if (request.message.ESfontSize) root.style.setProperty('--editorFontSize', request.message.ESfontSize + "px");
 		if (request.message.ESfontFamily){
 			root.style.setProperty('--editorFontFamily', request.message.ESfontFamily);
