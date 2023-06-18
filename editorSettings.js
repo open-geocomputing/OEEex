@@ -57,7 +57,6 @@ function initEditorSettings(){
 	let portWithBackground=null;
 
 	function setPortWithBackground(){
-		console.log("setPortWithBackground")
 		portWithBackground= chrome.runtime.connect(OEEexidString,{name: "oeel.extension.editorSettings"});
 		portWithBackground.onMessage.addListener((request, sender, sendResponse) => {
 			if(oeel_ECSet)clearTimeout(oeel_ECSet);
