@@ -19,7 +19,7 @@ function setECSettings(request,root){
 			if (request.message.ESfontFamily=='default')
 				root.style.setProperty('--editorFontFamily', "'Menlo','Monaco','DejaVu Sans Mono','Bitstream Vera Sans Mono','Consolas','source-code-pro',monospace");
 		}	
-		if (request.message.EStabSize) editor.setOption('tabSize',request.message.EStabSize)
+		if (request.message.EStabSize) setTimeout(function(){editor.setOption('tabSize',request.message.EStabSize)},1);
 		if (request.message.ES_SC){
 			for (const [key, value] of Object.entries(request.message.ES_SC)) {
 				editor.commands.commands[key].bindKey.mac=value;
