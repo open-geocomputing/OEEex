@@ -12,6 +12,7 @@ function injectScripts(){
 		'editorSettings',
 		'addTerminal',
 		'surveyMessage',
+		'consoleError',
 		'openScriptNewTab',
 	];
 
