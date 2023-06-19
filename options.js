@@ -8,6 +8,7 @@ listOfScript=['isShareable',
 	'addPlotly',
 	'openScriptNewTab',
 	'editorSettings',
+	'consoleError',
 	'addCopyJSON'
 ];
 
