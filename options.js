@@ -4,11 +4,11 @@ listOfScript=['isShareable',
 	'uploadWithManifest',
 	'hackEE',
 	'EEDarkMode',
-	'addCommandS',
 	'oeelCache',
 	'addPlotly',
 	'openScriptNewTab',
 	'editorSettings',
+	'consoleError',
 	'addCopyJSON'
 ];
 
@@ -48,7 +48,7 @@ function runOnceLoaded(){
 	// logoPlayer.play();
 
 	for (var i = listOfScript.length - 1; i >= 0; i--) {
-		document.querySelector('.'+listOfScript[i]).classList.add('available');
+		document.querySelector('.'+listOfScript[i])?.classList.add('available');
 	}
 }
 
@@ -85,6 +85,7 @@ function setSatus(key,
 	if(!(listOfScript.includes(key)))
 		return;
 	let element=document.querySelector('.'+key);
+	if(!element)return;
 	let player=element.querySelector('.lock lottie-player');
 	player.autoplay=false;
 
@@ -264,14 +265,33 @@ function initES(){
 		let listFont=listMonospaceFonts().map(fontName=>selector.appendChild(new Option(fontName, fontName)))
 	})()
 
-	chrome.storage.local.get(['ESfontSize','ESfontFamily'],
+	chrome.storage.local.get(['ESfontSize','ESfontFamily','EStabSize','ES_SC'],
 		function(data){
 			if (data.ESfontSize) {document.querySelector('#fontSize').setAttribute('value',data.ESfontSize);}
 			if (data.ESfontFamily) {document.querySelector('#fontFamily').value=data.ESfontFamily;}
+			if (data.EStabSize) {document.querySelector('#tabSize').value=data.EStabSize;}
+			if (data.ES_SC) {
+				for (const [key, value] of Object.entries(data.ES_SC)) {
+					console.log(key, value);
+					let obj=document.querySelector('.EC_SC_Setting[name="'+key+'"]');
+					if(obj) obj.value=value;
+				}
+			}
 		});
 
 	document.querySelector('#fontSize').addEventListener('change',function(event){chrome.storage.local.set({ESfontSize:event.target.value});});
 	document.querySelector('#fontFamily').addEventListener('change',function(event){chrome.storage.local.set({ESfontFamily:event.target.value})});
+	document.querySelector('#tabSize').addEventListener('change',function(event){chrome.storage.local.set({EStabSize:event.target.value})});
+	document.querySelectorAll('.EC_SC_Setting').forEach(function(el){el.addEventListener('change',function(event){
+		let newSc={}
+		document.querySelectorAll('.EC_SC_Setting').forEach(function(e){	
+			if(e.value)
+				newSc[e.name]=e.value;
+		})
+		chrome.storage.local.set({ES_SC:newSc})
+	});
+	});
+
 }
 
 

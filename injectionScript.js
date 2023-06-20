@@ -5,7 +5,6 @@ function injectScripts(){
 		'uploadWithManifest',
 		'hackEE',
 		'EEDarkMode',
-		'addCommandS',
 		'runAllTasks',
 		'addPlotly',
 		'3rd_party/shpwrite',
@@ -13,6 +12,7 @@ function injectScripts(){
 		'editorSettings',
 		'addTerminal',
 		'surveyMessage',
+		'consoleError',
 		'openScriptNewTab',
 		'pythonCE',
 	];

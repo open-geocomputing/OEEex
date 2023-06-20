@@ -63,6 +63,9 @@
 						</div>
 					</div>
 					<div class="message-body">
+						Tab size
+						<input id="tabSize" type="number" name="tabSize" min="1" max="10">
+						<br>
 						Font size
 						<input id="fontSize" type="number" name="fontSize" min="10" max="35">
 						<br>
@@ -70,23 +73,29 @@
 						<select name="fontFamily" id="fontFamily">
 							<option value="default">Default</option>
 						</select>
+						<div class="subsection box mt-2">
+							<h3>Shortcut</h3>
+							<div class="field">								
+								Execute
+								<input id="EC_Execute" class="EC_SC_Setting" type="text" name="Execute" placeholder="Ctrl-Enter"><br>
+								Execute With Profiler
+								<input id="EC_Execute With Profiler" class="EC_SC_Setting" type="text" name="Execute With Profiler" placeholder="Alt-Ctrl-Enter"><br>
+								Save
+								<input id="EC_Save" class="EC_SC_Setting" type="text" name="Save" placeholder="ctrl+S"><br>
+								Search
+								<input id="EC_Search" class="EC_SC_Setting" type="text" name="Search" placeholder="Alt-Ctrl-F"><br>
+								Suggestion
+								<input id="EC_Suggestion" class="EC_SC_Setting" type="text" name="Suggestion" placeholder="Ctrl-Space"><br>
+								alignCursors
+								<input id="EC_alignCursors" class="EC_SC_Setting" type="text" name="alignCursors" placeholder="Ctrl-Alt-A"><br>
+							</div>
+							<!-- <br>
+							<hr class="hr-text" data-content="OR">
+							<hr class="hr-big"> -->
+						</div>						
 					</div>
 				</article>
 			</div>
-			<div class="content is-medium addCommandS">
-				<article class="message is-info">
-					<div class="message-header">
-						macOS shortcuts
-						<div class="lock">
-							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
-						</div>
-					</div>
-					<div class="message-body">
-						This add the support of ⌘+S as save shortcut
-					</div>
-				</article>
-			</div>
-
 			<div class="content is-medium openScriptNewTab">
 				<article class="message is-info">
 					<div class="message-header">
@@ -165,6 +174,19 @@
 					</div>
 					<div class="message-body">
 						This allow to automatically insert a function signature from documentation to the code editor.
+					</div>
+				</article>
+			</div>
+			<div class="content is-medium consoleError">
+				<article class="message is-info">
+					<div class="message-header">
+						Error in console header 
+						<div class="lock">
+							<lottie-player src="images/logo.json" id='logo' background="transparent"  speed="1"  style="width: 2em; height: 2em;" ></lottie-player>
+						</div>
+					</div>
+					<div class="message-body">
+						Adjust the color of the console header in red to display errors. This is incredibly useful when using the inspector tool, as it provides immediate notification of errors within your script.
 					</div>
 				</article>
 			</div>

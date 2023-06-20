@@ -287,10 +287,15 @@ img.PlanetThumbnail {
 
 .editorSettings input, .editorSettings select{
 	position: absolute;
-	right: 1em;
+	right: 3em;
 }
 
 .editorSettings select{
 	margin-top: 4px;
+}
+
+.editorSettings .EC_SC_Setting{
+	width:250px;
+	text-align: right;
 }
 
