@@ -1,6 +1,7 @@
 var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 
 const consolePythonCEExtensionPrefix='OEEex_AddonPythonCE';
+const promptPythonCEExtensionPrefix='OEEex_Active_AddonPythonCE';
 
 if(typeof OEEexEscapeURL == 'undefined'){
 	OEEexEscapeURL = trustedTypes.createPolicy("OEEexEscapeURL", {
@@ -15,20 +16,64 @@ if(typeof OEEexEscape == 'undefined'){
 }
 
 currentInputUsed=null;
+EEContext=null;
 
 function oeePrint(toPrint){
-	if(currentInputUsed){
-		currentInputUsed.value=toPrint;
-		currentInputUsed.dispatchEvent(new Event('change'));
+	if(EEContext){
+		EEContext({answerType:"printConsole", value:toPrint})
 	}else{
-		console.log(JSON.parse(toPrint));
+		console.log(toPrint);
 	}
 }
+
+function oeeMap(eeMapOp,args){
+	if(EEContext){
+		EEContext({answerType:"MapOperation", mapOp:eeMapOp ,args:args})
+	}
+}
+
+function oeePlot(imageString){
+	if(EEContext){
+		EEContext({answerType:"pyplotFigure",value:imageString})
+	}
+}
+
+
 
 function oeeComputeValue(obj){
 	let val= ee.data.computeValue(ee.Deserializer.fromJSON(obj));
 	return val;
 }
+
+function oeeIsEE(obj){
+	return obj instanceof ee.ComputedObject;
+}
+
+function oeeEncodeEE(obj){
+	return ee.Serializer.encode(obj);
+}
+
+function oeeEEtype(obj){
+	return obj.name();
+}
+
+function oeeAsEEJS(obj,type){
+	return ee[type](ee.Deserializer.decode(obj.toJs({dict_converter: Object.fromEntries})))
+}
+function oeeAsJS(obj){
+	if(obj instanceof pyodide.ffi.PyProxy )
+		return obj.toJs({dict_converter: Object.fromEntries})
+	return obj
+}
+
+function callJSFucntion(f,args){
+	return f.apply(null,args)
+}
+
+function oeeIsFunction(obj){
+	return obj instanceof Function;
+}
+
 
 function injectPythonCE(){
 	window.dispatchEvent(new CustomEvent('pyodideLoading'));
@@ -75,85 +120,38 @@ function requestAsEE(uri){
 	throw "Python init error"
 }
 
-function loadConsolePythonCEWatcher(){
-	let MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
-	let myObserver          = new MutationObserver(function(mutList){
-
-		[...mutList].map(function(mut){
-			[...mut.addedNodes].map(function(e){
-				if (e.classList){
-					if(e.classList.contains('OEEexPythonCEAnalysis'))
-						return;
-					e.classList.add('OEEexPythonCEAnalysis')
-					analysisPythonCEAddon(e)
-				}
-			});
-		});
-	});
-	let obsConfig = { childList: true};
-	
-	if(document.querySelector('ee-console'))
-		myObserver.observe(document.querySelector('ee-console'), obsConfig);
+function overloadPrompt(){
+	let originalPrompt=prompt;
+	prompt=function(code, inputVal){
+		if(code==promptPythonCEExtensionPrefix){
+			return runSendPython(inputVal);
+		}
+		return originalPrompt(code,inputVal)
+	}
 }
 
-function editorModeWatcher(){
-
-	
-	let MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
-	let myObserver          = new MutationObserver(function(mutList){
-		let newName=false;
-		for (var i = 0; i < mutList.length; i++) {
-			if(mutList[i].addedNodes.length>0)
-				newName=mutList[i].addedNodes[0].textContent;
-		}
-		if(newName){
-			var editorElement=document.getElementsByClassName('ace_editor')
-			if(editorElement && editorElement.length>0){
-				editorElement[0].id='editor'
-				var editor = ace.edit("editor");
-			}
-			editor.session.setMode(newName.includes(".py")?"ace/mode/python":"ace/mode/javascript");
-		}
-	});
-	let obsConfig = { childList: true, characterData: true, subtree: true };;
-	
-	if(document.querySelector('.panel.editor-panel .header'))
-		myObserver.observe(document.querySelector('.panel.editor-panel .header'), obsConfig);
-}
-
-
-// editorModeWatcher()
-
-function analysisPythonCEAddon(val){
-	val.querySelectorAll('.ui-widget.ui-textbox').forEach(function(obj){
-		let input=obj.querySelector('input');
-		if(input.placeholder=="OEEex_Active_AddonPythonCE"){
-			obj.parentElement.style.display='none';
-			runSendPython(input);
-		}
-	});
-}
-
-function runSendPython(inputElement){
+overloadPrompt();
+injectPythonCE();
+function runSendPython(inputVal){
 	if(typeof pyoee == 'undefined' || typeof pyodide == 'undefined'){
 		injectPythonCE();
-		window.addEventListener('pyodideLoaded',function(){
-			runSendPython(inputElement)
-		});
-		return;
+		return {answerType:"error", message:"Wait that Python is loaded and re-run the code."};
 	}
-	currentInputUsed=inputElement;
-	let jsInput=JSON.parse(inputElement.value);
+
+	//currentInputUsed=inputElement;
+	let jsInput=inputVal;
 	switch (jsInput.type) {
 	case 'code':
 		pyodide.runPythonAsync(jsInput.code)
 		break;
 	case 'functionCall':
 		let functionResult=pyoee.callFunction(jsInput.pyId,jsInput.functionName,jsInput.arg);
-		inputElement.value=functionResult;
-		inputElement.dispatchEvent(new Event('change'))
+		return  oeeAsJS(functionResult);
 		break;
 	case 'loadModule':
+		EEContext=inputVal.context;
+
+			// delete inputVal.context;
 		let path=jsInput.path.split(":");
 		let url="https://code.earthengine.google.com/repo/file/load?repo="+encodeURI(path[0])+"&path="+encodeURI(path[1]);
 
@@ -169,13 +167,10 @@ function runSendPython(inputElement){
 		}
 
 		let lodingInfo=pyoee.loadModule(sourceCode,jsInput.path)
-		inputElement.value=lodingInfo;
-		inputElement.dispatchEvent(new Event('change'))
+		return oeeAsJS(lodingInfo);
 		break;
 	default:
 		console.log(`Sorry ${jsInput.type} is unsuported.`);
 	}
 
 }
-
-loadConsolePythonCEWatcher();

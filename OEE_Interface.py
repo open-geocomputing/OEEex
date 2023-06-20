@@ -11,17 +11,17 @@ oeel_namespaceArray = []
 consoleLog=print
 
 def eePrint(toPrint):
-	js.oeePrint(json.dumps({"answerType":"printConsole","type":"Print in CE console","value":toPrint}))
+	js.oeePrint(ee_Py2Js(toPrint));
 
 def eeMapOp(name,args):
-	js.oeePrint(json.dumps({"answerType":"MapOperation","type":"CE Map operation","mapOp":name,"value":encodeFunctionArgs(args)}))
+	js.oeeMap(name, ee_Py2Js([ee_Py2Js(value) for value in args]))
 
 def displayPlt():
 	buffer = io.BytesIO()
 	matplotlib.pyplot.savefig(buffer, format='png')
 	buffer.seek(0)
 	encoded_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
-	js.oeePrint(json.dumps({"answerType":"pyplotFigure","type":"Figure Pyplot","value":"data:image/png;base64,"+encoded_image}))
+	js.oeePlot("data:image/png;base64,"+encoded_image);
 
 matplotlib.pyplot.show=displayPlt;
 
@@ -34,28 +34,6 @@ class Map():
 			eeMapOp(name,args)
 		return method
 
-
-def encodeInput(inputVal):
-	if(isinstance(inputVal, types.FunctionType)):
-		raise NotImplementedError("This function has not been implemented yet due to the Async nature of JavaScript.");
-		# return {'type':'function','value':id(inputVal)}
-	if(isinstance(inputVal, ee.computedobject.ComputedObject)):
-		return {'type':'ee','ee_type':inputVal.name(),'value':json.dumps(ee.serializer.encode(inputVal))};
-	return {'type':'other','value':json.dumps(ee.serializer.encode(inputVal))};
-
-def decodeInput(inputVal):
-	if(inputVal['type']=='function'):
-		return generateFunction(inputVal)
-	if(inputVal['type']=='ee'):
-		return getattr(ee,inputVal['ee_type'])(ee.deserializer.fromJSON(inputVal["value"]));
-	return ee.deserializer.fromJSON(inputVal["value"]);
-
-def encodeFunctionArgs(args):
-	if len(args)==1 and isinstance(args[0],dict): # and !isinstance(args[0], ee.computedobject.ComputedObject):
-		return {key: encodeInput(value) for key, value in args[0]};
-	else:
-		return [encodeInput(value) for value in args];
-
 def loadModule(string,name):
 	code_block = compile(string, '<string>', 'exec')
 	idVal=len(oeel_namespaceArray);
@@ -65,19 +43,44 @@ def loadModule(string,name):
 	oeel_namespaceArray[idVal]["__builtins__"]["print"]=eePrint;
 	oeel_namespaceArray[idVal]["__builtins__"]["Map"]=Map();
 	oeel_namespaceArray[idVal]["__builtins__"]["ee"]=ee;
-	return json.dumps({"pyId":idVal,"id":":\"{}\"".format(name), "answerType":"moduleLoaded","type":"Python Module", "functions":list(filter(lambda x: x!="__builtins__", oeel_namespaceArray[idVal].keys()))})
+	return {"pyId":idVal,"id":":\"{}\"".format(name), "answerType":"moduleLoaded","type":"Python Module", "functions":list(filter(lambda x: x!="__builtins__", oeel_namespaceArray[idVal].keys()))};
+
+def isEEObject(val):
+	return js.oeeIsEE(val);
+
+def EEtype(val):
+	return js.oeeEEtype(val);
+
+def isJSFunction(val):
+	return js.oeeIsFunction(val);
+
+def ee_Js2Py(val):
+	if isEEObject(val):
+		return getattr(ee,EEtype(val))(ee.deserializer.decode(js.oeeEncodeEE(val).to_py()));
+	if isJSFunction(val):
+		def wrapper(*args,**kargs):
+			if(len(args)>0):
+				return js.callJSFucntion(val,ee_Py2Js([ee_Py2Js(value) for value in args]));
+			else:
+				return js.callJSFucntion(val,ee_Py2Js([{ee_Py2Js(value) for key, value in kargs}]));
+		return wrapper;
+	return val.to_py();
+
+def ee_Py2Js(val):
+	if isinstance(val, ee.computedobject.ComputedObject):
+		return js.oeeAsEEJS(ee.serializer.encode(val),val.name());
+	return js.oeeAsJS(val)
+
 
 def callFunction(idVal,name,args):
 	func = oeel_namespaceArray[idVal][name];
-	args=args.to_py();
+	args=args.to_py(depth=1);
 	
 	if type(args) is list: # Python's built-in array type is called list
-		r=func(*[decodeInput(value) for value in args])
+		r=func(*[ee_Js2Py(value) for value in args])
 	elif type(args) is dict: # Python's built-in dictionary type is called dict
-		r=func(**{key: decodeInput(value) for key, value in args})
+		r=func(**{key: ee_Js2Py(value) for key, value in args})
 	else:
 		r=func(args)
-	
-	r=encodeInput(r)
-	r["answerType"]="functionResult";
-	return json.dumps(r);
+
+	return {"answerType":"functionResult", "value":ee_Py2Js(r)};
