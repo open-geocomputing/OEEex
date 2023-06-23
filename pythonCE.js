@@ -15,6 +15,55 @@ if(typeof OEEexEscape == 'undefined'){
 	});
 }
 
+// add pythonLogo
+
+
+function addPythonLogo(){
+	let rootElement=document.querySelector('.goog-splitpane-second-container ee-tab-panel').shadowRoot;
+
+	var sheet = new CSSStyleSheet
+	sheet.replaceSync( `.header img.pytLogo { float: right; width: 19px; padding: 2px 6px; filter: drop-shadow(0px 0px 3px white); }
+						.header img.pytLogo.disabled { filter: grayscale(1); }
+						.header img.pytLogo {  }
+						@keyframes colorToGrayPyLogo {
+							0% { filter: grayscale(100%); }
+							50% { filter: drop-shadow(0px 0px 3px white); }
+							100% { filter: grayscale(100%); }
+						}
+						@keyframes rotatePyLogo {
+							0% { transform: rotate(0deg); }
+							100% { transform: rotate(360deg); }
+						}
+						.header img.pytLogo.loading {
+							/*animation: colorToGrayPyLogo 0.1s infinite;*/
+							animation: rotatePyLogo 2s linear infinite;
+							filter: drop-shadow(0px 0px 3px white) grayscale(66%);
+						}
+						.header img.pytLogo.running {
+							animation: rotatePyLogo 1s linear infinite;
+						}`)
+	// Append your style to the existing style sheet.
+	rootElement.adoptedStyleSheets=[...rootElement.adoptedStyleSheets,sheet];
+
+	let newImg = document.createElement('img');
+	newImg.classList.add("pytLogo","disabled")
+	newImg.src="chrome-extension://"+OEEexidString+"/images/pyLogo.svg"
+	rootElement.querySelector('.header').appendChild(newImg);
+
+	window.addEventListener("startPython",function(){newImg.classList.add("running");});
+	window.addEventListener("stopPython",function(){newImg.classList.remove("running");});
+
+	window.addEventListener("pyodideLoading",function(){
+		newImg.classList.add("loading");
+		newImg.classList.remove("disabled");
+	})
+	window.addEventListener("pyodideLoaded",function(){
+		newImg.classList.remove("loading");
+	})
+}
+
+addPythonLogo();
+
 currentInputUsed=null;
 EEContext=null;
 
@@ -38,7 +87,32 @@ function oeePlot(imageString){
 	}
 }
 
+function oeelExport(path,args){
+	let f=playground.api.Export;
+	for (var i = 0; i < path.length; i++) {
+		f=f[path[i]];
+	}
+	f.apply(null,args);
+}
 
+function oeelData(dataFunction,args){
+	let f=ee.data[dataFunction];
+	return f.apply(null,args);
+}
+
+
+function oeelCall(path, args){
+	if(EEContext){
+		return EEContext({answerType:"oeelCall", path:path ,args:args})
+	}
+	else{
+		throw "Error oeel not available. This error should not be possible :)"
+	}
+}
+
+function oeeRequireJS(path){
+	return oeeRequire(path)
+}
 
 function oeeComputeValue(obj){
 	let val= ee.data.computeValue(ee.Deserializer.fromJSON(obj));
@@ -55,6 +129,13 @@ function oeeEncodeEE(obj){
 
 function oeeEEtype(obj){
 	return obj.name();
+}
+
+function oeelGetJsCallable(funcID){
+	return function(){
+		console.log(arguments)
+		return pyoee.callFunc(funcID)
+	}
 }
 
 function oeeAsEEJS(obj,type){
@@ -76,6 +157,7 @@ function oeeIsFunction(obj){
 
 
 function injectPythonCE(){
+	let start = Date.now();
 	window.dispatchEvent(new CustomEvent('pyodideLoading'));
 	var s = document.createElement('script');
 	s.src = OEEexEscapeURL.createScriptURL("https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js");
@@ -85,11 +167,12 @@ function injectPythonCE(){
 			pyodide.loadPackage("matplotlib").then(function(){
 			pyodide.runPythonAsync(`
 	from pyodide.http import pyfetch
-	response = await pyfetch("chrome-extension://`+OEEexidString+`/earthengine-api.tar.gz")
-	await response.unpack_archive()
-	response2 = await pyfetch("chrome-extension://`+OEEexidString+`/OEE_Interface.py")
+	response = pyfetch("chrome-extension://`+OEEexidString+`/earthengine-api.tar.gz")
+	response2 =pyfetch("chrome-extension://`+OEEexidString+`/OEE_Interface.py")
+	unpack=(await response).unpack_archive()
 	with open("OEE_Interface.py", "wb") as f:
-		f.write(await response2.bytes())
+		f.write(await (await response2).bytes())
+	await unpack
 			`).then(function(){
 				pyee=pyodide.pyimport("ee");
 				console.log("ee charge in Py env")
@@ -98,9 +181,9 @@ function injectPythonCE(){
 				pyoee=pyodide.pyimport("OEE_Interface");
 				console.log("OEE interface is initialized")
 				window.dispatchEvent(new CustomEvent('pyodideLoaded'));
+				console.log(`Python load time: ${Date.now() - start} ms`);
 			})})
 		})
-
 		this.remove();
 	};
 	(document.head || document.documentElement).appendChild(s);
@@ -131,46 +214,79 @@ function overloadPrompt(){
 }
 
 overloadPrompt();
-injectPythonCE();
+// if(window.location.pathname!=="/" || new URLSearchParams(window.location.search).get("scriptPath")){
+// 	setTimeout("injectPythonCE();",1)
+// }else{
+// 	setTimeout("injectPythonCE();",10)
+// }
+
+function oeeRequire(path){
+	let sourceCode=requestCodeSync(path);
+	'use strict'
+	return eval("(function(){var exports={};" +sourceCode+"\n return exports})()")
+}
+
+function requestCodeSync(requestedPath){
+	
+	let path=requestedPath.split(":");
+	let url="https://code.earthengine.google.com/repo/file/load?repo="+encodeURI(path[0])+"&path="+encodeURI(path[1]);
+
+	const request = new XMLHttpRequest();
+	request.open("GET", url, false); // `false` makes the request synchronous
+	
+	request.setRequestHeader('X-XSRF-Token',window._ee_flag_initialData.xsrfToken);
+	request.setRequestHeader('Content-Type', 'application/json');
+	request.send(null);
+
+	if (request.status === 200) {
+		return JSON.parse(request.responseText);
+	}else{
+		throw request.responseText
+	}
+}
+
+
+
+
 function runSendPython(inputVal){
 	if(typeof pyoee == 'undefined' || typeof pyodide == 'undefined'){
 		injectPythonCE();
-		return {answerType:"error", message:"Wait that Python is loaded and re-run the code."};
+		window.addEventListener("pyodideLoaded",function(){
+			document.querySelector(".goog-button.run-button").click()
+		}, {once: true})
+		return {answerType:"error", message:"Wait that Python is loaded and re-run the code\n The code should reboot automatically (<10s)."};
 	}
 
 	//currentInputUsed=inputElement;
-	let jsInput=inputVal;
-	switch (jsInput.type) {
-	case 'code':
-		pyodide.runPythonAsync(jsInput.code)
-		break;
-	case 'functionCall':
-		let functionResult=pyoee.callFunction(jsInput.pyId,jsInput.functionName,jsInput.arg);
-		return  oeeAsJS(functionResult);
-		break;
-	case 'loadModule':
-		EEContext=inputVal.context;
+	window.dispatchEvent(new CustomEvent('startPython'));
+	
+	try {
+  		let jsInput=inputVal;
+		switch (jsInput.type) {
+		case 'code':
+			pyodide.runPythonAsync(jsInput.code)
+			window.dispatchEvent(new CustomEvent('stopPython'));
+			break;
+		case 'functionCall':
+			let functionResult=pyoee.callFunction(jsInput.pyId,jsInput.functionName,jsInput.arg);
+			window.dispatchEvent(new CustomEvent('stopPython'));
+			return  oeeAsJS(functionResult);
+			break;
+		case 'loadModule':
+			EEContext=inputVal.context;
 
-			// delete inputVal.context;
-		let path=jsInput.path.split(":");
-		let url="https://code.earthengine.google.com/repo/file/load?repo="+encodeURI(path[0])+"&path="+encodeURI(path[1]);
+			sourceCode=requestCodeSync(jsInput.path)
 
-		const request = new XMLHttpRequest();
-		request.open("GET", url, false); // `false` makes the request synchronous
-		
-		request.setRequestHeader('X-XSRF-Token',window._ee_flag_initialData.xsrfToken);
-		request.setRequestHeader('Content-Type', 'application/json');
-		request.send(null);
-
-		if (request.status === 200) {
-			sourceCode=JSON.parse(request.responseText);
+			let lodingInfo=pyoee.loadModule(sourceCode,jsInput.path)
+			window.dispatchEvent(new CustomEvent('stopPython'));
+			return oeeAsJS(lodingInfo);
+			break;
+		default:
+			console.log(`Sorry ${jsInput.type} is unsuported.`);
+			window.dispatchEvent(new CustomEvent('stopPython'));
+			break;
 		}
-
-		let lodingInfo=pyoee.loadModule(sourceCode,jsInput.path)
-		return oeeAsJS(lodingInfo);
-		break;
-	default:
-		console.log(`Sorry ${jsInput.type} is unsuported.`);
+	} finally {
+	  window.dispatchEvent(new CustomEvent('stopPython'));
 	}
-
 }
