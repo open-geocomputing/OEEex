@@ -9,6 +9,7 @@ listOfScript=['isShareable',
 	'openScriptNewTab',
 	'editorSettings',
 	'consoleError',
+	'pythonCE',
 	'addCopyJSON'
 ];
 
