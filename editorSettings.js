@@ -12,7 +12,7 @@ function setECSettings(request,root){
 	if(typeof(editor)=="undefined") return;
 	clearTimeout(oeel_ECSet);
 	oeel_ECSet=null;
-	if(request.type=='EditorSetting'){
+	if(request.type=='EditorSetting' && editor.commands && editor.setOption){
 		if (request.message.ESfontSize) root.style.setProperty('--editorFontSize', request.message.ESfontSize + "px");
 		if (request.message.ESfontFamily){
 			root.style.setProperty('--editorFontFamily', request.message.ESfontFamily);
