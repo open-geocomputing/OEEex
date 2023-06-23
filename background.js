@@ -19,7 +19,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		ESfontFamily:"default",
 		ES_SC:(navigator.platform.toLowerCase().includes('mac')?{Execute: 'Command+Enter', 'Execute With Profiler': 'Alt+Command+Enter', Save: 'Command+S', Search: 'Alt+Command+F', Suggestion: 'Ctrl+Alt+Command+Space', alignCursors: 'Alt+Command+A'}:{}),
 		addTerminal:true,
-		pythonCE:true,
+		pythonCE:false,
 		surveyMessage:true,
 		consoleError:true,
 		addPlotly:true

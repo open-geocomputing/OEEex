@@ -172,7 +172,7 @@ def ee_Py2Js(val):
 		#EE object
 		return js.oeeAsEEJS(ee.serializer.encode(val),val.name());
 	if isinstance(val, (types.FunctionType, types.BuiltinFunctionType, types.MethodType, types.LambdaType, types.GeneratorType)):
-	 	raise NotImplementedError("Unsupported Feature: Python function from JS not supported!")
+		raise NotImplementedError("Unsupported Feature: Python function from JS not supported!")
 		#return getJsCallable(val)
 	return js.oeeAsJS(val)
 
@@ -180,6 +180,14 @@ def getJsCallable(fun):
 	idVal=id(fun)
 	mappingFunction[idVal]=fun;
 	return js.oeelGetJsCallable(idVal)
+
+def listPkgsInstalled():
+	import micropip
+	return ee_Py2Js(list(micropip.list()));
+
+async def installPackage(pkgs):
+	import micropip
+	await micropip.install(ee_Js2Py(pkgs))
 
 def callFunction(idVal,name,args):
 	func = oeel_namespaceArray[idVal][name];

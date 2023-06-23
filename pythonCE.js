@@ -1,3 +1,5 @@
+pyodideAvailablePackage=["asciitree","astropy","atomicwrites","attrs","autograd","bcrypt","beautifulsoup4","biopython","bitarray","bleach","bokeh","boost-histogram","brotli","cbor-diag","certifi","cffi","cffi_example","cftime","click","cligj","cloudpickle","cmyt","colorspacious","coverage","cramjam","cryptography","cssselect","cycler","cytoolz","decorator","demes","distlib","docutils","exceptiongroup","fastparquet","fiona","fonttools","freesasa","fsspec","future","galpy","gensim","geopandas","gmpy2","gsw","h5py","html5lib","idna","imageio","iniconfig","jedi","Jinja2","joblib","jsonschema","kiwisolver","lazy-object-proxy","lightgbm","logbook","lxml","MarkupSafe","matplotlib","matplotlib-pyodide","micropip","mne","more-itertools","mpmath","msgpack","msprime","multidict","munch","mypy","networkx","newick","nlopt","nltk","nose","numcodecs","numpy","opencv-python","optlang","packaging","pandas","parso","patsy","Pillow","pillow_heif","pkgconfig","pluggy","py","pyb2d","pyclipper","pycparser","pycryptodome","pydantic","pyerfa","Pygments","pyheif","pyinstrument","pynacl","pyodide-http","pyparsing","pyproj","pyrsistent","pytest","pytest-benchmark","python-dateutil","python-magic","python-sat","python_solvespace","pytz","pywavelets","pyxel","pyyaml","rebound","reboundx","regex","retrying","RobotRaconteur","ruamel.yaml","scikit-image","scikit-learn","scipy","setuptools","shapely","six","smart_open","soupsieve","sparseqr","sqlalchemy","statsmodels","svgwrite","swiglpk","sympy","tblib","termcolor","threadpoolctl","tomli","tomli-w","toolz","tqdm","traits","tskit","typing-extensions","uncertainties","unyt","webencodings","wordcloud","wrapt","xarray","xgboost","xlrd","yarl","yt","zarr"];
+
 var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 
 const consolePythonCEExtensionPrefix='OEEex_AddonPythonCE';
@@ -164,7 +166,7 @@ function injectPythonCE(){
 	s.onload = function() {
 		loadPyodide().then(function(pyodideLoaded){
 			pyodide=pyodideLoaded;
-			pyodide.loadPackage("matplotlib").then(function(){
+			pyodide.loadPackage(["matplotlib","micropip"]).then(function(){
 			pyodide.runPythonAsync(`
 	from pyodide.http import pyfetch
 	response = pyfetch("chrome-extension://`+OEEexidString+`/earthengine-api.tar.gz")
@@ -246,14 +248,41 @@ function requestCodeSync(requestedPath){
 }
 
 
+function reRunCode(event){
+	window.addEventListener(event,function(){
+		document.querySelector(".goog-button.run-button").click()
+	}, {once: true})
+}
 
+
+function checkForRequiredAndInstallMisingPackage(pkgs){
+	if(typeof pkgs === "string")
+		pkgs=[pkgs];
+	let installedPkgs=pyoee.listPkgsInstalled();
+	missingPkgs=pkgs.filter(item => !installedPkgs.includes(item));
+	if(missingPkgs.length==0)
+		return
+	else{
+		let nonAvailableonPyodide=pkgs.filter(item => !pyodideAvailablePackage.includes(item));
+		if(nonAvailableonPyodide.length>0)
+		{
+			throw "The following packages are currrently not available: "+nonAvailableonPyodide.join(", ")
+			return;
+		}
+		reRunCode("oeeExtraPackageInstalled");
+		pyodide.loadPackage(missingPkgs).then(function(){
+			window.dispatchEvent(new CustomEvent('oeeExtraPackageInstalled'));
+		}).catch(function(error){
+			alert(error)
+		})
+		throw "The following packages are missing: "+missingPkgs.join(", ")+"\nThey are under installation your code should restart just after."
+	}
+}
 
 function runSendPython(inputVal){
 	if(typeof pyoee == 'undefined' || typeof pyodide == 'undefined'){
 		injectPythonCE();
-		window.addEventListener("pyodideLoaded",function(){
-			document.querySelector(".goog-button.run-button").click()
-		}, {once: true})
+		reRunCode("pyodideLoaded");
 		return {answerType:"error", message:"Wait that Python is loaded and re-run the code\n The code should reboot automatically (<10s)."};
 	}
 
@@ -274,6 +303,8 @@ function runSendPython(inputVal){
 			break;
 		case 'loadModule':
 			EEContext=inputVal.context;
+
+			checkForRequiredAndInstallMisingPackage(jsInput.extraPkgs);
 
 			sourceCode=requestCodeSync(jsInput.path)
 
