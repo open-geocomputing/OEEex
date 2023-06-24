@@ -317,6 +317,70 @@
 					</p>
 				</div>
 
+				<div class="box" id="Python">
+
+					<h3 class="title is-3">
+						Python
+					</h3>
+					<div class="message is-primary">
+						<div class="message-body">
+							This feature is presently only functional with version 1.7 or later of the Chrome extension (please update if necessary). Furthermore, it requires manual activation in the extension options.
+						</div>
+					</div>
+					<h4>Description</h4>
+					<p>
+						This feature allow to import Python code.
+					</p>
+					<h4>How to Use It</h4>
+					<p>
+						You can import a Python script using <code>requirePython(path[,extraPackageList])</code> in much the same way you would with the <code>standard require(path)</code>. Any function declared in the Python file can be accessed. Each call to requirePython and each run exists within its own separate Python environment, ensuring that any coding errors or exceptions do not propagate. Nonetheless, cross-communication between these isolated environments is not possible.
+						<br>
+						It's worth noting that there's no need to import <code>ee</code> or <code>oeel</code>.
+					</p>
+					<h4>Limitaion</h4>
+					<p>
+						<ul>
+							<li>
+								Upon first invoking Python, a few seconds (typically 5-7 seconds) are required to initialize the associated environment. This initialization can only be conducted asynchronously, thereby necessitating a fresh execution of the code. Although it's feasible to trigger Python's loading automatically upon opening the code editor, this would result in a temporary freeze of the browser for those 5 to 7 seconds.
+							</li>
+							<li>
+								
+At present, it is not possible to run Python code directly. It needs to be imported in JavaScript to be executed. The most efficient solution to run pure Python script is currently to use requirePython() to import your script inside another script. <i>Efforts are ongoing to find a better alternative, aiming to have something that works directly with the <b>Run</b> button.</i>
+							</li>
+							<li>
+								A Python function cannot be transferred to JavaScript, implying that a function itself cannot be returned as a result of another function if called from JS. Similarly, while a JavaScript function can be used as an input to a Python function without any issues, this Python function cannot accept another Python function as one of its inputs.
+							</li>
+							<li>
+								<code>Export.*</code> functions are mapped directly to the code editor and thus, they cannot be a task cannot be invoked from Python. Consequently, functions like <code>start()</code> or <code>status()</code> cannot be called from Python.
+							</li>
+							<li>
+								The <code>ui.*</code> functions are not mapped to Python. In fact, the use of Python requires this specific extension. Therefore, employing Python for application development is not recommended. 
+							</li>
+							<li>
+								Matplotlib can only result in static figures. If you need some interactivity rely on <a href="#Plotly">Plotly</a>.
+							</li>
+							<li>
+								Only <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">packages built in Pyodide</a> can be utilized. <i>Efforts are underway to support pure Python packages.</i>
+							</li>
+							<li>
+								If the script necessitates extra packages that are presently not available, the script will have to be re-executed after the installation. This is conveniently automated using the <code>extraPackageList</code> parameter. Hence, it is recommended to execute <code>requirePython()</code> as promptly as possible.
+							</li>
+						</ul>
+					</p>
+					<h4>Example</h4>
+					<p>
+						<a href="https://code.earthengine.google.com/01a754f8930e5dc03575a5094dc2056f">Python script example</a>
+						<br>
+						<a href="https://code.earthengine.google.com/24bee9c2963d258527f04a0613a143d9">JS calling script</a>
+					</p>
+					<h4>Implementation</h4>
+					<p>
+						The current approach is a result of multiple trials and is possibly the best solution identified so far. It utilizes <a href="https://pyodide.org/en">Pyodide</a>, a Python interpreter compiled in WebAssembly for browser usage.
+						<br>
+						A modified version of the <code>earthengine-api</code> package, which doesn't require initialization, enables all Earth Engine operations. In addition, functions like <code>print()</code>, <code>Map.*</code>, <code>Export.*</code>, and the JavaScript version of <code>require()</code> (which can be accessed as <code>oeel.requireJS()</code>) along with some more exotic <code>ee.data.*</code> functions, are forwarded to the Code Editor.
+					</p>
+				</div>
+
 				<div class="box" id="PlanetLab">
 					<h3 class="title is-3">PlanetLab Image Management</h3>
 					<h4>Description</h4>
@@ -344,8 +408,8 @@
 					<a target="_blank" href="/"><img src="/images/digitalWorld.gif" style="width: 140px; float: left; margin-right: 10px; filter: brightness(200%);"></a>
 					<p>The Open Earth Engine Extension (OEEex) is part of the <a href="/" target="_blank">open geocomputing initiative</a>. Its goal is to provide Google Earth Engine (GEE) users with free and open extensions that offer missing features. Some of the code required many hours of design and debugging.</p>
 					<h3 class="title is-3">Origins</h3>
-					<a target="_blank" href="https://unil.ch"><img src="https://www.unil.ch/modules/unil-core/img/unil-logo.svg" style="width: 165px; float: left; margin-right: 10px;"></a>
-					<p>The project originates from an extension developed by Mathieu Gravey during his PhD for use by the <a href="https://www.unil.ch/idyst/en/home.html">Institute of Earth Surface Dynamics at the University of Lausanne</a>. It started as a way to search for and automatically transfer Planet images to Google Earth Engine and became the platform for many small added features. After the <a href="https://earthoutreachonair.withgoogle.com/events/geoforgood21">Geo for Good 2021</a> event, it became clear that the extension should be shared with the community. <a target="_blank" href="https://www.uu.nl/en"><img src="https://www.uu.nl/themes/custom/corp/src/images/uu-logo-en.svg" style="width: 165px; float: right; margin-left: 10px;"></a>The extension was redesigned and improved during the time at <a target="_blank" href="https://www.uu.nl/en">Utrecht University</a>. Special thanks to Dr. Raphaël Nussbaumer, who was responsible for designing this website, and Pauline Ahumada for the animated logo.</p>
+					<a target="_blank" href="https://unil.ch"><img src="https://www.unil.ch/modules/unil-core/img/unil-logo.svg" style="height:60px; float: left; margin-right: 10px;"></a>
+					<p>The project originates from an extension developed by Mathieu Gravey during his PhD for use by the <a href="https://www.unil.ch/idyst/en/home.html">Institute of Earth Surface Dynamics at the University of Lausanne</a>. It started as a way to search for and automatically transfer Planet images to Google Earth Engine and became the platform for many small added features. After the <a href="https://earthoutreachonair.withgoogle.com/events/geoforgood21">Geo for Good 2021</a> event, it became clear that the extension should be shared with the community. <a target="_blank" href="https://www.uu.nl/en"><img src="https://www.uu.nl/themes/custom/corp/src/images/uu-logo-en.svg" style="height:60px; float: right; margin-left: 10px;"></a>The extension was redesigned and improved during the time at <a target="_blank" href="https://www.uu.nl/en">Utrecht University</a>. Now it's maintained by the <a href="https://www.oeaw.ac.at/en/igf/research/digital-landscape">Digital Landscape</a> group at the <a href="https://www.oeaw.ac.at/en/igf/home">Institute For Interdisciplinary Mountain Research</a> <img src="https://www.oeaw.ac.at/fileadmin/oeaw/institutstemplate/igf/img/IGF_Logo.png" style="height:60px; float: left; margin-right: 10px;">from the <a href="https://www.oeaw.ac.at/en/">Austrian Academy Of Sciences</a> in Innsbruck. <img src="https://www.oeaw.ac.at/typo3conf/ext/oeaw_redesign/Resources/Public/Icons/logo-lang-en.png" style="height:60px; float: right; margin-left: 10px;">  Special thanks to Dr. Raphaël Nussbaumer, who was responsible for designing this website, and Pauline Ahumada for the animated logo.</p>
 				</div>
 
 				<div class="box" id="PrivacyPolicy">

@@ -397,4 +397,14 @@ h4.deprecated{
 
 }
 
+#About img{
+  background: white;
+  box-shadow: 0px 0px 2px white;
+  padding: 1px;
+}
+
+.menu-list a{
+	color: var(--text-Color);
+}
+
 
