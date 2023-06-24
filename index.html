@@ -112,6 +112,9 @@
 										<a href="#shortcuts"><span>Shortcuts</span></a>
 									</li>
 									<li>
+										<a href="#jsonCopy"><span>Copy jsons</span></a>
+									</li>
+									<li>
 										<a href="#EditorFont"><span>Editor Font</span></a>
 									</li>
 									<li>
@@ -128,6 +131,9 @@
 									</li>
 									<li>
 										<a href="#AssetsAvailability"><span>Assets availability</span></a>
+									</li>
+									<li>
+										<a href="#ErrorConsoleHeader"><span>Error in console header</span></a>
 									</li>
 									<li>
 										<a href="#OpenScriptInNewTab"><span>Open Script in New Tab</span></a>
@@ -302,7 +308,6 @@
 						When a plot is needed, an input box (<code>ui.Textbox()</code>) with specific properties is created and detected by the extension, which then hides it and adds the expected Plotly plot. The input box is used to communicate between the plot and the EE code.
 					</p>
 				</div>
-
 				<div class="box" id="EditorFont">
 					<h3 class="title is-3">
 						Editor Font Settings
@@ -318,6 +323,42 @@
 					<h4>Implementation</h4>
 					<p>
 						The default settings are simply overwritten based on your choice.
+					</p>
+				</div>
+
+				<div class="box" id="jsonCopy">
+					<h3 class="title is-3">
+						Copy JSON from the console
+					</h3>
+					<h4>Description</h4>
+					<p>
+						This feature allows you to directly copy a computed JSON from the console
+					</p>
+					<h4>How to Use It</h4>
+					<p>
+						Simply double click on the JSON display button in the console.
+					</p>
+					<h4>Implementation</h4>
+					<p>
+						This feature adds an event listener to the JSON display button and subsequently copies the displayed JSON data to the clipboard.
+					</p>
+				</div>
+
+				<div class="box" id="ErrorConsoleHeader">
+					<h3 class="title is-3">
+						Error in console header
+					</h3>
+					<h4>Description</h4>
+					<p>
+						Have you ever found yourself losing precious time troubleshooting in the "Inspector" mode because the console's error messages weren't visible? This issue is now resolved! This feature enhances user experience by changing the color of the console button in the header to red whenever an error is fired. Thus, even when you're using the Inspector, you're promptly alerted to errors, preventing unnecessary delays in debugging.
+					</p>
+					<h4>How to Use It</h4>
+					<p>
+						Nothing just to keep activated in the options. 
+					</p>
+					<h4>Implementation</h4>
+					<p>
+						Every message displayed in the console is analyzed to determine if it's an error, and if necessary, the header color is adjusted accordingly.
 					</p>
 				</div>
 
@@ -348,8 +389,7 @@
 								Upon first invoking Python, a few seconds (typically 5-7 seconds) are required to initialize the associated environment. This initialization can only be conducted asynchronously, thereby necessitating a fresh execution of the code. Although it's feasible to trigger Python's loading automatically upon opening the code editor, this would result in a temporary freeze of the browser for those 5 to 7 seconds.
 							</li>
 							<li>
-								
-At present, it is not possible to run Python code directly. It needs to be imported in JavaScript to be executed. The most efficient solution to run pure Python script is currently to use requirePython() to import your script inside another script. <i>Efforts are ongoing to find a better alternative, aiming to have something that works directly with the <b>Run</b> button.</i>
+								At present, it is not possible to run Python code directly. It needs to be imported in JavaScript to be executed. The most efficient solution to run pure Python script is currently to use requirePython() to import your script inside another script. <i>Efforts are ongoing to find a better alternative, aiming to have something that works directly with the <b>Run</b> button.</i>
 							</li>
 							<li>
 								A Python function cannot be transferred to JavaScript, implying that a function itself cannot be returned as a result of another function if called from JS. Similarly, while a JavaScript function can be used as an input to a Python function without any issues, this Python function cannot accept another Python function as one of its inputs.
