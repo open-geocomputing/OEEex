@@ -98,14 +98,18 @@
 							<li><a href="#homePage" class="is-active"><i class="fas fa-book"></i><span class='mainSectionButton'>Documentation</span></a></li>
 							<div class='documentation-menu'>
 								<ul class="level-0">
-									<li>
-										<a href="#CommandS"><span>⌘+S</span></a>
-									</li>
+									
 									<li>
 										<a href="#Plotly"><span>Plotly</span></a>
 									</li>
+									<!-- <li>
+										<a href="#Python"><span>Python</span></a>
+									</li> -->
 									<li>
 										<a href="#RunAll"><span>Run All!</span></a>
+									</li>
+									<li>
+										<a href="#shortcuts"><span>Shortcuts</span></a>
 									</li>
 									<li>
 										<a href="#EditorFont"><span>Editor Font</span></a>
@@ -158,14 +162,14 @@
 					<p>For more information about each feature, check the feature documentation!</p>
 				</div>
 
-				<div class="box" id="CommandS">
-					<h3 class="title is-3">⌘+S</h3>
+				<div class="box" id="shortcuts">
+					<h3 class="title is-3">Code editor shortcuts</h3>
 					<h4>Description</h4>
-					<p>Redirect the shortcut ⌘+S to the save button.</p>
+					<p>This functionality permits the overriding of some shortcuts within the code editor. If you're using a Mac, a selection has been pre-configured for your convenience (⌘+S, ⌘+Enter ...). Please feel free to modify these in the extension options page.</p>
 					<h4>How to Use It?</h4>
-					<p>Simply press ⌘+S. 😀</p>
+					<p>Set the shortcuts in the extension options and use them.</p>
 					<h4>How Was It Implemented?</h4>
-					<p>This was implemented by adding a listener to the pressed key. When ⌘+S is detected, the save button is programmatically clicked.</p>
+					<p>This feature was implemented by modifying the shortcut configurations in the <a href="https://ace.c9.io/#nav=howto">code editor</a></p>
 				</div>
 
 				<div class="box" id="RunAll">
