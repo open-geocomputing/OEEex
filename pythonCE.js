@@ -325,3 +325,64 @@ function runSendPython(inputVal){
 	}
 }
 
+
+// python detection
+function overloadEditorForPython(){
+	let isRuningCode=false;
+	let defaultMode=editor.getSession().$mode;
+	function isCodePython(codeSnippet) {
+		let val=codeSnippet.startsWith("#");
+		if(val && !editor.getSession().$modeId.includes("python")){
+			editor.getSession().setMode('ace/mode/python')
+		}
+		if(!val && editor.getSession().$modeId.includes("python")){
+			editor.getSession().setMode('ace/mode/javascript')
+		}
+		return val;
+	}
+
+	function runCode(){
+		isRuningCode=true;
+		setTimeout(function(){isRuningCode=false;},1);
+	}
+
+	document.querySelector(".goog-button.run-button").addEventListener("click",runCode,true);
+	(function(){
+		let v=editor.commands.commands.Execute.exec;
+		editor.commands.commands.Execute.exec=function(){
+			runCode();
+			v();
+		}
+	})()
+
+	function addJSPythonImportHeader(code){
+		let predefineName=[...document.querySelectorAll('.env-entry-label')].map(x=>x.textContent);
+		let dict={}
+		for (var i = predefineName.length - 1; i >= 0; i--) {
+			dict[predefineName[i]]=predefineName[i];
+		}
+		return "/*var oeel=require('users/OEEL/lib:loadAll');*/ require('users/mgravey/pythonCode:requirePython_v2').runPython("+JSON.stringify(code)+","+JSON.stringify(dict).replaceAll('"','')+",[]);";
+	}
+
+	editor.getSession().getValue=function(){
+		let code=this.doc.getValue();
+		if(isCodePython(code) && isRuningCode)
+			return addJSPythonImportHeader(this.doc.getValue());
+		else
+			return this.doc.getValue();
+	}
+	editor.getSession().getValue()
+}
+
+var oeelSetEditorInterval=setInterval(function(){
+	let editorElement=document.getElementsByClassName('ace_editor');
+	if(editorElement && editorElement.length>0){
+		editorElement[0].id='editor'
+		editor = ace.edit("editor");
+	}
+
+	if(typeof(editor)!="undefined"){
+		clearInterval(oeelSetEditorInterval);
+		overloadEditorForPython();
+	}
+},1);
