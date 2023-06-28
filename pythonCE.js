@@ -200,7 +200,7 @@ function requestAsEE(uri){
 	request.send(null);
 
 	if (request.status === 200) {
-	  return request.responseText;
+		return request.responseText;
 	}
 	throw "Python init error"
 }
@@ -290,11 +290,14 @@ function runSendPython(inputVal){
 	window.dispatchEvent(new CustomEvent('startPython'));
 	
 	try {
-  		let jsInput=inputVal;
+		let jsInput=inputVal;
 		switch (jsInput.type) {
 		case 'code':
-			pyodide.runPythonAsync(jsInput.code)
+			EEContext=inputVal.context;
+			checkForRequiredAndInstallMisingPackage(jsInput.extraPkgs);
+			let r=pyoee.run(jsInput.code,jsInput.dict)
 			window.dispatchEvent(new CustomEvent('stopPython'));
+			return oeeAsJS(r);
 			break;
 		case 'functionCall':
 			let functionResult=pyoee.callFunction(jsInput.pyId,jsInput.functionName,jsInput.arg);
@@ -318,6 +321,7 @@ function runSendPython(inputVal){
 			break;
 		}
 	} finally {
-	  window.dispatchEvent(new CustomEvent('stopPython'));
+		window.dispatchEvent(new CustomEvent('stopPython'));
 	}
 }
+

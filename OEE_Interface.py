@@ -137,13 +137,28 @@ def loadModule(string,name):
 	code_block = compile(string, '<string>', 'exec')
 	idVal=len(oeel_namespaceArray);
 	oeel_namespaceArray.append({})
-	exec(code_block, oeel_namespaceArray[idVal])
+	exec(compile("", '<string>', 'exec'), oeel_namespaceArray[idVal])
 	oeel_namespaceArray[idVal]["__builtins__"]["consoleLog"]=consoleLog;
 	oeel_namespaceArray[idVal]["__builtins__"]["print"]=eePrint;
 	oeel_namespaceArray[idVal]["__builtins__"]["Map"]=Map();
 	oeel_namespaceArray[idVal]["__builtins__"]["ee"]=ee;
 	oeel_namespaceArray[idVal]["__builtins__"]["oeel"]=oeelChain();
+	exec(code_block, oeel_namespaceArray[idVal])
 	return {"pyId":idVal,"id":":\"{}\"".format(name), "answerType":"moduleLoaded","type":"Python Module", "functions":list(filter(lambda x: x!="__builtins__", oeel_namespaceArray[idVal].keys()))};
+
+def run(string,dataset):
+	dataset=dataset.to_py(depth=1);
+	dataset={key: ee_Js2Py(value) for key, value in dataset.items()};
+	code_block = compile(string, '<string>', 'exec')
+	dataset["__builtins__"]={};
+	dataset["__builtins__"]["consoleLog"]=consoleLog;
+	dataset["__builtins__"]["print"]=eePrint;
+	dataset["__builtins__"]["Map"]=Map();
+	dataset["__builtins__"]["ee"]=ee;
+	dataset["__builtins__"]["oeel"]=oeelChain();
+	exec(code_block, dataset)
+	return {"answerType":"run","type":"Python single run"};
+	
 
 def isEEObject(val):
 	return js.oeeIsEE(val);
