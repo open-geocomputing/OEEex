@@ -107,7 +107,9 @@ ee.batch.Export=eeExportModule();
 ee.data=eeDataModule();
 
 def eePrint(toPrint):
-	if(hasattr(toPrint, '__str__')):
+	if(isinstance(toPrint, ee.computedobject.ComputedObject)):
+		js.oeePrint(ee_Py2Js(toPrint));
+	elif(hasattr(toPrint, '__str__')):
 		js.oeePrint(str(toPrint))
 	else:
 		js.oeePrint(ee_Py2Js(toPrint));
@@ -137,12 +139,12 @@ def loadModule(string,name):
 	code_block = compile(string, '<string>', 'exec')
 	idVal=len(oeel_namespaceArray);
 	oeel_namespaceArray.append({})
-	exec(compile("", '<string>', 'exec'), oeel_namespaceArray[idVal])
 	oeel_namespaceArray[idVal]["__builtins__"]["consoleLog"]=consoleLog;
 	oeel_namespaceArray[idVal]["__builtins__"]["print"]=eePrint;
 	oeel_namespaceArray[idVal]["__builtins__"]["Map"]=Map();
 	oeel_namespaceArray[idVal]["__builtins__"]["ee"]=ee;
 	oeel_namespaceArray[idVal]["__builtins__"]["oeel"]=oeelChain();
+	oeel_namespaceArray[idVal]["__name__"]=name;
 	exec(code_block, oeel_namespaceArray[idVal])
 	return {"pyId":idVal,"id":":\"{}\"".format(name), "answerType":"moduleLoaded","type":"Python Module", "functions":list(filter(lambda x: x!="__builtins__", oeel_namespaceArray[idVal].keys()))};
 
@@ -156,6 +158,7 @@ def run(string,dataset):
 	dataset["__builtins__"]["Map"]=Map();
 	dataset["__builtins__"]["ee"]=ee;
 	dataset["__builtins__"]["oeel"]=oeelChain();
+	dataset["__name__"]="__main__";
 	exec(code_block, dataset)
 	return {"answerType":"run","type":"Python single run"};
 	
