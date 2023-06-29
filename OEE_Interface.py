@@ -139,6 +139,7 @@ def loadModule(string,name):
 	code_block = compile(string, '<string>', 'exec')
 	idVal=len(oeel_namespaceArray);
 	oeel_namespaceArray.append({})
+	oeel_namespaceArray[idVal]["__builtins__"]={};
 	oeel_namespaceArray[idVal]["__builtins__"]["consoleLog"]=consoleLog;
 	oeel_namespaceArray[idVal]["__builtins__"]["print"]=eePrint;
 	oeel_namespaceArray[idVal]["__builtins__"]["Map"]=Map();
@@ -146,7 +147,7 @@ def loadModule(string,name):
 	oeel_namespaceArray[idVal]["__builtins__"]["oeel"]=oeelChain();
 	oeel_namespaceArray[idVal]["__name__"]=name;
 	exec(code_block, oeel_namespaceArray[idVal])
-	return {"pyId":idVal,"id":":\"{}\"".format(name), "answerType":"moduleLoaded","type":"Python Module", "functions":list(filter(lambda x: x!="__builtins__", oeel_namespaceArray[idVal].keys()))};
+	return {"pyId":idVal,"id":":\"{}\"".format(name), "answerType":"moduleLoaded","type":"Python Module", "functions":list(filter(lambda x: not(x.startswith("__") and x.endswith("__")), oeel_namespaceArray[idVal].keys()))};
 
 def run(string,dataset):
 	dataset=dataset.to_py(depth=1);
