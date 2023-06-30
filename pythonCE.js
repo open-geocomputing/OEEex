@@ -281,7 +281,7 @@ function checkForRequiredAndInstallMisingPackage(pkgs){
 
 function runSendPython(inputVal){
 	if(typeof pyoee == 'undefined' || typeof pyodide == 'undefined'){
-		injectPythonCE();
+		setTimeout(injectPythonCE,1);
 		reRunCode("pyodideLoaded");
 		return {answerType:"error", message:"Wait that Python is loaded and re-run the code\n The code should reboot automatically (<10s)."};
 	}
