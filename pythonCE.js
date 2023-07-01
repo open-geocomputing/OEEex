@@ -263,17 +263,24 @@ function checkForRequiredAndInstallMisingPackage(pkgs){
 	if(missingPkgs.length==0)
 		return
 	else{
-		let nonAvailableonPyodide=pkgs.filter(item => !pyodideAvailablePackage.includes(item));
+		/*let nonAvailableonPyodide=pkgs.filter(item => !pyodideAvailablePackage.includes(item));
 		if(nonAvailableonPyodide.length>0)
 		{
+			console.log(nonAvailableonPyodide)
 			throw "The following packages are currrently not available: "+nonAvailableonPyodide.join(", ")
 			return;
-		}
+		}*/
 		reRunCode("oeeExtraPackageInstalled");
-		pyodide.loadPackage(missingPkgs).then(function(){
+		pyodide.runPythonAsync(`
+			import micropip
+			await micropip.install(`+JSON.stringify(missingPkgs)+`);
+			`).then(function(){
 			window.dispatchEvent(new CustomEvent('oeeExtraPackageInstalled'));
 		}).catch(function(error){
-			alert(error)
+			//alert(error)
+			[...document.querySelector("ee-console-log").shadowRoot.querySelectorAll("div.message.severity-error")]
+				.filter(x=>x.textContent.includes("They are under installation your code should restart just after"))
+				.map(x=> x.querySelector(".summary").textContent=error);
 		})
 		throw "The following packages are missing: "+missingPkgs.join(", ")+"\nThey are under installation your code should restart just after."
 	}
