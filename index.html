@@ -374,10 +374,12 @@
 					</div>
 					<h4>Description</h4>
 					<p>
-						This feature allow to import Python code.
+						This feature allow to use and import Python code.
 					</p>
 					<h4>How to Use It</h4>
 					<p>
+						You can use Python, simply start a file with a <code>#</code>.
+						You can run a python code using <code>runPython(sourceCode[,{variableDictionary}[,extraPackageList]])</code>
 						You can import a Python script using <code>requirePython(path[,extraPackageList])</code> in much the same way you would with the <code>standard require(path)</code>. Any function declared in the Python file can be accessed. Each call to requirePython and each run exists within its own separate Python environment, ensuring that any coding errors or exceptions do not propagate. Nonetheless, cross-communication between these isolated environments is not possible.
 						<br>
 						It's worth noting that there's no need to import <code>ee</code> or <code>oeel</code>.
@@ -389,7 +391,7 @@
 								Upon first invoking Python, a few seconds (typically 5-7 seconds) are required to initialize the associated environment. This initialization can only be conducted asynchronously, thereby necessitating a fresh execution of the code. Although it's feasible to trigger Python's loading automatically upon opening the code editor, this would result in a temporary freeze of the browser for those 5 to 7 seconds.
 							</li>
 							<li>
-								At present, it is not possible to run Python code directly. It needs to be imported in JavaScript to be executed. The most efficient solution to run pure Python script is currently to use requirePython() to import your script inside another script. <i>Efforts are ongoing to find a better alternative, aiming to have something that works directly with the <b>Run</b> button.</i>
+								<del>At present, it is not possible to run Python code directly. It needs to be imported in JavaScript to be executed. The most efficient solution to run pure Python script is currently to use requirePython() to import your script inside another script. <i>Efforts are ongoing to find a better alternative, aiming to have something that works directly with the <b>Run</b> button.</i></del>(fixed in 1.7.3)
 							</li>
 							<li>
 								A Python function cannot be transferred to JavaScript, implying that a function itself cannot be returned as a result of another function if called from JS. Similarly, while a JavaScript function can be used as an input to a Python function without any issues, this Python function cannot accept another Python function as one of its inputs.
@@ -404,10 +406,11 @@
 								Matplotlib can only result in static figures. If you need some interactivity rely on <a href="#Plotly">Plotly</a>.
 							</li>
 							<li>
-								Only <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">packages built in Pyodide</a> can be utilized. <i>Efforts are underway to support pure Python packages.</i>
+								<a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">Packages built in Pyodide</a> can be utilized. <del><i>Efforts are underway to support pure Python packages.</i></del>(fixed in 1.7.3), pure package are supported as well.
 							</li>
 							<li>
 								If the script necessitates extra packages that are presently not available, the script will have to be re-executed after the installation. This is conveniently automated using the <code>extraPackageList</code> parameter. Hence, it is recommended to execute <code>requirePython()</code> as promptly as possible.
+								This not possible for a direct run
 							</li>
 						</ul>
 					</p>
