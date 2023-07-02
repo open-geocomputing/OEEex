@@ -339,10 +339,8 @@ async function importSingleEEPackage(path){
 	}
 
 	listPromises=importSingleEEPackageInTree(list,path);
-	console.log(listPromises)
 	await Promise.all(listPromises)
 	await pyoee.installPackageFromObject(list,path);
-	console.log(list)
 	EEInstalledPackageList.push(path)
 }
 
@@ -356,7 +354,6 @@ function checkForRequiredAndInstallMisingPackage(pkgs){
 	if(typeof pkgs === "string")
 		pkgs=[pkgs];
 	let installedPkgs=pyoee.listPkgsInstalled();
-	console.log(EEInstalledPackageList)
 	missingPkgs=pkgs.filter(item => !(installedPkgs.includes(item) || EEInstalledPackageList.includes(item)));
 	if(missingPkgs.length==0)
 		return

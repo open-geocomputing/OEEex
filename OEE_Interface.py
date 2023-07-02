@@ -106,8 +106,65 @@ class eeDataModule:
 ee.batch.Export=eeExportModule();
 ee.data=eeDataModule();
 
+import sys
+
+class EEimpport():
+	def __init__(self):
+		self.modules={}
+		self.modulesPath={}
+
+	def addModule(self,obj,path):
+		import re
+		moduleName=re.split(r'[/|:]', path)[-1];
+		self.modules[moduleName]=obj;
+		self.modulesPath[moduleName]=path;
+
+	def find_module(self, fullname, path=None):
+		# Implement your custom import logic here
+		# Return a loader if the module is handled by this hook, None otherwise
+		consoleLog("search "+fullname)
+		consoleLog(self.modules.keys())
+		if fullname in self.modules.keys():
+			consoleLog("find "+fullname)
+			return self
+
+	def load_module(self, fullname):
+		# Implement module loading here
+		# Return the loaded module
+		consoleLog("load "+fullname)
+		if fullname in sys.modules:
+			return sys.modules[fullname]
+
+		# Create a new module object
+		module = sys.modules.setdefault(fullname, types.ModuleType(fullname))
+		module.__file__ = self.modulesPath[fullname]
+		module.__loader__ = self
+		module.__package__ = fullname
+
+		# Implement the package/module's functionality here
+
+		 # Populate the module with the content
+		self._populate_module_from_dict(module, self.modules[fullname])
+
+		consoleLog("module ",module)
+		return module
+
+	def _populate_module_from_dict(self, module, obj_dict):
+		for key, value in obj_dict.items():
+			if isinstance(value, dict):
+				sub_module = types.ModuleType(module.__name__ + '.' + key)
+				setattr(module, key, sub_module)
+				self._populate_module_from_dict(sub_module, value)
+			else:
+				exec(value, module.__dict__)
+
+
+EEimpportModule=EEimpport();
+
+sys.meta_path.append(EEimpportModule)
+
 async def installPackageFromObject(obj,path):
-	consoleLog(ee_Js2Py(obj))
+	EEimpportModule.addModule(ee_Js2Py(obj),path)
 
 def eePrint(toPrint):
 	if(isinstance(toPrint, ee.computedobject.ComputedObject)):
@@ -142,7 +199,7 @@ def loadModule(string,name):
 	code_block = compile(string, '<string>', 'exec')
 	idVal=len(oeel_namespaceArray);
 	oeel_namespaceArray.append({})
-	oeel_namespaceArray[idVal]["__builtins__"]={};
+	exec(compile("", '<string>', 'exec'), oeel_namespaceArray[idVal])
 	oeel_namespaceArray[idVal]["__builtins__"]["consoleLog"]=consoleLog;
 	oeel_namespaceArray[idVal]["__builtins__"]["print"]=eePrint;
 	oeel_namespaceArray[idVal]["__builtins__"]["Map"]=Map();
@@ -156,7 +213,7 @@ def run(string,dataset):
 	dataset=dataset.to_py(depth=1);
 	dataset={key: ee_Js2Py(value) for key, value in dataset.items()};
 	code_block = compile(string, '<string>', 'exec')
-	dataset["__builtins__"]={};
+	exec(compile("", '<string>', 'exec'), dataset)
 	dataset["__builtins__"]["consoleLog"]=consoleLog;
 	dataset["__builtins__"]["print"]=eePrint;
 	dataset["__builtins__"]["Map"]=Map();
