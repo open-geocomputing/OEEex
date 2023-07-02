@@ -106,6 +106,9 @@ class eeDataModule:
 ee.batch.Export=eeExportModule();
 ee.data=eeDataModule();
 
+async def installPackageFromObject(obj,path):
+	consoleLog(ee_Js2Py(obj))
+
 def eePrint(toPrint):
 	if(isinstance(toPrint, ee.computedobject.ComputedObject)):
 		js.oeePrint(ee_Py2Js(toPrint));

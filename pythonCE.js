@@ -247,6 +247,59 @@ function requestCodeSync(requestedPath){
 	}
 }
 
+async function requestCodeAsync(requestedPath) {
+    return new Promise((resolve, reject) => {
+        let path = requestedPath.split(":");
+        let url = "https://code.earthengine.google.com/repo/file/load?repo=" + encodeURI(path[0]) + "&path=" + encodeURI(path[1]);
+
+        const request = new XMLHttpRequest();
+        request.open("GET", url, true); // `true` makes the request asynchronous
+
+        request.setRequestHeader('X-XSRF-Token', window._ee_flag_initialData.xsrfToken);
+        request.setRequestHeader('Content-Type', 'application/json');
+
+        request.onload = function () {
+            if (request.status === 200) {
+                resolve(JSON.parse(request.responseText));
+            } else {
+                reject(request.responseText);
+            }
+        };
+
+        request.onerror = function () {
+            reject(Error("Network Error"));
+        };
+
+        request.send(null);
+    });
+}
+
+async function requestListAsync(requestedRepoPath) {
+    return new Promise((resolve, reject) => {
+        let url = "https://code.earthengine.google.com/repo/load?repo=" + encodeURI(requestedRepoPath);
+
+        const request = new XMLHttpRequest();
+        request.open("GET", url, true); // `true` makes the request asynchronous
+
+        request.setRequestHeader('X-XSRF-Token', window._ee_flag_initialData.xsrfToken);
+        request.setRequestHeader('Content-Type', 'application/json');
+
+        request.onload = function () {
+            if (request.status === 200) {
+                resolve(JSON.parse(request.responseText));
+            } else {
+                reject(request.responseText);
+            }
+        };
+
+        request.onerror = function () {
+            reject(Error("Network Error"));
+        };
+
+        request.send(null);
+    });
+}
+
 
 function reRunCode(event){
 	window.addEventListener(event,function(){
@@ -254,12 +307,57 @@ function reRunCode(event){
 	}, {once: true})
 }
 
+var EEInstalledPackageList=[];
+
+async function importSingleEEPackage(path){
+	pathPart=path.split(":")
+	let list=(await requestListAsync(pathPart[0]))["tree"];
+	let split=pathPart[1].split("/");
+	for (var i = 0; i < split.length; i++) {
+		list=list[split[i]];
+	}
+
+	function importSingleEEPackageInTree(obj,currentPath){
+		listPromise=[];
+		let listKeys=Object.keys(obj);
+		for (var i = listKeys.length - 1; i >= 0; i--) {
+			let key=listKeys[i];
+			if(obj[key]==null)
+			{
+				listPromise.push(new Promise((resolve, reject) => {
+					requestCodeAsync(currentPath+"/"+key)
+						.then(function(val){
+							obj[key]=val;
+							resolve(true)
+						}).catch(error=>{reject(error)});
+				}));
+			}
+			else
+				listPromise=listPromise.concat(importSingleEEPackageInTree(obj[key],currentPath+"/"+key));
+		}
+		return listPromise;
+	}
+
+	listPromises=importSingleEEPackageInTree(list,path);
+	console.log(listPromises)
+	await Promise.all(listPromises)
+	await pyoee.installPackageFromObject(list,path);
+	console.log(list)
+	EEInstalledPackageList.push(path)
+}
+
+
+async function importEEPackages(list){
+	return await Promise.all(list.map(p=>importSingleEEPackage(p)))
+}
 
 function checkForRequiredAndInstallMisingPackage(pkgs){
+	let localInstall=[];
 	if(typeof pkgs === "string")
 		pkgs=[pkgs];
 	let installedPkgs=pyoee.listPkgsInstalled();
-	missingPkgs=pkgs.filter(item => !installedPkgs.includes(item));
+	console.log(EEInstalledPackageList)
+	missingPkgs=pkgs.filter(item => !(installedPkgs.includes(item) || EEInstalledPackageList.includes(item)));
 	if(missingPkgs.length==0)
 		return
 	else{
@@ -271,10 +369,12 @@ function checkForRequiredAndInstallMisingPackage(pkgs){
 			return;
 		}*/
 		reRunCode("oeeExtraPackageInstalled");
-		pyodide.runPythonAsync(`
+		eePackageList=missingPkgs.filter(item=>item.includes("/") && !item.includes("://"))
+		let pip=pyodide.runPythonAsync(`
 			import micropip
-			await micropip.install(`+JSON.stringify(missingPkgs)+`);
-			`).then(function(){
+			await micropip.install(`+JSON.stringify(missingPkgs.filter(item => !eePackageList.includes(item)))+`);`)
+		eePackage=importEEPackages(eePackageList);
+		Promise.all([pip, eePackage]).then(function(){
 			window.dispatchEvent(new CustomEvent('oeeExtraPackageInstalled'));
 		}).catch(function(error){
 			//alert(error)
