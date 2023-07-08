@@ -392,13 +392,18 @@ function runSendPython(inputVal){
 
 	//currentInputUsed=inputElement;
 	window.dispatchEvent(new CustomEvent('startPython'));
-	
+	let regexPattern=/.*#( )*req(|uirements):(?<req>.*?)($|#)/gm
 	try {
 		let jsInput=inputVal;
 		switch (jsInput.type) {
 		case 'code':
 			EEContext=inputVal.context;
-			checkForRequiredAndInstallMisingPackage(jsInput.extraPkgs);
+			let requirementLine = [];
+			jsInput.code.replace(regexPattern, (match, p1,p2, req) => {
+				requirementLine.push(req.trim());
+			});
+			requirementLine=[...new Set(requirementLine.map(item => item.split(",").map(subItem => subItem.trim())).flat())];
+			checkForRequiredAndInstallMisingPackage(jsInput.extraPkgs.concat(requirementLine));
 			let r=pyoee.run(jsInput.code,jsInput.dict)
 			window.dispatchEvent(new CustomEvent('stopPython'));
 			return oeeAsJS(r);
@@ -411,9 +416,13 @@ function runSendPython(inputVal){
 		case 'loadModule':
 			EEContext=inputVal.context;
 
-			checkForRequiredAndInstallMisingPackage(jsInput.extraPkgs);
-
 			sourceCode=requestCodeSync(jsInput.path)
+			let requirementLine = [];
+			sourceCode.replace(regexPattern, (match, p1,p2, req) => {
+				requirementLine.push(req.trim());
+			});
+			requirementLine=[...new Set(requirementLine.map(item => item.split(",").map(subItem => subItem.trim())).flat())];
+			checkForRequiredAndInstallMisingPackage(jsInput.extraPkgs.concat(requirementLine));
 
 			let lodingInfo=pyoee.loadModule(sourceCode,jsInput.path)
 			window.dispatchEvent(new CustomEvent('stopPython'));
