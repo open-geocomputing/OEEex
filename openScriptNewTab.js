@@ -23,7 +23,6 @@ function addScriptPath(targetNode){
 	nodesToExplore.map(e=>{
 		let path=constructPath(e,e.querySelector('.tree-item-name').innerText)
 		e.addEventListener('click',event=>{
-			console.log()
 			if(!event.detail?.timeoutClick && event.target.classList.contains("tree-item-name")){
 				event.preventDefault();
 				event.stopPropagation();
@@ -36,6 +35,19 @@ function addScriptPath(targetNode){
 					var event = new CustomEvent("click", {'detail':{'timeoutClick': true}});
 					oee_dbclickScriptTimeout=setTimeout(function(){e.dispatchEvent(event)},300)
 				}
+			}else{
+				oee_dbclickScriptTimeout=null;
+			}
+
+			
+		},true);
+		e.addEventListener('contextmenu',event=>{
+			
+			if(event.target.classList.contains("tree-item-name")){
+				event.preventDefault();
+				event.stopPropagation();
+
+				navigator.clipboard.writeText(path);
 			}else{
 				oee_dbclickScriptTimeout=null;
 			}
