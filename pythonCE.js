@@ -394,11 +394,11 @@ function runSendPython(inputVal){
 	window.dispatchEvent(new CustomEvent('startPython'));
 	let regexPattern=/.*#( )*req(|uirements):(?<req>.*?)($|#)/gm
 	try {
+		let requirementLine = [];
 		let jsInput=inputVal;
 		switch (jsInput.type) {
 		case 'code':
 			EEContext=inputVal.context;
-			let requirementLine = [];
 			jsInput.code.replace(regexPattern, (match, p1,p2, req) => {
 				requirementLine.push(req.trim());
 			});
@@ -415,9 +415,13 @@ function runSendPython(inputVal){
 			break;
 		case 'loadModule':
 			EEContext=inputVal.context;
-
 			sourceCode=requestCodeSync(jsInput.path)
-			let requirementLine = [];
+			let startPattern = "/\\*\\*\\*\\* Start of imports. If edited, may not auto-convert in the playground. \\*\\*\\*\\*/";
+			let endPattern = "/\\*\\*\\*\\*\\* End of imports. If edited, may not auto-convert in the playground. \\*\\*\\*\\*\\*/";
+			let regex = new RegExp(startPattern + "[\\s\\S]*" + endPattern, 'g');
+
+			sourceCode = sourceCode.replace(regex, '');
+			
 			sourceCode.replace(regexPattern, (match, p1,p2, req) => {
 				requirementLine.push(req.trim());
 			});
