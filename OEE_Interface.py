@@ -105,66 +105,21 @@ class eeDataModule:
 
 ee.batch.Export=eeExportModule();
 ee.data=eeDataModule();
-
-import sys
-
-class EEimpport():
-	def __init__(self):
-		self.modules={}
-		self.modulesPath={}
-
-	def addModule(self,obj,path):
-		import re
-		moduleName=re.split(r'[/|:]', path)[-1];
-		self.modules[moduleName]=obj;
-		self.modulesPath[moduleName]=path;
-
-	def find_module(self, fullname, path=None):
-		# Implement your custom import logic here
-		# Return a loader if the module is handled by this hook, None otherwise
-		consoleLog("search "+fullname)
-		consoleLog(self.modules.keys())
-		if fullname in self.modules.keys():
-			consoleLog("find "+fullname)
-			return self
-
-	def load_module(self, fullname):
-		# Implement module loading here
-		# Return the loaded module
-		consoleLog("load "+fullname)
-		if fullname in sys.modules:
-			return sys.modules[fullname]
-
-		# Create a new module object
-		module = sys.modules.setdefault(fullname, types.ModuleType(fullname))
-		module.__file__ = self.modulesPath[fullname]
-		module.__loader__ = self
-		module.__package__ = fullname
-
-		# Implement the package/module's functionality here
-
-		 # Populate the module with the content
-		self._populate_module_from_dict(module, self.modules[fullname])
-
-		consoleLog("module ",module)
-		return module
-
-	def _populate_module_from_dict(self, module, obj_dict):
-		for key, value in obj_dict.items():
-			if isinstance(value, dict):
-				sub_module = types.ModuleType(module.__name__ + '.' + key)
-				setattr(module, key, sub_module)
-				self._populate_module_from_dict(sub_module, value)
-			else:
-				exec(value, module.__dict__)
-
-
-EEimpportModule=EEimpport();
-
-sys.meta_path.append(EEimpportModule)
+import os
+def installDictionaryAtPath(obj,path):
+	os.makedirs(path, exist_ok=True);
+	for key, value in obj.items():
+		if(isinstance(value,dict)):
+			installDictionaryAtPath(value,path+key+'/')
+		else:
+			with open(path+key, 'w') as file:
+				file.write(value);
 
 async def installPackageFromObject(obj,path):
-	EEimpportModule.addModule(ee_Js2Py(obj),path)
+	shortPath=path.split(":", 1)[1]
+	path=path.replace(":", "/");
+	installDictionaryAtPath(ee_Js2Py(obj),path+'/')
+	os.symlink(path, shortPath);
 
 def eePrint(toPrint):
 	if(isinstance(toPrint, ee.computedobject.ComputedObject)):
