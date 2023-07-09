@@ -18,6 +18,10 @@ function injectScripts(){
 		'uploadWithManifest',
 	];
 
+	if(document.location.pathname=='/tasks'){
+		listOfScript=['EEDarkMode'];
+	}
+
 	chrome.storage.local.get(listOfScript,
 		function(result){			
 			result['3rd_party/shpwrite']=result['uploadWithManifest'];
