@@ -100,12 +100,68 @@ class eeDataModule:
 	def __str__(self):
 		return "Dummy class for ee.data"
 
-	
-	
-
 ee.batch.Export=eeExportModule();
 ee.data=eeDataModule();
+
 import os
+
+import sys
+
+class EEimpport():
+	def __init__(self):
+		self.struct={"users":{}}
+		os.makedirs("users", exist_ok=True);
+		pass
+
+	def decodePathAdd(self,soruceTree,treeToAdd,path):
+		for key,value in soruceTree.items():
+			if(isinstance(value,dict)):
+				treeToAdd[key]={};
+				self.decodePathAdd(soruceTree[key],treeToAdd[key],path+"/"+key);
+			else:
+				treeToAdd[key.rstrip(".py")]=path+"/"+key;
+
+	def getEEPath(self,path,obj=None,currentPath=""):
+		if obj==None:
+			obj=self.struct;
+		splitPath=path.split(".",1)
+		if(splitPath[0] in obj):
+			if(len(splitPath)>1):
+				propagated=self.getEEPath(splitPath[1],obj[splitPath[0]],currentPath+"/"+splitPath[0]);
+				return propagated;#splitPath[0]+"/"+propagated if isinstance(propagated,str) else propagated;
+			else:
+				if('__init__' in obj[splitPath[0]]):
+					return obj[splitPath[0]]['__init__'];
+				else:
+					return obj[splitPath[0]];
+		else:
+			result=ee_Js2Py(js.importPakageStruct(currentPath.lstrip("/")+"/"+splitPath[0]))
+			obj[splitPath[0]]={}
+			self.decodePathAdd(result["tree"],obj[splitPath[0]],currentPath+"/"+splitPath[0]+":");
+			return None;
+
+	def find_module(self, fullname, path=None):
+		fullNameAsPath=fullname.replace('.',"/")
+		if fullname.startswith("users") and not (os.path.exists(fullNameAsPath) or os.path.exists(fullNameAsPath+'.py')):
+			downloadPath=self.getEEPath(fullname);
+			if(isinstance(downloadPath,str)):
+				downloadPath=downloadPath.lstrip("/")
+				code=js.importCode(downloadPath)
+				pathStore=downloadPath.replace(":","");
+				os.makedirs(os.path.dirname(pathStore), exist_ok=True);
+				with open(pathStore, 'w') as file:
+					file.write(code);
+			else:
+				os.makedirs(fullNameAsPath, exist_ok=True);
+				self.find_module(fullname, path)
+
+	def load_module(self, fullname):
+		pass
+
+
+EEimpportModule=EEimpport();
+sys.meta_path.insert(0,EEimpportModule)
+
 def installDictionaryAtPath(obj,path):
 	os.makedirs(path, exist_ok=True);
 	for key, value in obj.items():
@@ -115,7 +171,7 @@ def installDictionaryAtPath(obj,path):
 			with open(path+key, 'w') as file:
 				file.write(value);
 
-async def installPackageFromObject(obj,path):
+def installPackageFromObject(obj,path):
 	shortPath=path.split(":", 1)[1]
 	path=path.replace(":", "/");
 	installDictionaryAtPath(ee_Js2Py(obj),path+'/')

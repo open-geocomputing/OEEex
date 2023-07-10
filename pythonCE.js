@@ -248,58 +248,77 @@ function requestCodeSync(requestedPath){
 }
 
 async function requestCodeAsync(requestedPath) {
-    return new Promise((resolve, reject) => {
-        let path = requestedPath.split(":");
-        let url = "https://code.earthengine.google.com/repo/file/load?repo=" + encodeURI(path[0]) + "&path=" + encodeURI(path[1]);
+	return new Promise((resolve, reject) => {
+		let path = requestedPath.split(":");
+		let url = "https://code.earthengine.google.com/repo/file/load?repo=" + encodeURI(path[0]) + "&path=" + encodeURI(path[1]);
 
-        const request = new XMLHttpRequest();
-        request.open("GET", url, true); // `true` makes the request asynchronous
+		const request = new XMLHttpRequest();
+		request.open("GET", url, true); // `true` makes the request asynchronous
 
-        request.setRequestHeader('X-XSRF-Token', window._ee_flag_initialData.xsrfToken);
-        request.setRequestHeader('Content-Type', 'application/json');
+		request.setRequestHeader('X-XSRF-Token', window._ee_flag_initialData.xsrfToken);
+		request.setRequestHeader('Content-Type', 'application/json');
 
-        request.onload = function () {
-            if (request.status === 200) {
-                resolve(JSON.parse(request.responseText));
-            } else {
-                reject(request.responseText);
-            }
-        };
+		request.onload = function () {
+			if (request.status === 200) {
+				resolve(JSON.parse(request.responseText));
+			} else {
+				reject(request.responseText);
+			}
+		};
 
-        request.onerror = function () {
-            reject(Error("Network Error"));
-        };
+		request.onerror = function () {
+			reject(Error("Network Error"));
+		};
 
-        request.send(null);
-    });
+		request.send(null);
+	});
 }
 
 async function requestListAsync(requestedRepoPath) {
-    return new Promise((resolve, reject) => {
-        let url = "https://code.earthengine.google.com/repo/load?repo=" + encodeURI(requestedRepoPath);
+	return new Promise((resolve, reject) => {
+		let url = "https://code.earthengine.google.com/repo/load?repo=" + encodeURI(requestedRepoPath);
 
-        const request = new XMLHttpRequest();
-        request.open("GET", url, true); // `true` makes the request asynchronous
+		const request = new XMLHttpRequest();
+		request.open("GET", url, true); // `true` makes the request asynchronous
 
-        request.setRequestHeader('X-XSRF-Token', window._ee_flag_initialData.xsrfToken);
-        request.setRequestHeader('Content-Type', 'application/json');
+		request.setRequestHeader('X-XSRF-Token', window._ee_flag_initialData.xsrfToken);
+		request.setRequestHeader('Content-Type', 'application/json');
 
-        request.onload = function () {
-            if (request.status === 200) {
-                resolve(JSON.parse(request.responseText));
-            } else {
-                reject(request.responseText);
-            }
-        };
+		request.onload = function () {
+			if (request.status === 200) {
+				resolve(JSON.parse(request.responseText));
+			} else {
+				reject(request.responseText);
+			}
+		};
 
-        request.onerror = function () {
-            reject(Error("Network Error"));
-        };
+		request.onerror = function () {
+			reject(Error("Network Error"));
+		};
 
-        request.send(null);
-    });
+		request.send(null);
+	});
 }
 
+
+function requestListSync(requestedRepoPath) {
+	let url = "https://code.earthengine.google.com/repo/load?repo=" + encodeURI(requestedRepoPath);
+
+	const request = new XMLHttpRequest();
+	request.open("GET", url, false);
+
+	request.setRequestHeader('X-XSRF-Token', window._ee_flag_initialData.xsrfToken);
+	request.setRequestHeader('Content-Type', 'application/json');
+
+	request.send(null);
+
+	if (request.status === 200) {
+		return JSON.parse(request.responseText);
+	}else{
+		return {tree:{}};
+	}
+
+}
 
 function reRunCode(event){
 	window.addEventListener(event,function(){
@@ -308,6 +327,14 @@ function reRunCode(event){
 }
 
 var EEInstalledPackageList=[];
+
+function importPakageStruct(path){
+	return requestListSync(path);
+}
+
+function importCode(path){
+	return requestCodeSync(path);
+}
 
 async function importSingleEEPackage(path){
 	pathPart=path.split(":")
@@ -419,9 +446,9 @@ function runSendPython(inputVal){
 			let startPattern = "/\\*\\*\\*\\* Start of imports. If edited, may not auto-convert in the playground. \\*\\*\\*\\*/";
 			let endPattern = "/\\*\\*\\*\\*\\* End of imports. If edited, may not auto-convert in the playground. \\*\\*\\*\\*\\*/";
 			let regex = new RegExp(startPattern + "[\\s\\S]*" + endPattern, 'g');
-
-			sourceCode = sourceCode.replace(regex, '');
 			
+			sourceCode = sourceCode.replace(regex, '');
+
 			sourceCode.replace(regexPattern, (match, p1,p2, req) => {
 				requirementLine.push(req.trim());
 			});
@@ -478,7 +505,7 @@ function overloadEditorForPython(){
 		for (var i = predefineName.length - 1; i >= 0; i--) {
 			dict[predefineName[i]]=predefineName[i];
 		}
-		return "/*var oeel=require('users/OEEL/lib:loadAll');*/ require('users/mgravey/pythonCode:requirePython_v2').runPython("+JSON.stringify(code)+","+JSON.stringify(dict).replaceAll('"','')+",[]);";
+		return "/*var oeel=require('users/OEEL/lib:loadAllSF');*/ require('users/mgravey/pythonCode:requirePython_v2').runPython("+JSON.stringify(code)+","+JSON.stringify(dict).replaceAll('"','')+",[]);";
 	}
 
 	editor.getSession().getValue=function(){
