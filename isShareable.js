@@ -32,7 +32,7 @@ function chekForAssets(){
 	let importScript=document.querySelector('.zippy.env-list .body.env-ui').innerText;
 
 	let importScriptMatch=importScript.match(/(users|projects)(\/|[a-zA-Z0-9]|\-|\_)+/g);
-	let scriptMatch=script.match(/(users|projects)(\/|[a-zA-Z0-9]|\-|\_)+/g)
+	let scriptMatch=script.match(/(users|projects)(\/|[a-zA-Z0-9]|\-|\_|\:)+/g)
 	importScriptMatch=(Array.isArray(importScriptMatch)?importScriptMatch:[]);
 	scriptMatch=(Array.isArray(scriptMatch)?scriptMatch:[])
 	let listAssets=[... new Set([...importScriptMatch,
@@ -43,43 +43,111 @@ function chekForAssets(){
 	}
 	//request check of assets
 
-	let getAssetAvailability=new XMLHttpRequest();
-	getAssetAvailability.open("POST","https://asset-check-oee.open-geocomputing.org/checkAcces",true);
-	getAssetAvailability.setRequestHeader("Content-Type", "application/json");
-	getAssetAvailability.responseType = 'json';
-	getAssetAvailability.onload = function(e) {
-		if (this.status == 200) {
-			if(this.response){
-				let data=this.response;
-				let error=[];
-				let warning=[];
-				for (const [key, value] of Object.entries(data)) {
-					if(value)continue;
-					if(importScriptMatch.includes(key)){
-						error.push(key);
-					}else{
-						warning.push(key);
+	console.log(listAssets)
+
+	let scriptPath = [];
+	let assetPath = [];
+
+	listAssets.forEach(str => {
+		if (str.includes(":")) {
+			scriptPath.push(str);
+		} else {
+			assetPath.push(str);
+		}
+	});
+
+	promisesScript=[];
+
+	for (var i = scriptPath.length - 1; i >= 0; i--) {
+		let script=scriptPath[i];
+
+		promisesScript.push(new Promise((resolve, reject) => {
+			let repoName=script.slice(0,script.indexOf(":"));
+
+
+			let url="https://code.earthengine.google.com/repo/getacl?repo="+repoName;
+			let getRepoParam=new XMLHttpRequest();
+			getRepoParam.open("GET",url,true);
+			getRepoParam.responseType = 'json';
+			getRepoParam.onload = function(e) {
+				if (this.status == 200) {
+					let text="";
+					if(!this.response.all_users_can_read){
+						text+=("- "+repoName+' is a non public repository!')
 					}
+					resolve(text)
+				}else{
+					resolve(("- "+repoName+' is a non public repository!'))
 				}
-				let message="Some potential asset errors were detected!\n";
-				if(error.length>0){
-					message+='\n'
-					message+="Error: this script contains some assets not publicly shared:\n"
-					message+=(" - "+error.join("\n - ")).slice(0,-3)
-					message+='\n'
-				}
-				if(warning.length>0){
-					message+='\n'
-					message+="Warning: this script may contain some assets not publicly shared:\n"
-					message+=(" - "+warning.join("\n - ")).slice(0,-3)
-				}
-				if((error.length+warning.length)>0)alert(message)
 			}
+			getRepoParam.setRequestHeader("x-xsrf-token", window._ee_flag_initialData.xsrfToken);
+			getRepoParam.send();
+		}))
 	}
-}
 
-getAssetAvailability.send(new URLSearchParams({assetIDs:JSON.stringify(listAssets)}).toString());
+	let scriptsCheck=new Promise((resolve, reject) => {
+		Promise.all(promisesScript).then(values=>{
+			values=values.filter(str => str !== "");
+			if(values.length>0){
+				resolve("The following repositories are not publicly available:\n"+values.join("\n"));
+			}else{
+				resolve("")
+			}
+		})
+	})
 
+	let assetsCheck=new Promise((resolve, reject) => {
+		let getAssetAvailability=new XMLHttpRequest();
+		getAssetAvailability.open("POST","https://asset-check-oee.open-geocomputing.org/checkAcces",true);
+		getAssetAvailability.setRequestHeader("Content-Type", "application/json");
+		getAssetAvailability.responseType = 'json';
+		getAssetAvailability.onload = function(e) {
+			if (this.status == 200) {
+				if(this.response){
+					let data=this.response;
+					let error=[];
+					let warning=[];
+					for (const [key, value] of Object.entries(data)) {
+						if(value)continue;
+						if(importScriptMatch.includes(key)){
+							error.push(key);
+						}else{
+							warning.push(key);
+						}
+					}
+					let message="Some potential asset errors were detected!\n";
+					if(error.length>0){
+						message+='\n'
+						message+="Error: this script contains some assets not publicly shared:\n"
+						message+=(" - "+error.join("\n - ")).slice(0,-3)
+						message+='\n'
+					}
+					if(warning.length>0){
+						message+='\n'
+						message+="Warning: this script may contain some assets not publicly shared:\n"
+						message+=(" - "+warning.join("\n - ")).slice(0,-3)
+					}
+					if((error.length+warning.length)>0)
+						resolve(message)
+					else
+						resolve("")
+				}
+			}else{
+					reject(this.error)
+				}
+		}
+
+		getAssetAvailability.send(new URLSearchParams({assetIDs:JSON.stringify(assetPath)}).toString());
+	})
+
+
+	Promise.all([scriptsCheck, assetsCheck]).then(values=>{
+		values=values.filter(str => str !== "");
+		if(values.length>0){
+			let message=values.join("\n\n");
+			alert(message);
+		}
+	})
 }
 
 function locationChangeEvent(e) {
