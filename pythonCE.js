@@ -17,6 +17,13 @@ if(typeof OEEexEscape == 'undefined'){
 	});
 }
 
+
+if(typeof OEEexEscapeScript == 'undefined'){
+	OEEexEscapeScript = trustedTypes.createPolicy("OEEexEscapeScript", {
+		createScript: (string, sink) => string
+	});
+}
+
 // add pythonLogo
 
 
@@ -225,7 +232,7 @@ overloadPrompt();
 function oeeRequire(path){
 	let sourceCode=requestCodeSync(path);
 	'use strict'
-	return eval("(function(){var exports={};" +sourceCode+"\n return exports})()")
+	return eval(OEEexEscapeScript.createScript("(function(){var exports={};" +sourceCode+"\n return exports})()"));
 }
 
 function requestCodeSync(requestedPath){
