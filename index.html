@@ -318,7 +318,7 @@
 					</p>
 					<h4>How to Use It</h4>
 					<p>
-						Go to the extension <a href="chrome-extension://dhkobehdekjgdahfldleahkekjffibhg/options.html">options</a> page and set the font according to your preference. Then reload the code editor page.
+						Go to the extension <a target="_blank" href="chrome-extension://dhkobehdekjgdahfldleahkekjffibhg/options.html">options</a> page and set the font according to your preference. Then reload the code editor page.
 					</p>
 					<h4>Implementation</h4>
 					<p>
@@ -354,7 +354,7 @@
 					</p>
 					<h4>How to Use It</h4>
 					<p>
-						Nothing just to keep activated in the <a href="chrome-extension://dhkobehdekjgdahfldleahkekjffibhg/options.html">options</a>. 
+						Nothing just to keep activated in the <a target="_blank" href="chrome-extension://dhkobehdekjgdahfldleahkekjffibhg/options.html">options</a>. 
 					</p>
 					<h4>Implementation</h4>
 					<p>
@@ -369,7 +369,7 @@
 					</h3>
 					<div class="message is-primary">
 						<div class="message-body">
-							This feature is presently only functional with version 1.7.5 or later of the Chrome extension (please update if necessary). Furthermore, it requires manual activation in the <a href="chrome-extension://dhkobehdekjgdahfldleahkekjffibhg/options.html">extension options</a>.
+							This feature is presently only functional with version 1.7.5 or later of the Chrome extension (please update if necessary). Furthermore, it requires manual activation in the <a target="_blank" href="chrome-extension://dhkobehdekjgdahfldleahkekjffibhg/options.html">extension options</a>.
 						</div>
 					</div>
 					<h4>Description</h4>
@@ -379,8 +379,8 @@
 					<h4>How to Use It</h4>
 					<p>
 						You can use Python, simply start a file with a <code>#</code>.
-						You can run a python code using <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.run"><code>oeel.Python.run(sourceCode[,{variableDictionary}[,extraPackageList]])</code></a>
-						You can import a Python script using <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.require"><code>oeel.Python.require(path[,extraPackageList])</code></a> in much the same way you would with the <code>standard require(path)</code>. Any function declared in the Python file can be accessed. Each call to <code>oeel.Python.require</code> and each run exists within its own separate Python pseudo-environment, ensuring that any coding errors or exceptions do not propagate. Nonetheless, cross-communication between these isolated environments is not possible.
+						You can run a python code using <a target="_blank" href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.run"><code>oeel.Python.run(sourceCode[,{variableDictionary}[,extraPackageList]])</code></a>
+						You can import a Python script using <a target="_blank" href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.require"><code>oeel.Python.require(path[,extraPackageList])</code></a> in much the same way you would with the <code>standard require(path)</code>. Any function declared in the Python file can be accessed. Each call to <code>oeel.Python.require</code> and each run exists within its own separate Python pseudo-environment, ensuring that any coding errors or exceptions do not propagate. Nonetheless, cross-communication between these isolated environments is not possible.
 						<br>
 						It's worth noting that there's no need to import <code>ee</code> or <code>oeel</code>.
 					</p>
@@ -388,10 +388,10 @@
 					<div>
 						<ul>
 							<li>
-								You can import a single Python file in JavaScript with <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.require"><code>oeel.Python.require</code></a>.
+								You can import a single Python file in JavaScript with <a target="_blank" href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.require"><code>oeel.Python.require</code></a>.
 							</li>
 							<li>
-								You can run Python code (provided as a string) from JavaScript with <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.run"><code>oeel.Python.run</code></a>.
+								You can run Python code (provided as a string) from JavaScript with <a target="_blank" href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.run"><code>oeel.Python.run</code></a>.
 							</li>
 							<li>
 								You can directly run Python code from the code editor. It needs to start with <code>#</code>.
@@ -405,7 +405,7 @@
 								You can use JavaScript code in Python with <code>oeel.requireJS(path)</code>.
 							</li>
 							<li>
-								You can use all pure Python libraries, and all those supported <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">by Pyodide</a>, such as numpy, matplotlib, pyproj, or scikit-learn. Matplotlib will display the figure in the console.
+								You can use all pure Python libraries, and all those supported <a target="_blank" href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">by Pyodide</a>, such as numpy, matplotlib, pyproj, or scikit-learn. Matplotlib will display the figure in the console.
 							</li>
 							<li>
 								You can run Export tasks as you could in JavaScript.
@@ -443,13 +443,13 @@
 					</div>
 					<h4>Example</h4>
 					<p>
-						<a href="https://code.earthengine.google.com/40e272744f01807275d444816cd9b975">Python script example</a>
+						<a target="_blank" href="https://code.earthengine.google.com/40e272744f01807275d444816cd9b975">Python script example</a>
 						<br>
-						<a href="https://code.earthengine.google.com/9b1ce46b976104f2833c91c05b21451e">JS calling script</a>
+						<a target="_blank" href="https://code.earthengine.google.com/9b1ce46b976104f2833c91c05b21451e">JS calling script</a>
 					</p>
 					<h4>Implementation</h4>
 					<p>
-						The current approach is a result of multiple trials and is possibly the best solution identified so far. It utilizes <a href="https://pyodide.org/en">Pyodide</a>, a Python interpreter compiled in WebAssembly for browser usage.
+						The current approach is a result of multiple trials and is possibly the best solution identified so far. It utilizes <a target="_blank" href="https://pyodide.org/en">Pyodide</a>, a Python interpreter compiled in WebAssembly for browser usage.
 						<br>
 						A modified version of the <code>earthengine-api</code> package, which doesn't require initialization, enables all Earth Engine operations. In addition, functions like <code>print()</code>, <code>Map.*</code>, <code>Export.*</code>, and the JavaScript version of <code>require()</code> (which can be accessed as <code>oeel.requireJS()</code>) along with some more exotic <code>ee.data.*</code> functions, are forwarded to the Code Editor.
 					</p>
@@ -460,7 +460,7 @@
 					<h4>Description</h4>
 					<p>This feature allows you to search, order, and transfer PlanetLab imagery directly from GEE.</p>
 					<h4>How to Use It?</h4>
-					<p>To use it, activate the feature in the <a href="chrome-extension://dhkobehdekjgdahfldleahkekjffibhg/options.html">extension options page</a>, set up your account (if you log in, the API key will be retrieved automatically for you), set the path to your Planet imagery collection (this is required to remove already-available assets from the results list), and select the API version you want to use.
+					<p>To use it, activate the feature in the <a target="_blank" href="chrome-extension://dhkobehdekjgdahfldleahkekjffibhg/options.html">extension options page</a>, set up your account (if you log in, the API key will be retrieved automatically for you), set the path to your Planet imagery collection (this is required to remove already-available assets from the results list), and select the API version you want to use.
 						<br>
 						<ul>
 							<li>APIv1 is available to everyone but will not be maintained anymore and may be removed in the future. It requires the data to be transmitted through your computer. A good internet connection is critical, and the computer with the page must remain open. When you search, images that have already been ingested are automatically removed from the result list. To download, select the image and press "Download" or double-click on the image. Once an image is set for download, it will take up to 20 minutes for activation (computation of the image on the Planet side) before the download can start. If you select multiple images, they will all be activated in parallel.
@@ -469,7 +469,7 @@
 								APIv2 is available if you have paid quota, but it is unclear who can use it🤔. With APIv2, Planet will manage the ingestion in GEE for you once the order is placed👏. Normally, already ingested data are not displayed in the results, but ordered and not yet ingested data will be displayed. Be careful not to order the same data twice.
 							</li>
 						</ul>
-						Check <a href="https://code.earthengine.google.com/1aecca066392dc64d48aa07f6cfe6f16">this example</a> to get started.
+						Check <a target="_blank" href="https://code.earthengine.google.com/1aecca066392dc64d48aa07f6cfe6f16">this example</a> to get started.
 					</p>
 					<h4>Advice</h4>
 					<p>Once you've finished setting up, start with a single image to make sure everything works as expected before moving on to more downloads.</p>
