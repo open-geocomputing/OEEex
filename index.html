@@ -5,11 +5,11 @@
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0PQFJ14N61"></script>
 	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-	  gtag('config', 'G-0PQFJ14N61');
+		gtag('config', 'G-0PQFJ14N61',{ 'anonymize_ip': true });
 	</script>
 	<meta charset="UTF-8">
 	<title>Documentation of the Open Earth Engine extension</title>
@@ -379,19 +379,50 @@
 					<h4>How to Use It</h4>
 					<p>
 						You can use Python, simply start a file with a <code>#</code>.
-						You can run a python code using <code>runPython(sourceCode[,{variableDictionary}[,extraPackageList]])</code>
-						You can import a Python script using <code>requirePython(path[,extraPackageList])</code> in much the same way you would with the <code>standard require(path)</code>. Any function declared in the Python file can be accessed. Each call to requirePython and each run exists within its own separate Python environment, ensuring that any coding errors or exceptions do not propagate. Nonetheless, cross-communication between these isolated environments is not possible.
+						You can run a python code using <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.run"><code>oeel.Python.run(sourceCode[,{variableDictionary}[,extraPackageList]])</code></a>
+						You can import a Python script using <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.require"><code>oeel.Python.require(path[,extraPackageList])</code></a> in much the same way you would with the <code>standard require(path)</code>. Any function declared in the Python file can be accessed. Each call to <code>oeel.Python.require</code> and each run exists within its own separate Python pseudo-environment, ensuring that any coding errors or exceptions do not propagate. Nonetheless, cross-communication between these isolated environments is not possible.
 						<br>
 						It's worth noting that there's no need to import <code>ee</code> or <code>oeel</code>.
 					</p>
+					<h4>Functionality</h4>
+					<div>
+						<ul>
+							<li>
+								You can import a single Python file in JavaScript with <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.require"><code>oeel.Python.require</code></a>.
+							</li>
+							<li>
+								You can run Python code (provided as a string) from JavaScript with <a href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.run"><code>oeel.Python.run</code></a>.
+							</li>
+							<li>
+								You can directly run Python code from the code editor. It needs to start with <code>#</code>.
+							</li>
+							<li>
+								You can select extra packages to install using the <code>pks</code> parameter from JavaScript, or request it with a special comment like <code># requirements: firstPackage, secondPackage</code> or the shorter version <code># req: thirdPackage</code>. These comments can be placed anywhere in the code. ⚠️ Packages are cached between runs, but if a package needs to be installed, the code execution will restart after installation.
+								<br>
+								You can add packages stored on Earth Engine simply using their EE path, like for the JavaScript require, <code>users/userName/repoName:filePath/inTheRepo</code>. They can be used with Python import using a dot separator, e.g., <code>import users.userName.repoName.filePath.inTheRepo</code>. If you forget to import the package, a synchronous download will occur. (This is significantly slower.)
+							</li>
+							<li>
+								You can use JavaScript code in Python with <code>oeel.requireJS(path)</code>.
+							</li>
+							<li>
+								You can use all pure Python libraries, and all those supported <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">by Pyodide</a>, such as numpy, matplotlib, pyproj, or scikit-learn. Matplotlib will display the figure in the console.
+							</li>
+							<li>
+								You can run Export tasks as you could in JavaScript.
+							</li>
+							<li>
+								You can interact with the Map to add layers etc., as you would do in JavaScript. However, UI elements are not present due to the absence of use cases. 
+							</li>
+						</ul>
+					</div>
+
+
+
 					<h4>Limitaion</h4>
-					<p>
+					<div>
 						<ul>
 							<li>
 								Upon first invoking Python, a few seconds (typically 5-7 seconds) are required to initialize the associated environment. This initialization can only be conducted asynchronously, thereby necessitating a fresh execution of the code. Although it's feasible to trigger Python's loading automatically upon opening the code editor, this would result in a temporary freeze of the browser for those 5 to 7 seconds.
-							</li>
-							<li>
-								<del>At present, it is not possible to run Python code directly. It needs to be imported in JavaScript to be executed. The most efficient solution to run pure Python script is currently to use requirePython() to import your script inside another script. <i>Efforts are ongoing to find a better alternative, aiming to have something that works directly with the <b>Run</b> button.</i></del>(fixed in 1.7.3)
 							</li>
 							<li>
 								A Python function cannot be transferred to JavaScript, implying that a function itself cannot be returned as a result of another function if called from JS. Similarly, while a JavaScript function can be used as an input to a Python function without any issues, this Python function cannot accept another Python function as one of its inputs.
@@ -406,14 +437,10 @@
 								Matplotlib can only result in static figures. If you need some interactivity rely on <a href="#Plotly">Plotly</a>.
 							</li>
 							<li>
-								<a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">Packages built in Pyodide</a> can be utilized. <del><i>Efforts are underway to support pure Python packages.</i></del>(fixed in 1.7.3), pure package are supported as well.
-							</li>
-							<li>
-								If the script necessitates extra packages that are presently not available, the script will have to be re-executed after the installation. This is conveniently automated using the <code>extraPackageList</code> parameter. Hence, it is recommended to execute <code>requirePython()</code> as promptly as possible.
-								This not possible for a direct run
+								Imported files are cached and therefore are not reloaded for new runs. Consequently, any changes made between new runs will not take effect. Although reloading the page resolves this issue, it is suboptimal for the development of such packages. We are currently considering potential solutions.
 							</li>
 						</ul>
-					</p>
+					</div>
 					<h4>Example</h4>
 					<p>
 						<a href="https://code.earthengine.google.com/01a754f8930e5dc03575a5094dc2056f">Python script example</a>
