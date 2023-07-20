@@ -188,9 +188,9 @@ def eePrint(toPrint):
 def eeMapOp(name,args):
 	js.oeeMap(name, ee_Py2Js([ee_Py2Js(value) for value in args]))
 if withPlotly:
-	def displayPlt():
+	def displayPlt(bbox_inches="tight", dpi=100):
 		buffer = io.BytesIO()
-		matplotlib.pyplot.savefig(buffer, format='png')
+		matplotlib.pyplot.savefig(buffer, format='png',bbox_inches=bbox_inches,dpi=dpi)
 		buffer.seek(0)
 		encoded_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
 		js.oeePlot("data:image/png;base64,"+encoded_image);
