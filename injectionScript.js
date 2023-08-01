@@ -1,7 +1,6 @@
 function injectScripts(){
 	let listOfScript=[
 		'3rd_party/shpwrite',
-		'addCommandS',
 		'addCopyJSON',
 		'addPlotly',
 		'addTerminal',
