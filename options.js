@@ -1,7 +1,7 @@
 listOfScript=[
 	'addCopyJSON',
 	'addPlotly',
-	'aiCodeGeneration'
+	'aiCodeGeneration',
 	'consoleError',
 	'editorSettings',
 	'EEDarkMode',
@@ -12,7 +12,7 @@ listOfScript=[
 	'openScriptNewTab',
 	'planetLab',
 	'pythonCE',
-	'uploadWithManifest',
+	'uploadWithManifest'
 ];
 
 var lightIsAutomatic=true;
