@@ -6,17 +6,23 @@ function injectScripts(){
 		'addPlotly',
 		'addTerminal',
 		'aiCodeGeneration',
+		'consoleError',
 		'editorSettings',
 		'EEDarkMode',
 		'hackEE',
 		'insertInCE',
 		'isShareable',
 		'openScriptNewTab',
-		'planetLab',
+		'planetLab', 
+		'pythonCE',
 		'runAllTasks',
 		'surveyMessage',
 		'uploadWithManifest',
 	];
+
+	if(document.location.pathname=='/tasks'){
+		listOfScript=['EEDarkMode'];
+	}
 
 	chrome.storage.local.get(listOfScript,
 		function(result){			

@@ -9,20 +9,23 @@ chrome.runtime.onInstalled.addListener(function() {
 		uploadWithManifest:true,
 		hackEE:false, //remove in the future
 		EEDarkMode:true,
-		addCommandS:navigator.platform.toLowerCase().includes('mac'),
 		runAllTasks:true,
 		oeelCache:true,
 		addCopyJSON:true,
 		openScriptNewTab:true,
 		editorSettings:true,
+		EStabSize:2,
 		ESfontSize:13,
 		ESfontFamily:"default",
 		aiCodeGeneration:false,
 		addTerminal:true,
+		pythonCE:false,
 		surveyMessage:true,
+		consoleError:true,
 		addPlotly:true
 	});
 });
+
 
 chrome.action.onClicked.addListener(tab => {
 	if(tab.url.startsWith('https://code.earthengine.google.com')){
@@ -110,8 +113,8 @@ function sendESConfig(ports=listEditorPort){
 		ports=[ports];
 	}
 
-	chrome.storage.local.get(['ESfontSize','ESfontFamily'], function(data) {
-		ports.map((sender)=>sender.postMessage({ type:'changeFont', message: data }));
+	chrome.storage.local.get(['ESfontSize','ESfontFamily','EStabSize','ES_SC'], function(data) {
+		ports.map((sender)=>sender.postMessage({ type:'EditorSetting', message: data }));
 	});
 }
 
