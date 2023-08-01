@@ -1,16 +1,17 @@
-listOfScript=['isShareable',
+listOfScript=[
+	'addCommandS',
+	'addCopyJSON',
+	'addPlotly',
+	'aiCodeGeneration'
+	'editorSettings',
+	'EEDarkMode',
+	'hackEE',
 	'insertInCE',
+	'isShareable',
+	'oeelCache',
+	'openScriptNewTab',
 	'planetLab',
 	'uploadWithManifest',
-	'hackEE',
-	'EEDarkMode',
-	'addCommandS',
-	'oeelCache',
-	'addPlotly',
-	'openScriptNewTab',
-	'editorSettings',
-	'addCopyJSON',
-	'aiCodeGeneration'
 ];
 
 var lightIsAutomatic=true;
