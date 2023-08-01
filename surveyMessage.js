@@ -1,6 +1,6 @@
 var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 window.addEventListener("load", function(){
-    if(!promptPythonCEExtensionPrefix) return
+    if(typeof(promptPythonCEExtensionPrefix)=="undefined") return
     var s = document.createElement('script');
     s.src = 'chrome-extension://'+OEEexidString+'/3rd_party/lottie-player.js';
     s.onload = function() {
