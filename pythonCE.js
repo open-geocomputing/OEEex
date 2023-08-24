@@ -80,7 +80,7 @@ function oeePrint(toPrint){
 	if(EEContext){
 		EEContext({answerType:"printConsole", value:toPrint})
 	}else{
-		console.log(toPrint);
+		console.log.apply(null,toPrint);
 	}
 }
 

@@ -177,13 +177,16 @@ def installPackageFromObject(obj,path):
 	installDictionaryAtPath(ee_Js2Py(obj),path+'/')
 	os.symlink(path, shortPath);
 
-def eePrint(toPrint):
-	if(isinstance(toPrint, ee.computedobject.ComputedObject)):
-		js.oeePrint(ee_Py2Js(toPrint));
-	elif(hasattr(toPrint, '__str__')):
-		js.oeePrint(str(toPrint))
-	else:
-		js.oeePrint(ee_Py2Js(toPrint));
+def eePrint(*toPrints):
+	toPrints=list(toPrints)
+	for ix in range(len(toPrints)):
+		if(isinstance(toPrints[ix], ee.computedobject.ComputedObject)):
+			toPrints[ix]=ee_Py2Js(toPrints[ix]);
+		elif(hasattr(toPrints[ix], '__str__')):
+			toPrints[ix]=str(toPrints[ix]);
+		else:
+			toPrints[ix]=ee_Py2Js(toPrints[ix]);
+	js.oeePrint(ee_Py2Js(toPrints))
 
 def eeMapOp(name,args):
 	js.oeeMap(name, ee_Py2Js([ee_Py2Js(value) for value in args]))
