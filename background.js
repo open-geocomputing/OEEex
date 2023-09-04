@@ -291,7 +291,6 @@ chrome.runtime.onConnect.addListener(PlanetPortConnection);
 
 function requestAuth(request, sender, sendResponse) {
 	const regex = /^https:\/\/.*-colab\.googleusercontent\.com.*$/;
-	console.log(sender)
 	if((sender.origin=="https://colab.research.google.com"|| regex.test(sender.origin))&&request=="getAuthTocken"){
 		fetch('https://code.earthengine.google.com/')
 		.then(response => response.text())
