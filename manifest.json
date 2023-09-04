@@ -50,6 +50,7 @@
 	}],
 	"host_permissions": [
 		"https://api.planet.com/*",
+		"https://code.earthengine.google.com/",
 		"https://code.earthengine.google.com/repo/file/load?*",
 		"https://link.planet.com/*",
 		"https://tiles.planet.com/*"
@@ -86,6 +87,10 @@
 	},
 	"options_page": "options.html",
 	"externally_connectable": {
-		"matches": ["https://code.earthengine.google.com/*"]
+		"matches": [
+			"https://code.earthengine.google.com/*",
+			"https://colab.research.google.com/*",
+			"https://*.googleusercontent.com/*"
+		]
 	}
 }

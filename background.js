@@ -155,7 +155,7 @@ function setOeelCache(active){
 
 		function redirect(requestDetails) {
 			let newUrl="https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/"+
-					requestDetails.url.match("^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)")[1];
+			requestDetails.url.match("^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)")[1];
 			return {
 				redirectUrl: newUrl
 			};
@@ -165,7 +165,7 @@ function setOeelCache(active){
 			redirect,
 			{urls:["https://code.earthengine.google.com/repo/file/load?repo=users%2FOEEL%2Flib&path=*"], types:["xmlhttprequest"]},
 			["blocking"]
-		);
+			);
 		
 	}else{
 		future.then(function(){
@@ -284,3 +284,31 @@ chrome.storage.onChanged.addListener(function(){sendPlanetConfig();});
 
 chrome.runtime.onConnectExternal.addListener(PlanetPortConnection);
 chrome.runtime.onConnect.addListener(PlanetPortConnection);
+
+
+
+// extrernal login
+
+function requestAuth(request, sender, sendResponse) {
+	const regex = /^https:\/\/.*-colab\.googleusercontent\.com.*$/;
+
+	if((sender.origin=="https://colab.research.google.com"|| regex.test(sender.origin))&&request=="getAuthTocken"){
+		fetch('https://code.earthengine.google.com/')
+		.then(response => response.text())
+		.then(data => {
+			const authTokenRegex = /"authToken":\s*"([^"]+)"/;
+			const match = data.match(authTokenRegex);
+			if (match && match[1]) {
+				const authToken = match[1];
+				sendResponse({ type:'authToken', message: authToken })
+			} else {
+				sendResponse({ type:'error', message: "no authToken" })
+			}
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	}
+}
+
+chrome.runtime.onMessageExternal.addListener(requestAuth);
