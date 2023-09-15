@@ -230,9 +230,7 @@ overloadPrompt();
 // }
 
 function oeeRequire(path){
-	let sourceCode=requestCodeSync(path);
-	'use strict'
-	return eval(OEEexEscapeScript.createScript("(function(){var exports={};" +sourceCode+"\n return exports})()"));
+	return requestCodeSync(path);
 }
 
 function requestCodeSync(requestedPath){
