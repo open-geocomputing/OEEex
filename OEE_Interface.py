@@ -55,8 +55,9 @@ class oeelChain:
 			return ee_Js2Py(js.oeelCall(ee_Py2Js(self.attr_chain), ee_Py2Js([{ee_Py2Js(value) for key, value in kwargs}])))
 	
 	def requireJS(self, path):
-		return oeeRequire(path,{key:ee_Js2Py(value) for key, value in js.oeeRequireJS( ee_Py2Js(path)).to_py(depth=1).items()});
-
+		sourceCode=js.oeeRequireJS( ee_Py2Js(path))
+		js_output=pyodide.code.run_js("(function(){var exports={};" +sourceCode+"\n return exports})()");
+		return oeeRequire(path,{key:ee_Js2Py(value) for key, value in js_output.to_py(depth=1).items() });
 
 class eeExportModule:
 	def __init__(self, attr_chain=[]):
