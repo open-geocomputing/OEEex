@@ -166,14 +166,15 @@ function oeeIsFunction(obj){
 
 
 function injectPythonCE(){
+	let dataPyodide=atob("aHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L3B5b2RpZGUvdjAuMjQuMC9mdWxsLw==");
 	let start = Date.now();
 	window.dispatchEvent(new CustomEvent('pyodideLoading'));
 	var s = document.createElement('script');
-	s.src = OEEexEscapeURL.createScriptURL("https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js");
+	s.src = OEEexEscapeURL.createScriptURL("chrome-extension://"+OEEexidString+"/3rd_party/pyodide/pyodide.js");
 	s.onload = function() {
-		loadPyodide().then(function(pyodideLoaded){
+		loadPyodide({indexURL:dataPyodide}).then(function(pyodideLoaded){
 			pyodide=pyodideLoaded;
-			pyodide.loadPackage(["matplotlib","micropip"]).then(function(){
+			pyodide.loadPackage(["numpy","matplotlib","micropip"]).then(function(){
 			pyodide.runPythonAsync(`
 	from pyodide.http import pyfetch
 	response = pyfetch("chrome-extension://`+OEEexidString+`/earthengine-api.tar.gz")
