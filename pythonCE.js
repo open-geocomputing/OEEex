@@ -166,7 +166,7 @@ function oeeIsFunction(obj){
 
 
 function injectPythonCE(){
-	let dataPyodide=atob("aHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L3B5b2RpZGUvdjAuMjQuMC9mdWxsLw==");
+	let dataPyodide="https://cdn.jsdelivr.net/pyodide/v0.24.0/full/";
 	let start = Date.now();
 	window.dispatchEvent(new CustomEvent('pyodideLoading'));
 	var s = document.createElement('script');

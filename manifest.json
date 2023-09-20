@@ -16,10 +16,8 @@
 	"web_accessible_resources": [{
 		"resources": [
 			"2022-04-20.json",
-			"3rd_party/lottie-player.js",
+			"3rd_party/*",
 			"3rd_party/pyodide/*",
-			"3rd_party/shpwrite.js",
-			"3rd_party/trustedtypes.api_only.build.js",
 			"addCopyJSON.js",
 			"addPlotly.js",
 			"addTerminal.js",

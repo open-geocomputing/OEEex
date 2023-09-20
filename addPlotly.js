@@ -2,6 +2,8 @@ const consolePlotlyExtensionPrefix='OEEex_AddonPlotly';
 var plotPosition=0;
 var EECache={};
 
+var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
+
 const listPlotlyEvent=[
 	"plotly_click",
 	"plotly_hover",
@@ -880,7 +882,7 @@ const plotlyDarkTemplate = {
 
 function injectPlotly(){
 	var s = document.createElement('script');
-	s.src = OEEexEscapeURL.createScriptURL('https://cdn.plot.ly/plotly-2.12.1.min.js');
+	s.src = OEEexEscapeURL.createScriptURL("chrome-extension://"+OEEexidString+"/3rd_party/plotly-2.26.0.min.js");
 	s.onload = function() {
 		this.remove();
 	};
