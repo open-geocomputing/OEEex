@@ -202,10 +202,12 @@ function uploadFolder(manifest,fileArray){
 				for (var i = newArr.length - 1; i >= 0; i--) {
 					let ue=exploreJson2Upload(newArr[i],fileArray);
 					addManifestToIngestInGEE(newArr[i],ue);
+
 				}
 			}else{
 				let ue=exploreJson2Upload(newArr,fileArray);
 				addManifestToIngestInGEE(newArr,ue);
+
 			}
 		};
 		fr.readAsText(manifestFile);
@@ -264,7 +266,7 @@ function getUserRoot(){
 }
 
 function ingestInGEE(manifest,successCallback,errorCallback){
-	projectName=manifest.name.match(/^projects\/(.+)\/assets\//)[1];
+	let projectName=manifest.name.match(/^projects\/(.+)\/assets\//)[1];
 	if(!projectName)projectName="earthengine-legacy";
 	let ingestCall=new XMLHttpRequest();
 	if(manifest.table){
@@ -290,6 +292,11 @@ function ingestInGEE(manifest,successCallback,errorCallback){
 		}
 	}
 	ingestCall.setRequestHeader("Authorization", ee.data.getAuthToken());
+	
+	let accountHeader=document.querySelector("user-box");
+	let accountForUpload=accountHeader[Object.getOwnPropertySymbols(accountHeader)[0]];
+	if (accountForUpload!='')
+		ingestCall.setRequestHeader("X-Goog-User-Project", accountForUpload);
 
 	let reg=/^projects\/(.+)\/assets\/(.*$)/
 	let matches=reg.exec(manifest['name']);
@@ -442,6 +449,7 @@ function addManifestToIngestInGEE(manifest,uploadEvents){
 		uploadEvents:uploadEvents
 	}
 
+
 	for (var i = uploadEvents.length - 1; i >= 0; i--) {
 		uploadEvents[i].uploadDic=uploadDic;
 	}
@@ -463,6 +471,7 @@ function addManifestToIngestInGEE(manifest,uploadEvents){
 			}
 		}
 	})
+	checkForImediateIngestion(uploadDic);
 }
 
 function updateDispaly(uploadDic,chunkSize){
