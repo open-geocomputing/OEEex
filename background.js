@@ -22,6 +22,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		pythonCE:false,
 		surveyMessage:true,
 		consoleError:true,
+		addLinkToDoc:true,
 		addPlotly:true
 	});
 });

@@ -2,6 +2,7 @@ function injectScripts(){
 	let listOfScript=[
 		'3rd_party/shpwrite',
 		'addCopyJSON',
+		'addLinkToDoc',
 		'addPlotly',
 		'addTerminal',
 		'consoleError',

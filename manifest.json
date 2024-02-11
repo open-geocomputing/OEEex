@@ -19,6 +19,7 @@
 			"3rd_party/*",
 			"3rd_party/pyodide/*",
 			"addCopyJSON.js",
+			"addLinkToDoc.js",
 			"addPlotly.js",
 			"addTerminal.js",
 			"consoleError.js",
