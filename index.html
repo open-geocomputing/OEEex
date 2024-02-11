@@ -216,9 +216,7 @@
 					<h4>Description</h4>
 					<p>Manifest upload allows you to drag and drop one or more GeoTIFFs with their manifest and have it ingested directly.</p>
 					<h4>How to Use It?</h4>
-					<p>To use it, start by creating a manifest following the instructions <a href="https://developers.google.com/earth-engine/guides/image_manifest">here</a>. The only difference is in the file address; instead of using a gs:// address, use a local Unix-style file path (the path should not contain ".." to go to the parent directory).
-						<br>
-						Save the manifest as <code>manifest.json</code> in a folder (e.g., <code>myUploadFolder</code>) along with the GeoTIFFs (the images can be in subfolders). Then, drag and drop the folder onto the newly-appeared upload logo (arrow up) in the asset tab. You can follow the progress of the upload in the task tab. The data can also be from URLs, but the data will be transmitted through your computer.
+					<p>To use this feature, begin by creating a manifest using the guidelines found <a href="https://developers.google.com/earth-engine/guides/image_manifest">here</a>, with the key difference being the use of a local relative Unix-style file path instead of a gs:// address, ensuring it does not include ".." for parent directory navigation. Store the <code>manifest.json</code> file in a designated folder, such as <code>myUploadFolder</code>, with your GeoTIFFs (or zip for tables), which can be organized into subfolders. Drag and drop this folder onto the upload icon in the asset tab to initiate the upload, where you can monitor its progress in the task tab. If your data originates from URLs, it will be processed through your computer. For table uploads, incorporate <code>table:true</code> into your manifest to indicate vector data. From version <code>1.8.0</code> onwards, uploads will be associated with the currently active cloud project.
 					</p>
 					<h4>How Was It Implemented?</h4>
 					<p>The extension requests a GS upload link from Google, then the files are uploaded and the addresses in the manifest are replaced with the newly-obtained gs:// addresses. Finally, the manifest is submitted to GEE. For remotely available data (http(s)://), the data is first downloaded in the browser, temporarily stored, and uploaded following the same approach as for local files. The server must allow requests from <code>https://code.earthengine.google.com</code> or else the browser protection will cancel the request.
@@ -374,12 +372,12 @@
 					</div>
 					<h4>Description</h4>
 					<p>
-						This feature allow to use and import Python code.
+						This feature allows to use and import Python code.
 					</p>
 					<h4>How to Use It</h4>
 					<p>
 						You can use Python, simply start a file with a <code>#</code>.
-						You can run a python code using <a target="_blank" href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.run"><code>oeel.Python.run(sourceCode[,{variableDictionary}[,extraPackageList]])</code></a>
+						You can run a Python code using <a target="_blank" href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.run"><code>oeel.Python.run(sourceCode[,{variableDictionary}[,extraPackageList]])</code></a>
 						You can import a Python script using <a target="_blank" href="https://www.open-geocomputing.org/OpenEarthEngineLibrary/#.Python.require"><code>oeel.Python.require(path[,extraPackageList])</code></a> in much the same way you would with the <code>standard require(path)</code>. Any function declared in the Python file can be accessed. Each call to <code>oeel.Python.require</code> and each run exists within its own separate Python pseudo-environment, ensuring that any coding errors or exceptions do not propagate. Nonetheless, cross-communication between these isolated environments is not possible.
 						<br>
 						It's worth noting that there's no need to import <code>ee</code> or <code>oeel</code>.
@@ -425,7 +423,7 @@
 								Upon first invoking Python, a few seconds (typically 5-7 seconds) are required to initialize the associated environment. This initialization can only be conducted asynchronously, thereby necessitating a fresh execution of the code. Although it's feasible to trigger Python's loading automatically upon opening the code editor, this would result in a temporary freeze of the browser for those 5 to 7 seconds.
 							</li>
 							<li>
-								A Python function cannot be transferred to JavaScript, implying that a function itself cannot be returned as a result of another function if called from JS. Similarly, while a JavaScript function can be used as an input to a Python function without any issues, this Python function cannot accept another Python function as one of its inputs.
+								A Python function cannot be transferred to JavaScript, implying that a function itself cannot be returned as a result of another function if called from JavaScript. Similarly, while a JavaScript function can be used as an input to a Python function without any issues, this Python function cannot accept another Python function as one of its inputs.
 							</li>
 							<li>
 								<code>Export.*</code> functions are mapped directly to the code editor and thus, they cannot be a task cannot be invoked from Python. Consequently, functions like <code>start()</code> or <code>status()</code> cannot be called from Python.
