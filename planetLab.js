@@ -418,7 +418,7 @@ function addSceneInConsole(randomId,features,assetConfig,item_type,dispTunail,co
 	);
 
 	let chackIDAvailableInGEE=new XMLHttpRequest();
-	chackIDAvailableInGEE.open("POST",'https://content-earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/value:compute',true);
+	chackIDAvailableInGEE.open("POST",'https://content-earthengine.googleapis.com/v1/projects/earthengine-legacy/value:compute',true);
 	chackIDAvailableInGEE.responseType = 'json';
 	chackIDAvailableInGEE.setRequestHeader("Content-Type", "application/json");
 	chackIDAvailableInGEE.onload = function(e) {

@@ -268,10 +268,10 @@ function ingestInGEE(manifest,successCallback,errorCallback){
 	if(!projectName)projectName="earthengine-legacy";
 	let ingestCall=new XMLHttpRequest();
 	if(manifest.table){
-		ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/'+projectName+'/table:import',true);
+		ingestCall.open("POST",'https://earthengine.googleapis.com/v1/projects/'+projectName+'/table:import',true);
 	}
 	else{
-		ingestCall.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/'+projectName+'/image:import',true);
+		ingestCall.open("POST",'https://earthengine.googleapis.com/v1/projects/'+projectName+'/image:import',true);
 	}
 	
 	ingestCall.responseType = 'json';

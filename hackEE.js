@@ -86,7 +86,7 @@ function confirmManager(code,element){
         if(instructions.startsWith(actionPrefix+':')){
             let path=instructions.slice(actionPrefix.length+1);
             let geeRequest=new XMLHttpRequest();
-            geeRequest.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/assets?assetId='+encodeURI(path),true);
+            geeRequest.open("POST",'https://earthengine.googleapis.com/v1/projects/earthengine-legacy/assets?assetId='+encodeURI(path),true);
             geeRequest.responseType = 'json';
             geeRequest.onload = function(e) {
                 if (this.status == 200) {
@@ -106,7 +106,7 @@ function confirmManager(code,element){
         if(instructions.startsWith(actionPrefix+':')){
             var config=instructions.slice(actionPrefix.length+1);
             let geeRequest=new XMLHttpRequest();
-            geeRequest.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/image:export',true);
+            geeRequest.open("POST",'https://earthengine.googleapis.com/v1/projects/earthengine-legacy/image:export',true);
             geeRequest.responseType = 'json';
             geeRequest.onload = function(e) {
                 if (this.status == 200) {
@@ -125,7 +125,7 @@ function confirmManager(code,element){
         if(instructions.startsWith(actionPrefix+':')){
             var config=instructions.slice(actionPrefix.length+1);
             let geeRequest=new XMLHttpRequest();
-            geeRequest.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/table:export',true);
+            geeRequest.open("POST",'https://earthengine.googleapis.com/v1/projects/earthengine-legacy/table:export',true);
             geeRequest.responseType = 'json';
             geeRequest.onload = function(e) {
                 if (this.status == 200) {
@@ -144,7 +144,7 @@ function confirmManager(code,element){
         if(instructions.startsWith(actionPrefix+':')){
             var config=instructions.slice(actionPrefix.length+1);
             let geeRequest=new XMLHttpRequest();
-            geeRequest.open("POST",'https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/video:export',true);
+            geeRequest.open("POST",'https://earthengine.googleapis.com/v1/projects/earthengine-legacy/video:export',true);
             geeRequest.responseType = 'json';
             geeRequest.onload = function(e) {
                 if (this.status == 200) {
