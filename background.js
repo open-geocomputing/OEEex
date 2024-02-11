@@ -16,7 +16,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		EStabSize:2,
 		hackEE:false, //remove in the future
 		insertInCE:true,
-		isShareable:true,
+		isShareable:false,
 		oeelCache:true,
 		openScriptNewTab:true,
 		planetLab:false,
