@@ -10,7 +10,6 @@ function loadDocWatcher(){
 						let urlname=e[Object.getOwnPropertySymbols(e)[2]].name.replace(/\./g, '-').toLowerCase();
 						let docFooterDiv=e.shadowRoot.querySelector("paper-dialog .buttons");
 						let externalDocButton=docFooterDiv.querySelector(".external-doc-button")
-						console.log(externalDocButton)
 						if(!externalDocButton){
 							externalDocButton = document.createElement("a");
 							externalDocButton.className="external-doc-button"
@@ -23,7 +22,6 @@ function loadDocWatcher(){
 							docFooterDiv.style.justifyContent='space-between';
 						}
 						externalDocButton.href="https://developers.google.com/earth-engine/apidocs/"+urlname;
-						console.log(docFooterDiv)
 					},0)
 					
 				}
@@ -46,8 +44,6 @@ function addfunctionName(){
 			span.classList.add('insertInCEButton','material-icons')
 			span.innerHTML=OEEexEscape.createHTML("keyboard_tab");
 			e.shadowRoot.lastChild.appendChild(span);
-
-			s
 		})
 }
 
