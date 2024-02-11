@@ -3,27 +3,27 @@
 chrome.runtime.onInstalled.addListener(function() {
 	chrome.storage.local.set({lightMode: 'automatic'});
 	chrome.storage.local.set({
-		isShareable:true,
-		insertInCE:true,
-		planetLab:false,
-		uploadWithManifest:true,
-		hackEE:false, //remove in the future
-		EEDarkMode:true,
-		runAllTasks:true,
-		oeelCache:true,
 		addCopyJSON:true,
-		openScriptNewTab:true,
-		editorSettings:true,
-		EStabSize:2,
-		ESfontSize:13,
-		ESfontFamily:"default",
-		ES_SC:(navigator.platform.toLowerCase().includes('mac')?{Execute: 'Command+Enter', 'Execute With Profiler': 'Alt+Command+Enter', Save: 'Command+S', Search: 'Alt+Command+F', Suggestion: 'Ctrl+Alt+Command+Space', alignCursors: 'Alt+Command+A'}:{}),
-		addTerminal:true,
-		pythonCE:false,
-		surveyMessage:true,
-		consoleError:true,
 		addLinkToDoc:true,
-		addPlotly:true
+		addPlotly:true,
+		addTerminal:true,
+		consoleError:true,
+		editorSettings:true,
+		EEDarkMode:true,
+		ES_SC:(navigator.platform.toLowerCase().includes('mac')?{Execute: 'Command+Enter', 'Execute With Profiler': 'Alt+Command+Enter', Save: 'Command+S', Search: 'Alt+Command+F', Suggestion: 'Ctrl+Alt+Command+Space', alignCursors: 'Alt+Command+A'}:{}),
+		ESfontFamily:"default",
+		ESfontSize:13,
+		EStabSize:2,
+		hackEE:false, //remove in the future
+		insertInCE:true,
+		isShareable:true,
+		oeelCache:true,
+		openScriptNewTab:true,
+		planetLab:false,
+		pythonCE:false,
+		runAllTasks:true,
+		surveyMessage:true,
+		uploadWithManifest:true
 	});
 });
 
