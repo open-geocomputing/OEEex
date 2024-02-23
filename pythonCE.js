@@ -511,7 +511,7 @@ function overloadEditorForPython(){
 		for (var i = predefineName.length - 1; i >= 0; i--) {
 			dict[predefineName[i]]=predefineName[i];
 		}
-		return "require('users/OEEL/lib:loadAllSF').Python.run("+JSON.stringify(code)+","+JSON.stringify(dict).replaceAll('"','')+",[]);";
+		return "require('users/OEEL/lib:loadAll').Python.run("+JSON.stringify(code)+","+JSON.stringify(dict).replaceAll('"','')+",[]);";
 	}
 
 	editor.getSession().getValue=function(){
