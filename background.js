@@ -14,6 +14,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		ESfontFamily:"default",
 		ESfontSize:13,
 		EStabSize:2,
+		geminiAddon:true,
 		hackEE:false, //remove in the future
 		insertInCE:true,
 		isShareable:false,

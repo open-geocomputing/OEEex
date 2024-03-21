@@ -61,3 +61,20 @@ ee-console-log.OEEexTerminal input::placeholder{
 ee-tab-panel ee-tab:nth-child(2){
 	height: calc(100% - 45px);
 }
+
+.oeeex-ai-button span{
+	font-size: 1.7em;
+	display: inline-block;
+	transform: translateY(-0.25em);
+}
+.oeeex-ai-button:disabled {
+	   filter: grayscale(1);
+}
+
+.ace_gutter-cell.oeeex-ai-comment.ace_info{
+	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50%" x="50%" dy=".35em" text-anchor="middle" font-size="90">🧠</text></svg>');
+}
+
+.ace_gutter-cell.oeeex-ai-comment.ace_info:hover{
+	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50%" x="50%" dy=".35em" text-anchor="middle" font-size="90">💩</text></svg>');
+}

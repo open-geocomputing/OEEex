@@ -8,6 +8,7 @@ function injectScripts(){
 		'consoleError',
 		'editorSettings',
 		'EEDarkMode',
+		'geminiAddon',
 		'hackEE',
 		'insertInCE',
 		'isShareable',
