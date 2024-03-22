@@ -5,6 +5,7 @@ listOfScript=[
 	'consoleError',
 	'editorSettings',
 	'EEDarkMode',
+	'geminiAddon',
 	'hackEE',
 	'insertInCE',
 	'isShareable',
@@ -297,6 +298,19 @@ function initES(){
 
 }
 
+// AI-Gemini
+
+function initAIOption(){
+		chrome.storage.local.get(['AiLanguage'],
+		function(data){
+			if (data.AiLanguage) {
+				document.querySelector('#AiLanguage').setAttribute('value',data.AiLanguage);
+			}
+		});
+
+		document.querySelector('#AiLanguage').addEventListener('change',function(event){chrome.storage.local.set({AiLanguage:event.target.value});});
+}
+
 
 //init
 initES();
@@ -304,6 +318,7 @@ runOnceLoaded();
 setLight();
 setModuleStatus();
 updateStatus();
+initAIOption();
 
 
 function makeRangeDisplay(idObject){

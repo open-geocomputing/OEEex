@@ -65,7 +65,7 @@
 		{
 			"matches": ["https://code.earthengine.google.com/*"], 
 			"js": ["injectionScript.js"],
-			"css" : ["EEDarkMode.css","OEEex.css","planetLab.css"]
+			"css" : ["EEDarkMode.css","OEEex.css","planetLab.css","animate.min.css"]
 		},{
 			"matches": ["https://*.earthengine.app/*"], 
 			"js": ["injectionScriptApp.js"],

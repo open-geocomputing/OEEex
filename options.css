@@ -285,7 +285,7 @@ img.PlanetThumbnail {
 	height: 180px;
 }
 
-.editorSettings input, .editorSettings select{
+.editorSettings input, .editorSettings select, .geminiAddon input{
 	position: absolute;
 	right: 3em;
 }

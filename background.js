@@ -135,6 +135,34 @@ chrome.storage.onChanged.addListener(function(){sendESConfig();});
 chrome.runtime.onConnectExternal.addListener(ESPortConnection);
 chrome.runtime.onConnect.addListener(ESPortConnection);
 
+//editor Settings
+
+listAIPort=[]
+function sendESConfig(ports=listAIPort){
+	if(!Array.isArray(ports)){
+		ports=[ports];
+	}
+
+	chrome.storage.local.get(['AiLanguage'], function(data) {
+		ports.map((sender)=>sender.postMessage({ type:'AiSettings', message: data }));
+	});
+}
+
+function ESPortConnection(port) {
+	if(port.name === "oeel.extension.AiSettings"){
+		listAIPort.push(port);
+		sendESConfig(port);
+		port.onDisconnect.addListener(function() {
+			listAIPort= listAIPort.filter(function(el) { return el !== port});
+		});
+	}
+}
+
+chrome.storage.onChanged.addListener(function(){sendESConfig();});
+
+chrome.runtime.onConnectExternal.addListener(ESPortConnection);
+chrome.runtime.onConnect.addListener(ESPortConnection);
+
 
 //oeel cache
 

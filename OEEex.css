@@ -71,11 +71,21 @@ ee-tab-panel ee-tab:nth-child(2){
 	   filter: grayscale(1);
 }
 
-.ace_gutter-cell.oeeex-ai-comment.ace_info{
+.ace_dark .ace_gutter-cell.oeeex-ai-comment.ace_info, .ace_gutter-cell.oeeex-ai-comment.ace_info{
 	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50%" x="50%" dy=".35em" text-anchor="middle" font-size="90">🧠</text></svg>');
 	filter: grayscale(0.8);
 }
 
-.ace_gutter-cell.oeeex-ai-comment.ace_info:hover{
+.ace_dark .ace_gutter-cell.oeeex-ai-comment.ace_info:hover,.ace_gutter-cell.oeeex-ai-comment.ace_info:hover{
 	filter: grayscale(0);
+}
+
+.oeeexAIInfo{
+	background: linear-gradient(to right top, rgba(82, 73, 208, 0.5) 10%, rgba(208, 153, 250, 0.5));
+    border-radius: 5px;
+    padding-left: 13px;
+    padding: 10px;
+    margin: 2px;
+    text-align: justify;
+    animation-duration: 1s;
 }
