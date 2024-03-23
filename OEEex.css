@@ -68,7 +68,7 @@ ee-tab-panel ee-tab:nth-child(2){
 	transform: translateY(-0.25em);
 }
 .oeeex-ai-button:disabled {
-	   filter: grayscale(1);
+	filter: grayscale(1);
 }
 
 .ace_dark .ace_gutter-cell.oeeex-ai-comment.ace_info, .ace_gutter-cell.oeeex-ai-comment.ace_info{

@@ -29,28 +29,28 @@ setPortWithBackground();
 
 
 async function sendCodeAndDisplayComment(requestObject) {
-  
-  try {
-    const response = await fetch('https://oeeex-ai-assistant.open-geocomputing.org/code/explain/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestObject),
-    });
-    
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    
-    aiTab.show();
-    const jsonData = await response.json();
-    displayAIComment(jsonData);
+	
+	try {
+		const response = await fetch('https://oeeex-ai-assistant.open-geocomputing.org/code/explain/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(requestObject),
+		});
+		
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		
+		aiTab.show();
+		const jsonData = await response.json();
+		displayAIComment(jsonData);
 
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-    document.getElementById("oeeex-tool-ai-button").disabled=false;
-  }
+	} catch (error) {
+		console.error('There was a problem with the fetch operation:', error);
+		document.getElementById("oeeex-tool-ai-button").disabled=false;
+	}
 }
 
 function displayAIComment(json){
@@ -73,10 +73,10 @@ function displayAIComment(json){
 
 	infoBox=document.createElement('div');
 
-  if(infoBox){
-    infoBox.innerHTML=OEEexEscape.createHTML('<strong>Gemini assistance</strong>\
-        <br>'+localJson["overallDescription"])
-    infoBox.classList.add("oeeexAIInfo","animate__zoomInUp")
+	if(infoBox){
+		infoBox.innerHTML=OEEexEscape.createHTML('<strong>Gemini assistance</strong>\
+				<br>'+localJson["overallDescription"])
+		infoBox.classList.add("oeeexAIInfo","animate__zoomInUp")
 	}
 	aiTab.appendChild(infoBox)
 
@@ -110,7 +110,7 @@ function explainCode(){
 	let object={code: editor.getSession().getValue(), header:"",start:0, end:editor.getSession().getLength(), language:aiSettings.AiLanguage}
 	let selectionRange=editor.getSession().selection.getRange();
 	if(!((selectionRange.start.row==selectionRange.end.row) && (selectionRange.start.row==selectionRange.end.column ))){
-		object.start 	=selectionRange.start.row+1;
+		object.start 	=selectionRange.start.row;
 		object.end 		=selectionRange.end.row+1;
 	}
 	sendCodeAndDisplayComment(object);
@@ -152,6 +152,132 @@ function addTab(name, hidden=false, selected=false, parm3=false ){
 	return newTab
 }
 
+async function sendErrorAndCodeAndDisplayComment(errorMessage,button,requestObject) {
+	console.log( JSON.stringify(requestObject))
+	try {
+		const response = await fetch('https://oeeex-ai-assistant.open-geocomputing.org/error/explain/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(requestObject),
+		});
+		
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		
+		aiTab.show();
+		const jsonData = await response.json();
+		displayAiErrorHelpMessage(errorMessage,jsonData);
+
+	} catch (error) {
+		console.error('There was a problem with the fetch operation:', error);
+		button.classList.remove("disabled");
+	}
+}
+
+function displayAiErrorHelpMessage(e,jsonData){
+	let advice=jsonData['adviceOnError']
+	aiAnswerMessageDiv=document.createElement("div");
+	aiAnswerMessageDiv.classList.add("aiAnswer");
+	aiAnswerMessageDiv.innerHTML="<b>Gemini Assistance</b><br>"+advice;
+	aiAnswerMessageDiv.classList.add("animate__zoomInDown")
+	e.appendChild(aiAnswerMessageDiv);
+	e.removeChild(e.querySelector(".aiButton"))
+}
+
+function addErrorButon(e, message){
+
+	const sheet = new CSSStyleSheet();
+	// Apply a rule to the sheet
+	sheet.replaceSync("@keyframes zoomInDown {\
+		from {\
+			opacity: 0;\
+			-webkit-transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);\
+			transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);\
+			-webkit-animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);\
+			animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);\
+		}\
+	\
+		60% {\
+			opacity: 1;\
+			-webkit-transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);\
+			transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);\
+			-webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);\
+			animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);\
+		}\
+	}\
+	.animate__zoomInDown {\
+		-webkit-animation-name: zoomInDown;\
+		animation-name: zoomInDown;\
+	}\
+	.aiButton{\
+		position: relative;\
+		float: right;\
+		right: -4px;\
+		bottom: -4px;\
+		padding: 2px 5px 4px 3px;\
+		border-top-left-radius: 4px;\
+		border-right: none;\
+		border-bottom: none;\
+		border: 2px white solid;\
+		user-select: none;\
+		font-size: 1.3em;\
+		margin-top: -25px;\
+	}\
+\
+	.aiButton.disabled {\
+	   filter: grayscale(1);\
+	}\
+	.aiAnswer{\
+		background: linear-gradient(to right top, rgba(82, 73, 208, 0.5) 10%, rgba(208, 153, 250, 0.5));\
+		border-radius: 5px;\
+		padding-left: 13px;\
+		padding: 5px;\
+		margin: 2px;\
+		text-align: justify;\
+		animation-duration: 0.3s;\
+	}\
+	");
+	e.shadowRoot.adoptedStyleSheets=[...e.shadowRoot.adoptedStyleSheets,sheet];
+	let errorMessage=e.shadowRoot.querySelector(".message.severity-error");
+	if(errorMessage){
+		aiButton=document.createElement("span");
+		aiButton.classList.add("aiButton");
+		aiButton.textContent="🤔";
+		errorMessage.appendChild(aiButton);
+		errorMessage.addEventListener("click",function(){
+			if(aiButton.classList.contains("disabled"))
+				return;
+			aiButton.classList.add("disabled");
+			let object={code: editor.getSession().getValue(), header:"",error:message, language:aiSettings.AiLanguage}
+			sendErrorAndCodeAndDisplayComment(errorMessage,aiButton,object)
+		})
+	}
+}
+
+function addConsoleErrorObeserver(){
+	let MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
+	let myObserver          = new MutationObserver(function(mutList){
+		[...mutList].map(function(mut){
+			[...mut.addedNodes].map(function(e){
+				if(e.classList.contains('OEEexAIErrorHelper'))
+					return;
+				e.classList.add('OEEexAIErrorHelper');
+				if(e[Object.getOwnPropertySymbols(e)[1]]=='error'){
+					setTimeout(addErrorButon,0,e,e[Object.getOwnPropertySymbols(e)[0]]);
+				}
+			});
+		});
+	});
+	let obsConfig = { childList: true};
+	
+	if(document.querySelector('ee-console'))
+		myObserver.observe(document.querySelector('ee-console'), obsConfig);
+}
+
+
 function initGeminiAddon(){
 
 	let getLinkButton=document.querySelector("#tool-bar-link-button");
@@ -167,6 +293,10 @@ function initGeminiAddon(){
 	aiButton.addEventListener("click",explainCode);
 
 	aiTab=addTab("AI",true);
+	addConsoleErrorObeserver();
 
 }
 initGeminiAddon();
+
+
+
