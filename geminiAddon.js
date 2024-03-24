@@ -183,8 +183,25 @@ function displayAiErrorHelpMessage(e,jsonData){
 	aiAnswerMessageDiv.classList.add("aiAnswer");
 	aiAnswerMessageDiv.innerHTML="<b>Gemini Assistance</b><br>"+advice;
 	aiAnswerMessageDiv.classList.add("animate__zoomInDown")
+	
+	if(jsonData["codeChangeArray"] && jsonData["codeChangeArray"].length>0){
+
+		let updateButton=document.createElement("span");
+		updateButton.innerText='🔄';
+		updateButton.classList.add("updateCode");
+		aiAnswerMessageDiv.insertBefore(updateButton,aiAnswerMessageDiv.firstChild);
+		updateButton.addEventListener('click',function(){
+			for(var changeIndex in jsonData["codeChangeArray"]){
+				let Range = ace.require('ace/range').Range;
+				editor.getSession().replace(new Range(jsonData["codeChangeArray"][changeIndex].line-1, 0, jsonData["codeChangeArray"][changeIndex].line-1, Number.MAX_VALUE), jsonData["codeChangeArray"][changeIndex].newCode);
+			}
+		})
+	}
+
 	e.appendChild(aiAnswerMessageDiv);
 	e.removeChild(e.querySelector(".aiButton"))
+
+
 }
 
 function addErrorButon(e, message){
@@ -239,6 +256,13 @@ function addErrorButon(e, message){
 		text-align: justify;\
 		animation-duration: 0.3s;\
 	}\
+	.updateCode{\
+	  position: relative;\
+	  font-size: 1.4em;\
+    float: right;\
+     top: -5px;\
+    right: -2px;\
+	}\
 	");
 	e.shadowRoot.adoptedStyleSheets=[...e.shadowRoot.adoptedStyleSheets,sheet];
 	let errorMessage=e.shadowRoot.querySelector(".message.severity-error");
@@ -247,7 +271,7 @@ function addErrorButon(e, message){
 		aiButton.classList.add("aiButton");
 		aiButton.textContent="🤔";
 		errorMessage.appendChild(aiButton);
-		errorMessage.addEventListener("click",function(){
+		aiButton.addEventListener("click",function(){
 			if(aiButton.classList.contains("disabled"))
 				return;
 			aiButton.classList.add("disabled");
