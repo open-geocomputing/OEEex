@@ -58,7 +58,7 @@ ee-console-log.OEEexTerminal input::placeholder{
 	color: transparent;
 }
 
-ee-tab-panel ee-tab:nth-child(2){
+.goog-splitpane-second-container ee-tab-panel ee-tab:nth-child(2){
 	height: calc(100% - 45px);
 }
 
