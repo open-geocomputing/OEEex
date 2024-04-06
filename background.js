@@ -138,7 +138,7 @@ chrome.runtime.onConnect.addListener(ESPortConnection);
 //editor Settings
 
 listAIPort=[]
-function sendESConfig(ports=listAIPort){
+function sendAIConfig(ports=listAIPort){
 	if(!Array.isArray(ports)){
 		ports=[ports];
 	}
@@ -148,7 +148,7 @@ function sendESConfig(ports=listAIPort){
 	});
 }
 
-function ESPortConnection(port) {
+function AIPortConnection(port) {
 	if(port.name === "oeel.extension.AiSettings"){
 		listAIPort.push(port);
 		sendESConfig(port);
@@ -158,10 +158,10 @@ function ESPortConnection(port) {
 	}
 }
 
-chrome.storage.onChanged.addListener(function(){sendESConfig();});
+chrome.storage.onChanged.addListener(function(){sendAIConfig();});
 
-chrome.runtime.onConnectExternal.addListener(ESPortConnection);
-chrome.runtime.onConnect.addListener(ESPortConnection);
+chrome.runtime.onConnectExternal.addListener(AIPortConnection);
+chrome.runtime.onConnect.addListener(AIPortConnection);
 
 
 //oeel cache
