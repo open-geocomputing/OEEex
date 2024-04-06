@@ -66,6 +66,7 @@ ee-tab-panel ee-tab:nth-child(2){
 	font-size: 1.7em;
 	display: inline-block;
 	transform: translateY(-0.25em);
+	text-shadow: 0 0 1px black;
 }
 .oeeex-ai-button:disabled {
 	filter: grayscale(1);

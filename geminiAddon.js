@@ -229,6 +229,9 @@ function addErrorButon(e, message){
 		-webkit-animation-name: zoomInDown;\
 		animation-name: zoomInDown;\
 	}\
+	.message.severity-error .summary{\
+		padding-right: 27px;\
+	}\
 	.aiButton{\
 		position: relative;\
 		float: right;\
@@ -242,6 +245,7 @@ function addErrorButon(e, message){
 		user-select: none;\
 		font-size: 1.3em;\
 		margin-top: -25px;\
+		text-shadow: 0 0 0px white;\
 	}\
 \
 	.aiButton.disabled {\
@@ -269,7 +273,7 @@ function addErrorButon(e, message){
 	if(errorMessage){
 		aiButton=document.createElement("span");
 		aiButton.classList.add("aiButton");
-		aiButton.textContent="🤔";
+		aiButton.textContent="✨";
 		errorMessage.appendChild(aiButton);
 		aiButton.addEventListener("click",function(){
 			if(aiButton.classList.contains("disabled"))
@@ -309,7 +313,7 @@ function initGeminiAddon(){
 	aiButton.classList.add("goog-button");
 	aiButton.title="Gemini-help";
 	aiButton.id="oeeex-tool-ai-button";
-	aiButton.innerHTML=OEEexEscape.createHTML('<span >🤔</span>');
+	aiButton.innerHTML=OEEexEscape.createHTML('<span >✨</span>');
 
 	getLinkButton.parentNode.insertBefore(aiButton, getLinkButton);
 	aiButton.classList.add("oeeex-ai-button");
