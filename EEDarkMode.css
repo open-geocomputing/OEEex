@@ -185,3 +185,16 @@ html.dark{
 	background-color:rgb(29, 31, 33) ;
 	color: #C5C8C6;
 }
+
+.dark .oeeMenuContextContainer {
+	background: #0f0f0f;
+	border: 1px solid #2b2b2b;
+}
+.dark .oeeMenuContextButton{
+	color:var(--oeel-color);
+	background-color: var(--oeel-background-color); /* Default background */
+}
+
+.dark .oeeMenuContextButton:hover {
+	background-color: #404040; /* Darker background on hover */
+}
