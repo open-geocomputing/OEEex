@@ -1,5 +1,3 @@
-console.log("OEEMenu")
-
 var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 var lightIsAutomatic=true;
 var portWithBackground=null;
@@ -9,9 +7,6 @@ if(typeof OEEexEscape == 'undefined'){
 		createHTML: (string, sink) => string
 	});
 }
-
-console.log(OEEexidString)
-console.log('chrome-extension://'+OEEexidString+'/images/logo_white_OEEex_open_128.png')
 
 function addOEEMenu(){
 
@@ -89,5 +84,3 @@ addOEEMenu();
 
 // Example registration of a menu item
 contextOEEMenuRegistationMenuItem('Options', () => window.open('chrome-extension://'+OEEexidString+'/options.html', '_blank'));
-contextOEEMenuRegistationMenuItem('Svbrtfdb ay Hello', () => alert('Hello!'));
-contextOEEMenuRegistationMenuItem('Say Hello', () => alert('Hello!'));
