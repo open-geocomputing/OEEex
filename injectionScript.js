@@ -16,6 +16,7 @@ function injectScripts(){
 		'planetLab',
 		'pythonCE',
 		'runAllTasks',
+		'sharedCodeSession',
 		'surveyMessage',
 		'uploadWithManifest',
 	].concat([ /// run first

@@ -23,6 +23,7 @@ chrome.runtime.onInstalled.addListener(function() {
 		planetLab:false,
 		pythonCE:false,
 		runAllTasks:true,
+		sharedCodeSession:true,
 		surveyMessage:true,
 		uploadWithManifest:true
 	});

@@ -40,6 +40,7 @@
 			"planetLab.js",
 			"pythonCE.js",
 			"runAllTasks.js",
+			"sharedCodeSession.js",
 			"surveyMessage.js",
 			"uploadWithManifest.js"
 		],
