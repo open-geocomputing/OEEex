@@ -63,43 +63,44 @@ ee-tab-panel ee-tab:nth-child(2){
 }
 
 .oeeMenuContextContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  background: #f0f0f0;
-  border: 1px solid #d4d4d4;
-  padding: 5px;
-  position: absolute;
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	background: #f0f0f0;
+	border: 1px solid #d4d4d4;
+	padding: 5px;
+	position: absolute;
 	border-radius: 5px;
 }
 
 .oeeMenuContextButton {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: #fff; /* Default background */
-  border: none;
-  padding: 5px 10px;
-  text-align: left;
-
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	background-color: #fff; /* Default background */
+	border: none;
+	padding: 5px 10px;
+	text-align: left;
 }
 
 .oeeMenuContextButton:hover {
-  background-color: #e0e0e0; /* Darker background on hover */
+	background-color: #e0e0e0; /* Darker background on hover */
 }
 
 .oeeSCSContainer{
+	z-index: 10;
 	position: fixed;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	display: none;
-  flex-direction: column;
-   gap: 5px;
-  background: #f0f0f0;
-  border: 1px solid #d4d4d4;
-  border-radius: 5px;
-  padding: 5px;
+	flex-direction: column;
+	gap: 5px;
+	background: #f0f0f0;
+	border: 1px solid #d4d4d4;
+	border-radius: 5px;
+	padding: 5px;
 }
 
 .oeeSCSContainer.visible{
@@ -107,49 +108,57 @@ ee-tab-panel ee-tab:nth-child(2){
 }
 
 .session-toggle {
-    display: flex;
-    border: 1px solid #d4d4d4;
-    border-radius: 5px;
-    overflow: hidden; /* Ensures the buttons fit nicely inside the container */
+	display: flex;
+	border: 1px solid #d4d4d4;
+	border-radius: 5px;
+	overflow: hidden; /* Ensures the buttons fit nicely inside the container */
 }
 
 .toggle-btn {
-    flex: 1;
-    padding: 5px 10px;
-    border: none;
-    background: #e0e0e0;
-    color: #000;
-    cursor: pointer;
-    transition: background-color 0.3s;
+	flex: 1;
+	padding: 5px 10px;
+	border: none;
+	background: #e0e0e0;
+	color: #000;
+	cursor: pointer;
+	transition: background-color 0.3s;
 }
 
 .toggle-btn.left {
-    border-right: 1px solid #d4d4d4;
-    border-radius: 5px 0 0 5px;
+	border-right: 1px solid #d4d4d4;
+	border-radius: 5px 0 0 5px;
 }
 
 .toggle-btn.right {
-    border-radius: 0 5px 5px 0;
+	border-radius: 0 5px 5px 0;
 }
 
 .toggle-btn.active {
-    background: #f0f0f0;
+	background: #f0f0f0;
 }
 
 .toggle-btn {
-    flex: 1;
-    padding: 5px 10px;
-    border: none;
-    background: #e0e0e0;
-    color: #000;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    position: relative; /* For z-index */
-    z-index: 1; /* Ensure active button appears above the non-active */
+	flex: 1;
+	padding: 5px 10px;
+	border: none;
+	background: #e0e0e0;
+	color: #000;
+	cursor: pointer;
+	transition: background-color 0.3s, box-shadow 0.3s;
+	position: relative; /* For z-index */
+	z-index: 1; /* Ensure active button appears above the non-active */
 }
 
 .toggle-btn.active, #validateSession:active {
-    background: #d0d0d0; /* Slightly darker to simulate being pressed */
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2); /* Inner shadow for "in" effect */
-    z-index: 2; /* Ensure active button is above others */
+	background: #d0d0d0; /* Slightly darker to simulate being pressed */
+	box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2); /* Inner shadow for "in" effect */
+	z-index: 2; /* Ensure active button is above others */
+}
+
+.oeeSCSContainer input.wrong{
+	color:red;
+}
+
+.remoteSelection{
+	background-color: rgba(0,255,0,0.5);
 }
