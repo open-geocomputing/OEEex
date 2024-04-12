@@ -189,10 +189,16 @@ let showVersionSwitchModal=null;
 			editor = ace.edit("editor");
 			aceRange = ace.require('ace/range').Range;
 		}
+
+		let oeePeerServer={
+			host: "ee-peer.open-geocomputing.org",
+			port: 443,
+			path: "/ee-peer",
+		}
 		// get editor
 		if("host"==actionType ){
 			sessionPassword=password;
-			var peer = new Peer(sessionId);
+			var peer = new Peer(sessionId,oeePeerServer);
 			peer.on('open', function(id) {
 				console.log('My peer ID is: ' + id);
 				editor.getSession().on('change', onEditorChange);
@@ -229,7 +235,7 @@ let showVersionSwitchModal=null;
 
 		if("join"==actionType ){
 			sessionPassword=password;
-			var peer = new Peer();
+			var peer = new Peer(oeePeerServer);
 			peer.on('open', function(id) {
 				console.log('My peer ID is: ' + id);
 				var con = peer.connect(sessionId,{reliable:true});
