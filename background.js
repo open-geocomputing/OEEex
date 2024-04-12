@@ -18,10 +18,12 @@ chrome.runtime.onInstalled.addListener(function() {
 		insertInCE:true,
 		isShareable:false,
 		oeelCache:true,
+		OEEMenu:true, // this is a permanente button and not a option
 		openScriptNewTab:true,
 		planetLab:false,
 		pythonCE:false,
 		runAllTasks:true,
+		sharedCodeSession:true,
 		surveyMessage:true,
 		uploadWithManifest:true
 	});
