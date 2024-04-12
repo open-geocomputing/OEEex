@@ -1,4 +1,7 @@
+let showVersionSwitchModal=null;
 (function() {
+
+	let OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 
 	if(typeof OEEexEscapeURL == 'undefined'){
 		OEEexEscapeURL = trustedTypes.createPolicy("OEEexEscapeURL", {
@@ -38,15 +41,26 @@
 			lastSendVersion=data.content;
 		}
 		if(data.type && data.type=="editorPatch"){
+			let previousLastVersion=lastSendVersion
+			lastSendVersion=Diff.applyPatch(lastSendVersion, data.patch);
 			let newCode=Diff.applyPatch(editor.getSession().getValue(), data.patch);
 			if(newCode)
 			{
 				editor.getSession().setValue(newCode);
 			}
 			else{
-				// handle the case
+				//try to fix
+				let patch = Diff.createPatch("filename", previousLastVersion, editor.getSession().getValue(), "", "");
+				let newCode=Diff.applyPatch(previousLastVersion, patch);
+				if(newCode)
+				{
+					console.log("fix worked")
+					editor.getSession().setValue(newCode);
+					showVersionSwitchModal();
+				}else{
+					showVersionSwitchModal();
+				}
 			}
-			lastSendVersion=Diff.applyPatch(lastSendVersion, data.patch);
 		}
 		if(data.type && data.type=="selections"){
 			displayRemoteSelection(data);
@@ -245,6 +259,8 @@
 		}
 	}
 
+	
+
 	function createSharedCodeSessionPopup(){
 		// Create the popup container
 		const popup = document.createElement('div');
@@ -262,6 +278,42 @@
 			<input type="password" id="sessionPassword" placeholder="Password (Optional)" autocomplete="off" />
 			<button id="validateSession" class="toggle-btn">Connect</button> <!-- The text will change dynamically -->
 		`);
+
+		const codePatchingErrorPopup = document.createElement('div');
+		codePatchingErrorPopup.className = 'oeeSCSContainer'; // Reuse context menu styling
+		codePatchingErrorPopup.id="versionSwitchModal"
+		document.body.appendChild(codePatchingErrorPopup);
+
+		codePatchingErrorPopup.innerHTML = OEEexEscape.createHTML(`
+		<p style="max-width: 21em; text-align: center; margin:0"><b style="font-size:1.4em"> ⚠️Unable to apply the updates!⚠️</b><br>Do you want to stay on the current version or switch to the new version?</p>
+		<button id="stayButton">Stay</button>
+		<button id="switchButton">Switch</button>
+		`);
+
+		showVersionSwitchModal = function() {
+			const modal = document.getElementById('versionSwitchModal');
+			modal.classList.add('visible');
+		}
+
+		// Function to hide the modal
+		function hideVersionSwitchModal() {
+			const modal = document.getElementById('versionSwitchModal');
+			modal.classList.remove('visible');
+		}
+
+		// Event listeners for the buttons
+		document.getElementById('stayButton').addEventListener('click', function() {
+			hideVersionSwitchModal();
+			console.log("User chose to stay on the current version.");
+			// Additional logic to handle staying on the current version
+			// what should we do ??
+		});
+
+		document.getElementById('switchButton').addEventListener('click', function() {
+			hideVersionSwitchModal();
+			editor.getSession().setValue(lastSendVersion)
+		});
+
 
 		let sessionId = document.getElementById('sessionId');
 		let passwordSession = document.getElementById('sessionPassword');
@@ -289,6 +341,12 @@
 
 		document.addEventListener('mousedown', (event) => {
 			if (!popup.contains(event.target) && popup.classList.contains("visible")) {
+				togglePopup();
+			}
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if ((event.keyCode == 27)  && !popup.contains(event.target) && popup.classList.contains("visible")) {
 				togglePopup();
 			}
 		});

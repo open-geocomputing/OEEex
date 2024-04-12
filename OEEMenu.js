@@ -69,9 +69,15 @@ function addContextMneu(button){
 	// Add an event listener to the entire document
 	document.addEventListener('click', (event) => {
 	// Check if the click was outside the contextMenu
-	if (!contextMenu.contains(event.target)) {
-		contextMenu.style.display = 'none';
-	}
+		if (!contextMenu.contains(event.target)) {
+			contextMenu.style.display = 'none';
+		}
+	});
+
+	document.addEventListener('keydown', (event) => {
+		if ((event.keyCode == 27)) {
+			contextMenu.style.display = 'none';
+		}
 	});
 
 	// Ensure the menu doesn't close when clicking inside it
