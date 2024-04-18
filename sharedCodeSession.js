@@ -56,7 +56,7 @@ let showVersionSwitchModal=null;
 				{
 					console.log("fix worked")
 					editor.getSession().setValue(newCode);
-					showVersionSwitchModal();
+					//showVersionSwitchModal();
 				}else{
 					showVersionSwitchModal();
 				}
@@ -83,9 +83,8 @@ let showVersionSwitchModal=null;
 		if(data.isEmpty)
 			return
 
-		console.log(data.ranges)
+
 		let convertedRanges=data.ranges.map(convertRange)
-		console.log(convertedRanges)
 
 		convertedRanges.map(function(range){
 			editor.getSession().addMarker(range, "remoteSelection", "text", false);
@@ -162,7 +161,6 @@ let showVersionSwitchModal=null;
 	}
 
 	function onSelectionChange(event,selection){
-		console.log(selection.getAllRanges());
 		broadcastToEveryone({type:"selections",ranges:JSON.parse(JSON.stringify(selection.getAllRanges())), isEmpty:selection.isEmpty()})
 	}
 
@@ -181,7 +179,7 @@ let showVersionSwitchModal=null;
 	let editor=null;
 	let aceRange=null;
 	function handleSessionAction(popupElement, sessionId, password, actionType) {
-		console.log(`Session ID: ${sessionId}, Password: ${password}, Action: ${actionType}`);
+		//console.log(`Session ID: ${sessionId}, Password: ${password}, Action: ${actionType}`);
 
 		let editorElement=document.getElementsByClassName('ace_editor');
 		if(editorElement && editorElement.length>0){
@@ -200,7 +198,7 @@ let showVersionSwitchModal=null;
 			sessionPassword=password;
 			var peer = new Peer(sessionId,oeePeerServer);
 			peer.on('open', function(id) {
-				console.log('My peer ID is: ' + id);
+				//console.log('My peer ID is: ' + id);
 				editor.getSession().on('change', onEditorChange);
 				editor.getSession().selection.on('changeSelection', onSelectionChange);
 				popupElement.classList.remove("visible");
@@ -211,7 +209,7 @@ let showVersionSwitchModal=null;
 					if(data.type && data.type=="connection"){
 						if(data.status && data.status=="active"){
 							if(sessionPassword!=""){
-								console.log("request pasword");
+								//console.log("request pasword");
 								con.send({type:"passwordRequest"});
 							}else{
 								addToListOFConnectionAndSendLastversion(con);
@@ -237,7 +235,7 @@ let showVersionSwitchModal=null;
 			sessionPassword=password;
 			var peer = new Peer(oeePeerServer);
 			peer.on('open', function(id) {
-				console.log('My peer ID is: ' + id);
+				//console.log('My peer ID is: ' + id);
 				var con = peer.connect(sessionId,{reliable:true});
 				con.on('data',anwserToRequest);
 				con.on('data', function(data){
@@ -310,7 +308,7 @@ let showVersionSwitchModal=null;
 		// Event listeners for the buttons
 		document.getElementById('stayButton').addEventListener('click', function() {
 			hideVersionSwitchModal();
-			console.log("User chose to stay on the current version.");
+			//console.log("User chose to stay on the current version.");
 			// Additional logic to handle staying on the current version
 			// what should we do ??
 		});
