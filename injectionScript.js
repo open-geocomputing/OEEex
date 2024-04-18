@@ -1,5 +1,6 @@
 function injectScripts(){
-	let listOfScript=[
+	let listOfScript=
+	[
 		'3rd_party/shpwrite',
 		'addCopyJSON',
 		'addLinkToDoc',
@@ -16,9 +17,12 @@ function injectScripts(){
 		'planetLab',
 		'pythonCE',
 		'runAllTasks',
+		'sharedCodeSession',
 		'surveyMessage',
 		'uploadWithManifest',
-	];
+	].concat([ /// run first
+		'OEEMenu',
+	]);
 
 	if(document.location.pathname=='/tasks'){
 		listOfScript=['EEDarkMode'];
