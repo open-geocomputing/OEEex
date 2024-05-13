@@ -1,6 +1,6 @@
 {
 	"name": "Open Earth Engine extension",
-	"description": "An unofficel extension to enhance Google Earth Engine, and Open Earth Engine experience.",
+	"description": "An unoffical extension to enhance Google Earth Engine, and Open Earth Engine experience.",
 	"version": "1.9.0",
 	"manifest_version": 3,
 	"background": {
