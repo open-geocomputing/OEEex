@@ -153,7 +153,7 @@ function sendAIConfig(ports=listAIPort){
 function AIPortConnection(port) {
 	if(port.name === "oeel.extension.AiSettings"){
 		listAIPort.push(port);
-		sendESConfig(port);
+		sendAIConfig(port);
 		port.onDisconnect.addListener(function() {
 			listAIPort= listAIPort.filter(function(el) { return el !== port});
 		});
