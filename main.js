@@ -6,7 +6,7 @@ let permanentModule2Load=[
     "surveyMessage"
 ];
 
-let moules2Load = [
+let moules2Load = [    
     "copyAsJson",
     "darkMode",
     "editorSettings",
@@ -57,6 +57,7 @@ chrome.storage.local.get(moules2Load, function(items) {
 /*************** MT part **************************/
 
 let moulesMT2Load = [
+    "aiCodeGeneration",
     "consoleError",
     "darkMode",
     "docLink",

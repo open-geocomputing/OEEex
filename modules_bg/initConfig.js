@@ -1,11 +1,11 @@
 let defaultParam={
 	//isShareable:false,
+	aiCodeGeneration:true,
 	consoleError:true,
 	copyAsJson:true,
 	darkMode:true,
 	docLink:true,
 	editorSettings:true,
-	darkMode:true,
 	ES_SC:(navigator.platform.toLowerCase().includes('mac')?{Execute: 'Command+Enter', 'Execute With Profiler': 'Alt+Command+Enter', Save: 'Command+S', Search: 'Alt+Command+F', Suggestion: 'Ctrl+Alt+Command+Space', alignCursors: 'Alt+Command+A'}:{}),
 	ESfontFamily:"default",
 	ESfontSize:13,
