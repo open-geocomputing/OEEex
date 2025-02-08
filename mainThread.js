@@ -23,7 +23,6 @@ for (let i = 0; i < permanentModule2Load.length; i++) {
 
 window.addEventListener("moduleMT2Load", function(items) {
 	let extensionId=items.detail.extensionId;
-	console.log("extensionId",extensionId)
 	items=items.detail.modules;
 	moules2Load=Object.keys(items)
 	for (let i = 0; i < moules2Load.length; i++) {
