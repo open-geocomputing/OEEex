@@ -1,0 +1,50 @@
+/* Container sizing (wrap around rootDiv, or use .container class if you prefer) */
+#aiFirstPanelDiv {
+  height: calc( var(--height) - 6px );
+  display: flex;
+  gap: 2px; /* Space between items */
+  flex-direction: column;
+}
+
+/* Collapsible styling */
+.collapsible {
+  margin-bottom: 3px;
+  display: block;
+}
+
+#aiFirstPanelDiv button {
+  width: 100%;
+  background-color: #eee;
+  border: none;
+  padding: 3px;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
+  max-height: 25px;
+  flex: 1;
+}
+
+/* Content hidden by default */
+.content {
+  overflow: hidden;
+  transition: flex 0.3s ease-out;
+  padding: 0 10px; /* No vertical padding so it doesn't expand space. */
+  flex: 0;
+}
+
+/* On toggle, expand to some max-height. 
+   Adjust 200px or use calc(...) if you want dynamic sizing. */
+.content.show {
+  flex-grow: 10;
+}
+
+#aiFirstPanelDiv .content.generate-code-panel textarea,#aiFirstPanelDiv .content.alter-code-panel textarea{
+  width: calc(100% - 4px);
+  height: calc( var(--height) - 6px - ( 46px * 5) );
+}
+
+#aiFirstPanelDiv  .content.explain-code-panel button{
+  margin: 10px 0;
+  max-height: none;
+}
