@@ -324,38 +324,3 @@ function makeRangeDisplay(idObject){
 makeRangeDisplay('rangeParallelUpload');
 makeRangeDisplay('rangeParallelDownload');
 
-//OpenAI
-
-
-chrome.storage.onChanged.addListener(setOpenAIConfig);
-
-function setOpenAIConfig(dic){
-	if('openAIConfig' in dic){
-		openAIParam=dic['openAIConfig'];
-		if('newValue' in openAIParam) openAIParam=openAIParam['newValue'];
-		document.getElementById('openAIApiKey').value=openAIParam["apiKey"];
-		
-		document.querySelector('.content.aiCodeGeneration.available').classList.remove('somethingMissing');
-		if( !openAIParam["apiKey"] ){
-			document.querySelector('.content.aiCodeGeneration.available').classList.add('somethingMissing');
-		}
-	}
-}
-
-function constructOpenAIConfig(){
-	return{
-		apiKey:document.getElementById('openAIApiKey').value,
-	}
-}
-
-function saveNewOpenAIParam(event=false){
-	chrome.storage.local.set({openAIConfig:constructOpenAIConfig()});
-}
-
-function addOpenAIListner(){
-
-	chrome.storage.local.get(['openAIConfig'],setOpenAIConfig);
-	document.getElementById('openAIApiKey').addEventListener('change', saveNewOpenAIParam);
-}
-
-addOpenAIListner();

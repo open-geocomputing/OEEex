@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Assistance Settings</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="ai-settings.css">
+    <script src="ai-settings.js"></script>
+</head>
+<body class="dark">
+    <main class="container">
+        <h1 class="title">AI Assistance Settings</h1>
+        
+        <div class="field">
+            <label class="label">Select AI Interface</label>
+            <div class="control">
+                <div class="select">
+                    <select id="aiInterface">
+                        <option value="openai">OpenAI</option>
+                        <option value="gemini">Gemini</option>
+                        <option value="ollama">Ollama</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="field">
+            <label class="checkbox">
+                <input type="checkbox" id="customPromptToggle"> Enable Custom Prompts
+            </label>
+        </div>
+
+        <div class="ai-settings openai-settings">
+            <h2 class="subtitle">OpenAI Settings</h2>
+            <label class="label">Host Address</label>
+            <input class="input" data-type="host" type="text" placeholder="Enter OpenAI host">
+            <label class="label">API Key</label>
+            <input class="input" data-type="apiKey" type="text" placeholder="Enter OpenAI API Key">
+            <label class="label">Model Version</label>
+            <input class="input" data-type="modelVersion" type="text" placeholder="e.g. gpt-4o">
+            <div class="custom-prompt-section">
+                <h2 class="subtitle">Custom Prompts</h2>
+                <label class="label">Generate Code</label>
+                <textarea class="textarea custom-prompt" data-type="generate_code" placeholder="Custom prompt for code generation"></textarea>
+                <label class="label">Explain Code</label>
+                <textarea class="textarea custom-prompt" data-type="explain_code" placeholder="Custom prompt for explaining code"></textarea>
+                <label class="label">High-Level Explanation</label>
+                <textarea class="textarea custom-prompt" data-type="high_level_explain_code" placeholder="Custom prompt for high-level explanation"></textarea>
+                <label class="label">Alter Code</label>
+                <textarea class="textarea custom-prompt" data-type="alter_code" placeholder="Custom prompt for altering code"></textarea>
+                <label class="label">Fix Code</label>
+                <textarea class="textarea custom-prompt" data-type="fix_code" placeholder="Custom prompt for fixing code"></textarea>
+            </div>
+        </div>
+
+        <div class="ai-settings gemini-settings" style="display:none;">
+            <h2 class="subtitle">Gemini Settings</h2>
+            <label class="label">Host Address</label>
+            <input class="input" data-type="host" type="text" placeholder="Enter Gemini host">
+            <label class="label">API Key</label>
+            <input class="input" data-type="apiKey" type="text" placeholder="Enter Gemini API Key">
+            <label class="label">Model Version</label>
+            <input class="input" data-type="modelVersion" type="text" placeholder="Enter model version">
+            <div class="custom-prompt-section">
+                <h2 class="subtitle">Custom Prompts</h2>
+                <label class="label">Generate Code</label>
+                <textarea class="textarea custom-prompt" data-type="generate_code" placeholder="Custom prompt for code generation"></textarea>
+                <label class="label">Explain Code</label>
+                <textarea class="textarea custom-prompt" data-type="explain_code" placeholder="Custom prompt for explaining code"></textarea>
+                <label class="label">High-Level Explanation</label>
+                <textarea class="textarea custom-prompt" data-type="high_level_explain_code" placeholder="Custom prompt for high-level explanation"></textarea>
+                <label class="label">Alter Code</label>
+                <textarea class="textarea custom-prompt" data-type="alter_code" placeholder="Custom prompt for altering code"></textarea>
+                <label class="label">Fix Code</label>
+                <textarea class="textarea custom-prompt" data-type="fix_code" placeholder="Custom prompt for fixing code"></textarea>
+            </div>
+        </div>
+
+        <div class="ai-settings ollama-settings" style="display:none;">
+            <h2 class="subtitle">Ollama Settings</h2>
+            <label class="label">Host Address</label>
+            <input class="input" data-type="host" type="text" placeholder="Enter Ollama host">
+            <label class="label">Model Version</label>
+            <input class="input" data-type="modelVersion" type="text" placeholder="Enter model version">
+            <div class="custom-prompt-section">
+                <h2 class="subtitle">Custom Prompts</h2>
+                <label class="label">Generate Code</label>
+                <textarea class="textarea custom-prompt" data-type="generate_code" placeholder="Custom prompt for code generation"></textarea>
+                <label class="label">Explain Code</label>
+                <textarea class="textarea custom-prompt" data-type="explain_code" placeholder="Custom prompt for explaining code"></textarea>
+                <label class="label">High-Level Explanation</label>
+                <textarea class="textarea custom-prompt" data-type="high_level_explain_code" placeholder="Custom prompt for high-level explanation"></textarea>
+                <label class="label">Alter Code</label>
+                <textarea class="textarea custom-prompt" data-type="alter_code" placeholder="Custom prompt for altering code"></textarea>
+                <label class="label">Fix Code</label>
+                <textarea class="textarea custom-prompt" data-type="fix_code" placeholder="Custom prompt for fixing code"></textarea>
+            </div>
+        </div>
+        
+        <button class="button is-primary">Save Settings</button>
+    </main>
+</body>
+</html>
