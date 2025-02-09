@@ -1,6 +1,7 @@
 let defaultParam={
 	//isShareable:false,
 	aiCodeGeneration:true,
+	aiConfig:{interface:"openai"},
 	consoleError:true,
 	copyAsJson:true,
 	darkMode:true,
@@ -13,6 +14,7 @@ let defaultParam={
 	insertFucntionSignature:true,
 	lightMode: 'automatic',
 	oeelCache:true,
+	ollamaURL:"http://localhost:11434/",
 	openInNewTab:true,
 	plotly:true,
 	pythonCE:true,
