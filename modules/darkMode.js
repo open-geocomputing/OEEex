@@ -1,4 +1,4 @@
-// var OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
+// let OEEexidString=document.currentScript.src.match("([a-z]{32})|([0-9a-f-]{36})")[0];
 let lightIsAutomatic=true;
 let portWithBackground=null;
 
@@ -65,7 +65,7 @@ function setLightModeButton(){
 	button.setAttribute('align',"right");
 	let userBoxElement=document.getElementsByTagName('user-box')
 	if(userBoxElement && userBoxElement.length>0){
-		var localRoot=userBoxElement[0].shadowRoot;
+		let localRoot=userBoxElement[0].shadowRoot;
 		localRoot.children[0].insertBefore(button,localRoot.children[0].firstChild)
 
 		let buttonLight=localRoot.getElementById('toogleModeButton');
@@ -84,7 +84,7 @@ function setLightModeButton(){
 			buttonLight.innerHTML=OEEexEscape.createHTML(buttonMode)
 		})		
 
-		var sheet = new CSSStyleSheet
+		let sheet = new CSSStyleSheet
 		sheet.replaceSync( '.user-box.dark { background-color:black } .dark .project-label {background: #1e1d1d; box-shadow: #1e1d1d 0px 0px 4px 1px inset;}')
 		// Append your style to the existing style sheet.
 		localRoot.adoptedStyleSheets=[...localRoot.adoptedStyleSheets,sheet];
@@ -145,7 +145,7 @@ function docsListPanel(event){
 		docList.classList.toggle('dark', event.detail.toDark)
 	})
 	let localRoot=docList.shadowRoot;
-	var sheet = new CSSStyleSheet;
+	let sheet = new CSSStyleSheet;
 	sheet.replaceSync(':host(.dark) ee-zippy > .header:hover {background: var(--color-hover-bg);}'+
 		':host(.dark) ee-zippy > .header::before {filter:invert()}');
 	localRoot.adoptedStyleSheets=[...localRoot.adoptedStyleSheets,sheet];
@@ -190,8 +190,8 @@ function switchCodeEditor(event){
 	let editorElement=document.getElementsByClassName('ace_editor')
 	if(editorElement && editorElement.length>0){
 		editorElement[0].id='editor'
-		var editor = ace.edit("editor");
-		var theme='xcode';
+		let editor = ace.edit("editor");
+		let theme='xcode';
 		if (event.detail.toDark){
 			theme='tomorrow_night';
 		}
