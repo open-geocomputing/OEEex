@@ -35,11 +35,10 @@
 		}
     ],
 	"host_permissions": [
-		"https://api.planet.com/*",
 		"https://code.earthengine.google.com/",
 		"https://code.earthengine.google.com/repo/file/load?*",
-		"https://link.planet.com/*",
-		"https://tiles.planet.com/*"
+		"http://localhost/",
+		"http://127.0.0.1/"
 	],
 	"permissions": [
 		"activeTab",
@@ -56,7 +55,8 @@
             ],
             "css":
             [
-                "css/EEDarkMode.css",
+            	"css/ai.css",
+                "css/darkMode.css",
                 "css/OEEex.css"
             ],
             "js":
@@ -97,7 +97,6 @@
 	"externally_connectable": {
 		"matches": [
 			"https://code.earthengine.google.com/*",
-			"https://colab.research.google.com/*",
 			"https://*.googleusercontent.com/*"
 		]
 	}
