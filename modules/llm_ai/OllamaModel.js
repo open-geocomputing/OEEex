@@ -9,10 +9,10 @@ export class OllamaModel extends AIModelInterface {
         this.modelsEndpoint = `${this.host}/api/tags`;
         this.superPrompt ="You are an expert assistant in Google Earth Engine (GEE) coding. Any code request must be written exclusively in JavaScript for the browser-based Google Earth Engine Code Editor.\n";
         this.defaultPrompts = {
-            enerate_code:  this.stringToFunction("Generate efficient code for:\n${prompt}"),
+            generate_code:  this.stringToFunction("Generate efficient code for:\n${prompt}"),
             explain_code: this.stringToFunction("Explain this code line by line:\n${code}"),
             high_level_explain_code: this.stringToFunction("Summarize the purpose of this code:\n${code}"),
-            alter_code: this.stringToFunction("Modify the following code:\n${code}\nChanges: ${request}"),
+            alter_code: this.stringToFunction("Modify the following code:\n${code}\nChanges: ${prompt}"),
             fix_code: this.stringToFunction("Fix the errors in this code:\n${code}\nError: ${error}")
         };
     }

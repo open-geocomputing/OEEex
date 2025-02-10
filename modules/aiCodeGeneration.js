@@ -4,13 +4,16 @@ let OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
 	createHTML: (string, sink) => string
 });
 
+
+/**** make panel ******/
+
 function enableAiInterface(aiConfig){
 	let leftAiTab=addTab(document.querySelector('.goog-splitpane-first-container ee-tab-panel'),"AI",false);
 	let rightAiTab=addTab(document.querySelector('.goog-splitpane-second-container ee-tab-panel'),"AI",true);
 
 	rightAiTab.addAiOutput=function(text){
 		const div = document.createElement("div");
-		div.classList.add("aiResult")
+		div.classList.add("aiResult","animate__zoomInUp")
 		div.textContent = text;  
 		this.appendChild(div);
 		this.show();
@@ -127,13 +130,7 @@ function generateCodePanel(leftAiTab,rightAiTab, aiConfig) {
 	return container;
 }
 
-// Placeholder function for generating code based on user input
-function generateCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
-	aiConfig.llmiInterface.generateCode(packInformation(aiConfig, userRequest)).then(function(val){
-		aiConfig.codeEditor.setValue(val.code);
-		rightAiTab.addAiOutput(val.explanation)
-	})
-}
+
 
 function explainCodePanel(leftAiTab,rightAiTab, aiConfig) {
 		// Create the main container
@@ -158,20 +155,6 @@ function explainCodePanel(leftAiTab,rightAiTab, aiConfig) {
 	return container;
 }
 
-// Function to explain the overall purpose of the code
-function explainOverview(leftAiTab,rightAiTab, aiConfig) {
-	aiConfig.llmiInterface.highLevelExplainCode(packInformation(aiConfig)).then(function(val){
-		rightAiTab.addAiOutput(val.explanation)
-	})
-}
-
-// Function to explain the code line by line
-function explainDetails(leftAiTab,rightAiTab, aiConfig) {
-	aiConfig.llmiInterface.explainCode(packInformation(aiConfig)).then(function(val){
-		console.log(val)
-		//rightAiTab.addAiOutput(val.explanation)
-	})
-}
 
 
 function alterCodePanel(leftAiTab, rightAiTab, aiConfig) {
@@ -207,14 +190,6 @@ function alterCodePanel(leftAiTab, rightAiTab, aiConfig) {
 
 
 	return container;
-}
-
-// Placeholder function for modifying code based on user input
-function modifyCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
-	aiConfig.llmiInterface.alterCode(packInformation(aiConfig, userRequest)).then(function(val){
-		aiConfig.codeEditor.setValue(val.code)
-		rightAiTab.addAiOutput(val.explanation)
-	})
 }
 
 function fixCodePanel(leftAiTab,rightAiTab, aiConfig) {
@@ -263,34 +238,41 @@ function fillFirstAiPanel(leftAiTab,rightAiTab, aiConfig){
 	})
 }
 
-function createLLMInterface(aiConfig, extensionId){
+/******** Ai Action  **********/
 
-	document.addEventListener("aiConfig", (event) => {
-		console.log("Received aiConfig:", event.detail);
-
-		console.log(JSON.stringify(event.detail))
-		let selectInterface=event.detail.interface;
-		const llmsSetting = {
-			interface: selectInterface,
-			interfaceParam: event.detail[selectInterface]
-		};
-		aiConfig.llmiInterface=createAIModel(llmsSetting,extensionId);
-	});
-
-
-	document.dispatchEvent(new Event("requestAiConfig")); // request the config
+// Placeholder function for generating code based on user input
+function generateCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
+	aiConfig.llmiInterface.generateCode(packInformation(aiConfig, userRequest)).then(function(val){
+		aiConfig.codeEditor.setValue(val.code);
+		rightAiTab.addAiOutput(val.explanation)
+	})
 }
 
-function setEditor(aiConfig){
-	let editorElement=document.getElementsByClassName('ace_editor')
-	if(editorElement && editorElement.length>0){
-		editorElement[0].id='editor'
-		let editor = ace.edit("editor");
-		aiConfig.codeEditor=editor;
-	}else{
-		setTimeout(setEditor,10,aiConfig)
-	}
+// Function to explain the overall purpose of the code
+function explainOverview(leftAiTab,rightAiTab, aiConfig) {
+	aiConfig.llmiInterface.highLevelExplainCode(packInformation(aiConfig)).then(function(val){
+		rightAiTab.addAiOutput(val.explanation)
+	})
 }
+
+// Function to explain the code line by line
+function explainDetails(leftAiTab,rightAiTab, aiConfig) {
+	aiConfig.llmiInterface.explainCode(packInformation(aiConfig)).then(function(val){
+		console.log(val)
+		mapAnnotations(aiConfig.codeEditor.getSession(), val.explanations);
+	})
+}
+
+// Placeholder function for modifying code based on user input
+function modifyCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
+	aiConfig.llmiInterface.alterCode(packInformation(aiConfig, userRequest)).then(function(val){
+		aiConfig.codeEditor.setValue(val.code)
+		rightAiTab.addAiOutput(val.explanation)
+	})
+}
+
+
+/*** input for the prompt***/
 
 function getErrorsFromConsole(){
 	return [...document.querySelectorAll("ee-console-log")].filter(item => item.querySelector(".error") || item.shadowRoot.querySelector(".severity-error")).map(e => e.innerText || e.shadowRoot.textContent).map( t => t.trim());
@@ -301,6 +283,108 @@ function packInformation(aiConfig, prompt=null){
 	let code=aiConfig.codeEditor.getValue();
 	let selectedCode=aiConfig.codeEditor.getSelectedText();
 	return { prompt, code, selectedCode, errors }
+}
+
+/*** display line comment***/
+
+function mapAnnotations(session, annotations) {
+    const lines = session.getDocument().getAllLines(); // Get all lines from editor
+    const mappedAnnotations = [];
+
+    annotations.forEach(({ comment, code_line }) => {
+        const trimmedCode = code_line.trim(); // Remove extra spaces
+
+        if (trimmedCode === "") return; // Ignore empty code lines
+
+        const lineNumber = lines.findIndex(line => line.trim() === trimmedCode); // Match trimmed content
+
+        if (lineNumber !== -1) {
+            mappedAnnotations.push({
+                row: lineNumber,
+                column: 0,
+                text: comment,
+                type: "info" // Change type if needed
+            });
+            session.addGutterDecoration(lineNumber,"oeeex-ai-comment")
+        }
+    });
+
+    session.setAnnotations(mappedAnnotations);
+}
+
+function removeCodeAnnotation(editor){
+	editor.getSession().on("changeAnnotation", function(){
+		let session=editor.getSession();
+		for (var i = session.getLength(); i >= 0; i--) {
+			session.removeGutterDecoration(i,"oeeex-ai-comment")
+		}
+	});
+}
+
+
+// autoRemoveAi_comment=false;
+
+// function explainCode(){
+	
+
+// 	if(! autoRemoveAi_comment){
+// 		autoRemoveAi_comment=true;
+// 		editor.getSession().on("changeAnnotation", function(){
+// 			let session=editor.getSession();
+// 			for (var i = session.getLength(); i >= 0; i--) {
+// 				session.removeGutterDecoration(i,"oeeex-ai-comment")
+// 			}
+// 		});
+// 	}
+
+
+
+// 	let object={code: editor.getSession().getValue(), header:"",start:0, end:editor.getSession().getLength(), language:aiSettings.AiLanguage}
+// 	let selectionRange=editor.getSession().selection.getRange();
+// 	if(!((selectionRange.start.row==selectionRange.end.row) && (selectionRange.start.row==selectionRange.end.column ))){
+// 		object.start 	=selectionRange.start.row;
+// 		object.end 		=selectionRange.end.row+1;
+// 	}
+// 	sendCodeAndDisplayComment(object);
+// 	document.getElementById("oeeex-tool-ai-button").disabled=true;
+// }
+
+// let aiTab=null;
+
+/***  error in console ***/
+
+/***  get editor interface ***/
+
+function setEditor(aiConfig){
+	let editorElement=document.getElementsByClassName('ace_editor')
+	if(editorElement && editorElement.length>0){
+		editorElement[0].id='editor'
+		let editor = ace.edit("editor");
+		aiConfig.codeEditor=editor;
+		removeCodeAnnotation(editor)
+	}else{
+		setTimeout(setEditor,10,aiConfig)
+	}
+}
+
+/***  ai config ***/
+
+function createLLMInterface(aiConfig, extensionId){
+
+	document.addEventListener("aiConfig", (event) => {
+		// console.log("Received aiConfig:", event.detail);
+
+		// console.log(JSON.stringify(event.detail))
+		let selectInterface=event.detail.interface;
+		const llmsSetting = {
+			interface: selectInterface,
+			interfaceParam: event.detail[selectInterface]
+		};
+		aiConfig.llmiInterface=createAIModel(llmsSetting,extensionId);
+	});
+
+
+	document.dispatchEvent(new Event("requestAiConfig")); // request the config
 }
 
 export function initializeMT(extensionId){

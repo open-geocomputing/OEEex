@@ -3,7 +3,6 @@ import { GeminiModel } from "./GeminiModel.js";
 import { OllamaModel } from "./OllamaModel.js";
 
 export function createAIModel(llmsSetting, extensionId=null) {
-    console.log("llmsSetting",llmsSetting)
     switch (llmsSetting.interface) {
         case "openai":
             return new OpenAIModel(llmsSetting);
