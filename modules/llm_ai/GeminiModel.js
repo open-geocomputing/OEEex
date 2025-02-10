@@ -7,11 +7,11 @@ export class GeminiModel extends AIModelInterface {
         this.modelsEndpoint = `${this.host}/v1/models`;
         this.superPrompt =`You are an expert assistant in Google Earth Engine (GEE) coding. Any code request must be written exclusively in JavaScript for the browser-based Google Earth Engine Code Editor.\n`;
         this.defaultPrompts = {
-            generate_code: (input) => `Generate a well-structured and optimized code snippet for:\n${input.prompt}`,
-            explain_code: (input) => `Provide a detailed explanation of this code, line by line:\n${input.code}`,
-            high_level_explain_code: (input) => `Give a brief summary of what this code does:\n${input.code}`,
-            alter_code: (input) => `Refactor this code according to these instructions:\n${input.code}\nChanges: ${input.request}`,
-            fix_code: (input) => `Detect and fix any issues in this code:\n${input.code}\nError: ${input.error}`
+            enerate_code:  this.stringToFunction("Generate efficient code for:\n${prompt}"),
+            explain_code: this.stringToFunction("Explain this code line by line:\n${code}"),
+            high_level_explain_code: this.stringToFunction("Summarize the purpose of this code:\n${code}"),
+            alter_code: this.stringToFunction("Modify the following code:\n${code}\nChanges: ${request}"),
+            fix_code: this.stringToFunction("Fix the errors in this code:\n${code}\nError: ${error}")
         };
     }
 

@@ -6,7 +6,8 @@ let permanentModule2Load=[
     "surveyMessage"
 ];
 
-let moules2Load = [    
+let moules2Load = [ 
+    "aiCodeGeneration",   
     "copyAsJson",
     "darkMode",
     "editorSettings",

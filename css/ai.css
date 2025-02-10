@@ -48,3 +48,14 @@
   margin: 10px 0;
   max-height: none;
 }
+
+.aiResult{
+  margin-bottom: 3px;
+  display: inline-block;
+  padding: 10px 15px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+}

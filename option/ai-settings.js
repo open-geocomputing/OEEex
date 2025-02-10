@@ -1,4 +1,58 @@
-document.addEventListener("DOMContentLoaded", function () {
+
+function lightSetup(){
+    var lightIsAutomatic=true;
+
+    var portWithBackground=null;
+    function setPortWithBackground(){
+        portWithBackground= chrome.runtime.connect({name: "oeel.extension.lightMode"});
+        portWithBackground.onDisconnect.addListener(function(port){ 
+            portWithBackground=null;
+            setPortWithBackground();
+        })
+
+        portWithBackground.onMessage.addListener((request,
+             sender,
+             sendResponse) => {
+            if(request.type=='changeLightMode'){
+                if(request.message=='automatic'){
+                    switch2DarkMode((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches),
+                            true)
+                }else{
+                    switch2DarkMode(request.message,
+                            false);
+                }
+            };
+        })
+    }
+
+    setPortWithBackground();
+
+
+    function switch2DarkMode(toDark,
+            isAuto=false){
+        lightIsAutomatic=isAuto;
+        document.getElementsByTagName('html')[0].classList.toggle('dark',toDark)
+    };
+
+    window.addEventListener("load",
+         function(){
+        portWithBackground.postMessage({type:"getLightMode"});
+    });
+
+    
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',
+         e => {
+        if(lightIsAutomatic)
+            switch2DarkMode(e.matches,
+                    true);
+    });
+}
+lightSetup();
+
+
+function aiParamSetup(){
+
+    let isLoading=false;
     const aiInterface = document.getElementById("aiInterface");
     const settingsSections = document.querySelectorAll(".ai-settings");
     const customPromptToggle = document.getElementById("customPromptToggle");
@@ -34,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function saveAIConfig() {
+        if (isLoading) return;
         const aiConfig = {
             interface: aiInterface.value,
             customPromptsEnabled: customPromptToggle.checked,
@@ -50,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function loadAIConfig() {
         chrome.storage.local.get("aiConfig", (data) => {
             if (data.aiConfig) {
+                isLoading=true;
                 aiInterface.value = data.aiConfig.interface || "openai";
                 customPromptToggle.checked = data.aiConfig.customPromptsEnabled || false;
                 toggleCustomPrompts();
@@ -66,13 +122,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
                 updateSettingsDisplay();
             }
+            isLoading=false;
         });
     }
+
+    loadAIConfig();
 
     document.querySelector(".button.is-primary").addEventListener("click", saveAIConfig);
     document.querySelectorAll(".input, .textarea").forEach(input => {
         input.addEventListener("blur", saveAIConfig); // Auto-save on field blur
     });
     
-    loadAIConfig();
+    
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    aiParamSetup();
 });

@@ -1,6 +1,7 @@
 html {
     --ai-background-color: rgb(240, 240, 240);
     --ai-color: black;
+    background-color: var(--ai-background-color);
 } 
 
 html.dark {
@@ -9,10 +10,14 @@ html.dark {
 } 
 
 body {
-    background-color: var(--ai-background-color);
+    
     color: var(--ai-color);
     font-family: Arial, sans-serif;
     padding: 20px;
+}
+
+.subtitle, .title, .label  {
+    color: var(--ai-color);
 }
 
 .container {
@@ -39,6 +44,10 @@ h1, h2 {
     border-radius: 5px;
     background-color: var(--ai-background-color);
     color: var(--ai-color);
+}
+
+.dark .input::placeholder, .dark .textarea::placeholder{
+    color: #5c5b5b ;
 }
 
 .textarea {

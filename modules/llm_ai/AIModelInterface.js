@@ -1,9 +1,22 @@
 export class AIModelInterface {
+   
+    stringToFunction(s){
+        let f= (input) => new Function(
+          ...Object.keys(input),  // Extract input keys as function parameters
+          `return \`${s}\`;`      // Template literal processing
+        )(...Object.values(input)); // Pass values dynamically
+        return f;
+    }
+
     constructor(llmsSetting) {
         this.host = llmsSetting.interfaceParam.host || "";
         this.apiKey = llmsSetting.interfaceParam.apiKey || "";
         this.modelVersion = llmsSetting.interfaceParam.modelVersion || "";
-        this.customPrompt = llmsSetting.interfaceParam.customPrompt || {};
+        this.customPrompt = Object.fromEntries(
+          Object.entries(llmsSetting.interfaceParam.customPrompt || {})
+          .filter(([_, value]) => value)
+          .map(([key, value]) => [key, this.stringToFunction(value)])
+        );
     }
 
     setModelVersion(modelVersion) {
@@ -19,26 +32,26 @@ export class AIModelInterface {
     }
 
     getPrompt(taskType, input, defaultPrompts) {
-        return this.customPrompt[taskType] || defaultPrompts[taskType](input);
+        return (this?.customPrompt[taskType] ? this.customPrompt[taskType](input) : defaultPrompts[taskType](input));
     }
 
-    async generateCode(prompt) {
-        return this.request("generate_code", { prompt });
+    async generateCode(input) {
+        return this.request("generate_code",input);
     }
 
-    async explainCode(code) {
-        return this.request("explain_code", { code });
+    async explainCode(input) {
+        return this.request("explain_code", input);
     }
 
-    async highLevelExplainCode(code) {
-        return this.request("high_level_explain_code", { code });
+    async highLevelExplainCode(input) {
+        return this.request("high_level_explain_code", input);
     }
 
-    async alterCode(code, request) {
-        return this.request("alter_code", { code, request });
+    async alterCode(input) {
+        return this.request("alter_code", input);
     }
 
-    async fixCode(code, error) {
-        return this.request("fix_code", { code, error });
+    async fixCode(input) {
+        return this.request("fix_code", input);
     }
 }

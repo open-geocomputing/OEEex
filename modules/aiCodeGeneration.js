@@ -8,6 +8,14 @@ function enableAiInterface(aiConfig){
 	let leftAiTab=addTab(document.querySelector('.goog-splitpane-first-container ee-tab-panel'),"AI",false);
 	let rightAiTab=addTab(document.querySelector('.goog-splitpane-second-container ee-tab-panel'),"AI",true);
 
+	rightAiTab.addAiOutput=function(text){
+		const div = document.createElement("div");
+		div.classList.add("aiResult")
+		div.textContent = text;  
+		this.appendChild(div);
+		this.show();
+	};
+
 	fillFirstAiPanel(leftAiTab,rightAiTab, aiConfig);
 }
 
@@ -23,20 +31,20 @@ function addTab(parent,name, hidden=false, selected=false, parm3=false ){
 	newTab.hidden=hidden;
 
 	newTab.select=function(){
-		newTab.show();
+		this.show();
 		[...parent.shadowRoot.querySelectorAll('.header button')].filter(x=> x.innerText==localName)[0].click();
 	}
 
 	newTab.show=function(){
 		newTab[Object.getOwnPropertySymbols(newTab)[1]]=false;
 		parent.shadowRoot.querySelector('.header button.selected').click();
-		newTab.hidden=false;
+		this.removeAttribute("hidden");
 	}
 
 	newTab.hide=function(){
 		newTab[Object.getOwnPropertySymbols(newTab)[1]]=true;
 		parent.shadowRoot.querySelector('.header button.selected').click();
-		newTab.hidden=true;
+		this.setAttribute("hidden", "");
 	}
 
 	return newTab
@@ -44,7 +52,7 @@ function addTab(parent,name, hidden=false, selected=false, parm3=false ){
 
 function generateCollapsibleMenus(rootDiv, dataList, aiConfig) {
 
-  // Clear the root before appending (optional)
+	// Clear the root before appending (optional)
 	rootDiv.innerHTML = OEEexEscape.createHTML('');
 
 	let insideDiv=document.createElement('div');
@@ -61,163 +69,168 @@ function generateCollapsibleMenus(rootDiv, dataList, aiConfig) {
 
 	// Create content
 		const content = item.content;
-	content.classList.add('content'); // CSS will handle hidden/visible states
-	// content.appendChild(item.content);
+		content.classList.add('content'); // CSS will handle hidden/visible states
+		// content.appendChild(item.content);
 
-	// Attach toggle event
-	btn.addEventListener('click', () => {
-		insideDiv.querySelectorAll(".content").forEach(x => x.classList.remove("show"));
-		content.classList.toggle('show');
+		// Attach toggle event
+		btn.addEventListener('click', () => {
+			insideDiv.querySelectorAll(".content").forEach(x => x.classList.remove("show"));
+			content.classList.toggle('show');
+		});
+
+		// Append button & content to collapsible container
+		insideDiv.appendChild(btn);
+		insideDiv.appendChild(content);
+
+		controls[item.code]={
+			container:content,
+			button:btn
+		};
 	});
-
-	// Append button & content to collapsible container
-	insideDiv.appendChild(btn);
-	insideDiv.appendChild(content);
-
-	controls[item.code]={
-		container:content,
-		button:btn
-	};
-});
 	rootDiv.appendChild(insideDiv);
 
 	return controls;
 }
 
 function generateCodePanel(leftAiTab,rightAiTab, aiConfig) {
-     // Create the main container
-    const container = document.createElement("div");
-    container.classList.add("generate-code-panel");
+		 // Create the main container
+	const container = document.createElement("div");
+	container.classList.add("generate-code-panel");
 
-    // Create the instruction paragraph
-    const instruction = document.createElement("p");
-    instruction.textContent = "Describe the functionality you want in the code:";
+		// Create the instruction paragraph
+	const instruction = document.createElement("p");
+	instruction.textContent = "Describe the functionality you want in the code:";
 
-    // Create the textarea for user input
-    const textArea = document.createElement("textarea");
-    textArea.placeholder = "E.g., A code to display the last Sentinel 2 image";
+		// Create the textarea for user input
+	const textArea = document.createElement("textarea");
+	textArea.placeholder = "E.g., A code to display the last Sentinel 2 image";
 
-    // Create the generate button
-    const generateButton = document.createElement("button");
-    generateButton.textContent = "Generate Code";
+		// Create the generate button
+	const generateButton = document.createElement("button");
+	generateButton.textContent = "Generate Code";
 
-    // Append elements to the container
-    container.appendChild(instruction);
-    container.appendChild(textArea);
-    container.appendChild(generateButton);
+		// Append elements to the container
+	container.appendChild(instruction);
+	container.appendChild(textArea);
+	container.appendChild(generateButton);
 
-    // Event Listener for future AI-powered code generation
-    generateButton.addEventListener("click", () => generateCode(leftAiTab, rightAiTab, textArea.value, aiConfig));
-    textArea.addEventListener("keydown", (event) => {
-        if (event.shiftKey && event.key === "Enter") {
-            event.preventDefault(); // Prevents newline insertion
-            generateButton.click();
-        }
-    });
+		// Event Listener for future AI-powered code generation
+	generateButton.addEventListener("click", () => generateCode(leftAiTab, rightAiTab, textArea.value, aiConfig));
+	textArea.addEventListener("keydown", (event) => {
+		if (event.shiftKey && event.key === "Enter") {
+						event.preventDefault(); // Prevents newline insertion
+						generateButton.click();
+					}
+				});
 
 
-    return container;
+	return container;
 }
 
 // Placeholder function for generating code based on user input
 function generateCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
-    aiConfig.llmiInterface.generateCode(userRequest).then(function(val){
-    	aiConfig.codeEditor.setValue(val.code);
-    	alert(val.explaination)
-    })
+	aiConfig.llmiInterface.generateCode(packInformation(aiConfig, userRequest)).then(function(val){
+		aiConfig.codeEditor.setValue(val.code);
+		rightAiTab.addAiOutput(val.explanation)
+	})
 }
 
 function explainCodePanel(leftAiTab,rightAiTab, aiConfig) {
-    // Create the main container
-    const container = document.createElement("div");
-    container.classList.add("explain-code-panel");
+		// Create the main container
+	const container = document.createElement("div");
+	container.classList.add("explain-code-panel");
 
-    // Create buttons
-    const overviewButton = document.createElement("button");
-    overviewButton.textContent = "Explain Overall Code";
+		// Create buttons
+	const overviewButton = document.createElement("button");
+	overviewButton.textContent = "Explain Overall Code";
 
-    const detailedButton = document.createElement("button");
-    detailedButton.textContent = "Explain Code Line by Line";
+	const detailedButton = document.createElement("button");
+	detailedButton.textContent = "Explain Code Line by Line";
 
-    // Append buttons to the container
-    container.appendChild(overviewButton);
-    container.appendChild(detailedButton);
+		// Append buttons to the container
+	container.appendChild(overviewButton);
+	container.appendChild(detailedButton);
 
-    // Event Listeners
-    overviewButton.addEventListener("click", () => explainOverview(leftAiTab,rightAiTab, aiConfig));
-    detailedButton.addEventListener("click", () => explainDetails(leftAiTab,rightAiTab, aiConfig));
+		// Event Listeners
+	overviewButton.addEventListener("click", () => explainOverview(leftAiTab,rightAiTab, aiConfig));
+	detailedButton.addEventListener("click", () => explainDetails(leftAiTab,rightAiTab, aiConfig));
 
-    return container;
+	return container;
 }
 
 // Function to explain the overall purpose of the code
 function explainOverview(leftAiTab,rightAiTab, aiConfig) {
-    targetTab.innerText = "Generating an overall explanation of the code...";
-    // Call your LLM function here to generate the explanation
+	aiConfig.llmiInterface.highLevelExplainCode(packInformation(aiConfig)).then(function(val){
+		rightAiTab.addAiOutput(val.explanation)
+	})
 }
 
 // Function to explain the code line by line
 function explainDetails(leftAiTab,rightAiTab, aiConfig) {
-    targetTab.innerText = "Generating a detailed line-by-line explanation...";
-    // Call your LLM function here to generate detailed comments
+	aiConfig.llmiInterface.explainCode(packInformation(aiConfig)).then(function(val){
+		console.log(val)
+		//rightAiTab.addAiOutput(val.explanation)
+	})
 }
 
 
 function alterCodePanel(leftAiTab, rightAiTab, aiConfig) {
 // Create the main container
-    const container = document.createElement("div");
-    container.classList.add("alter-code-panel");
+	const container = document.createElement("div");
+	container.classList.add("alter-code-panel");
 
-    // Create the instruction paragraph
-    const instruction = document.createElement("p");
-    instruction.textContent = "Describe how the code should be modified:";
+		// Create the instruction paragraph
+	const instruction = document.createElement("p");
+	instruction.textContent = "Describe how the code should be modified:";
 
-    // Create the textarea for user input
-    const textArea = document.createElement("textarea");
-    textArea.placeholder = "E.g., Optimize performance, add logging, change function names...";
+		// Create the textarea for user input
+	const textArea = document.createElement("textarea");
+	textArea.placeholder = "E.g., Optimize performance, add logging, change function names...";
 
-    // Create the generate button
-    const alterButton = document.createElement("button");
-    alterButton.textContent = "Modify Code";
+		// Create the generate button
+	const alterButton = document.createElement("button");
+	alterButton.textContent = "Modify Code";
 
-    // Append elements to the container
-    container.appendChild(instruction);
-    container.appendChild(textArea);
-    container.appendChild(alterButton);
+		// Append elements to the container
+	container.appendChild(instruction);
+	container.appendChild(textArea);
+	container.appendChild(alterButton);
 
-    // Event Listener for future integration
-    alterButton.addEventListener("click", () => modifyCode(leftAiTab, rightAiTab, textArea.value, aiConfig));
-    textArea.addEventListener("keydown", (event) => {
-        if (event.shiftKey && event.key === "Enter") {
-            event.preventDefault(); // Prevents newline insertion
-            alterButton.click();
-        }
-    });
+		// Event Listener for future integration
+	alterButton.addEventListener("click", () => modifyCode(leftAiTab, rightAiTab, textArea.value, aiConfig));
+	textArea.addEventListener("keydown", (event) => {
+		if (event.shiftKey && event.key === "Enter") {
+						event.preventDefault(); // Prevents newline insertion
+						alterButton.click();
+					}
+				});
 
 
-    return container;
+	return container;
 }
 
 // Placeholder function for modifying code based on user input
 function modifyCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
-    rightAiTab.innerText = `Applying changes: "${userRequest}"...`;
-    // Integrate LLM logic here to modify the code
+	aiConfig.llmiInterface.alterCode(packInformation(aiConfig, userRequest)).then(function(val){
+		aiConfig.codeEditor.setValue(val.code)
+		rightAiTab.addAiOutput(val.explanation)
+	})
 }
 
 function fixCodePanel(leftAiTab,rightAiTab, aiConfig) {
-    // Create the main container div
-    const container = document.createElement("div");
-    container.classList.add("fixCode");
+		// Create the main container div
+	const container = document.createElement("div");
+	container.classList.add("fixCode");
 
-    // Create the paragraph section
-    const paragraph = document.createElement("p");
-    paragraph.textContent = "To do!!";
+		// Create the paragraph section
+	const paragraph = document.createElement("p");
+	paragraph.textContent = "To do!!";
 
-    // Append elements to the container
-    container.appendChild(paragraph);
+		// Append elements to the container
+	container.appendChild(paragraph);
 
-    // Return the created div
-    return container;
+		// Return the created div
+	return container;
 }
 
 
@@ -250,34 +263,22 @@ function fillFirstAiPanel(leftAiTab,rightAiTab, aiConfig){
 	})
 }
 
-function createLLMInterface(extensionId){
-	const llmsSetting = {
-		interface: "ollama",
-		interfaceParam: {
-			host: "http://localhost:11434",
-			modelVersion: "llama3.2",
-			customPrompt: {
-				high_level_explain_code: "Briefly summarize what this script accomplishes:\n{code}"
-			}
-		}
-	};
+function createLLMInterface(aiConfig, extensionId){
 
-	const aiModel = createAIModel(llmsSetting,extensionId);
+	document.addEventListener("aiConfig", (event) => {
+		console.log("Received aiConfig:", event.detail);
 
-	// // Change model dynamically
-	// //aiModel.setModelVersion("llama3.3");
+		console.log(JSON.stringify(event.detail))
+		let selectInterface=event.detail.interface;
+		const llmsSetting = {
+			interface: selectInterface,
+			interfaceParam: event.detail[selectInterface]
+		};
+		aiConfig.llmiInterface=createAIModel(llmsSetting,extensionId);
+	});
 
-	// // Generate code
-	// aiModel.generateCode("Write a function to check if a number is prime.")
-	// .then(console.log)
-	// .catch(console.error);
 
-	// // Get available models
-	// aiModel.getAvailableModels()
-	// .then(models => console.log("Available models:", models))
-	// .catch(console.error);
-
-	return aiModel
+	document.dispatchEvent(new Event("requestAiConfig")); // request the config
 }
 
 function setEditor(aiConfig){
@@ -291,11 +292,51 @@ function setEditor(aiConfig){
 	}
 }
 
+function getErrorsFromConsole(){
+	return [...document.querySelectorAll("ee-console-log")].filter(item => item.querySelector(".error") || item.shadowRoot.querySelector(".severity-error")).map(e => e.innerText || e.shadowRoot.textContent).map( t => t.trim());
+}
+
+function packInformation(aiConfig, prompt=null){
+	let errors=getErrorsFromConsole().join("\n\n");
+	let code=aiConfig.codeEditor.getValue();
+	let selectedCode=aiConfig.codeEditor.getSelectedText();
+	return { prompt, code, selectedCode, errors }
+}
+
 export function initializeMT(extensionId){
-	let aiConfig={
-		llmiInterface:createLLMInterface(extensionId)
-	};
+	let aiConfig={llmiInterface:null};
+	createLLMInterface(aiConfig, extensionId)
 	setEditor(aiConfig)
 	enableAiInterface(aiConfig);
+}
+
+function setLLmConfigCommunication() {
+	const storageKey = "aiConfig";
+
+		// Listen for changes in Chrome local storage
+	chrome.storage.onChanged.addListener((changes, namespace) => {
+		if (changes[storageKey]) {
+			const { oldValue, newValue } = changes[storageKey];
+
+						// Perform deep comparison
+			if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
+				const event = new CustomEvent("aiConfig", { detail: newValue });
+				document.dispatchEvent(event);
+			}
+		}
+	});
+
+		// Listen for "requestAiConfig" event and respond with the current aiConfig value
+	document.addEventListener("requestAiConfig", () => {
+		chrome.storage.local.get([storageKey], (result) => {
+			const event = new CustomEvent("aiConfig", { detail: result[storageKey] });
+			document.dispatchEvent(event);
+		});
+	});
+	document.dispatchEvent(new Event("requestAiConfig"));
+}
+
+export function initialize(extensionId){
+	setLLmConfigCommunication()
 
 }

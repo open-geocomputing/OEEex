@@ -1,7 +1,54 @@
+const aiDefaultConfig=
+{
+    "customPromptsEnabled": false,
+    "gemini":
+    {
+        "apiKey": "",
+        "customPrompt":
+        {
+            "alter_code": "",
+            "explain_code": "",
+            "fix_code": "",
+            "generate_code": "",
+            "high_level_explain_code": ""
+        },
+        "host": "https://generativelanguage.googleapis.com/v1beta/",
+        "modelVersion": "gemini-2.0-flash"
+    },
+    "interface": "openai",
+    "ollama":
+    {
+        "customPrompt":
+        {
+            "alter_code": "",
+            "explain_code": "",
+            "fix_code": "",
+            "generate_code": "",
+            "high_level_explain_code": ""
+        },
+        "host": "http://localhost:11434",
+        "modelVersion": ""
+    },
+    "openai":
+    {
+        "apiKey": "",
+        "customPrompt":
+        {
+            "alter_code": "",
+            "explain_code": "",
+            "fix_code": "",
+            "generate_code": "",
+            "high_level_explain_code": ""
+        },
+        "host": "https://api.openai.com/v1/",
+        "modelVersion": "gpt-4o"
+    }
+}
+
 let defaultParam={
 	//isShareable:false,
 	aiCodeGeneration:true,
-	aiConfig:{interface:"openai"},
+	aiConfig:aiDefaultConfig,
 	consoleError:true,
 	copyAsJson:true,
 	darkMode:true,
