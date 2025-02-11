@@ -557,6 +557,17 @@ function setLLmConfigCommunication() {
 	document.dispatchEvent(new Event("requestAiConfig"));
 }
 
-export function initialize(extensionId){
+function addAiOptionButton(){
+	const customEvent = new CustomEvent('add2OEEMenu', {
+        detail: {
+            name: 'AI Options',
+            callback: () => window.open(chrome.runtime.getURL("option/ai.html"), '_blank')
+        }
+    });
+    window.dispatchEvent(customEvent);
+}
+
+export function initialize(){
 	setLLmConfigCommunication();
+	addAiOptionButton();
 }
