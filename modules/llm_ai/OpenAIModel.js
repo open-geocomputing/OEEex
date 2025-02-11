@@ -5,13 +5,13 @@ export class OpenAIModel extends AIModelInterface {
 		super(llmsSetting);
 		this.endpoint = `${this.host}/chat/completions`;
 		this.modelsEndpoint = `${this.host}/models`;
-		this.superPrompt =`You are an expert assistant in Google Earth Engine (GEE) coding. Any code request must be written exclusively in JavaScript for the browser-based Google Earth Engine Code Editor.\n`;
+		this.superPrompt =`You are an expert assistant in Google Earth Engine (GEE) coding. Any code request must be written exclusively in JavaScript for the browser-based Google Earth Engine Code Editor. Additionally comment should be written exlusively in ${this.language}. For explanatory text that needs to be structured, use Markdown syntax.\n`;
 		this.defaultPrompts = {
 			generate_code:  this.stringToFunction("Generate efficient code for:\n${prompt}"),
 			explain_code: this.stringToFunction("Explain this code line by line:\n${code}"),
 			high_level_explain_code: this.stringToFunction("Summarize the purpose of this code:\n${code}"),
-			alter_code: this.stringToFunction("Modify the following code:\n${code}\nChanges: ${prompt}"),
-			fix_code: this.stringToFunction("Fix the errors in this code:\n${code}\nError: ${error}")
+			alter_code: this.stringToFunction("Modify the following code:\n${code}\nChanges: ${prompt}\n Prefer to provide a code pach if possible, alternatively you can provide a complete code."),
+			fix_code: this.stringToFunction("Fix the errors in this code:\n${code}\nError: ${error}\n Provide only the code patch (diff file) to correct the code. Diff content should be dircetly in the patch parameter or the answer.")
 		};
 	}
 
@@ -36,7 +36,7 @@ export class OpenAIModel extends AIModelInterface {
 	}
 
 	async generateCode(input) {
-		console.log("input",input, this.getPrompt("generate_code", input, this.defaultPrompts))
+		//console.log("input",input, this.getPrompt("generate_code", input, this.defaultPrompts))
 		const response = await fetch(this.endpoint, {
 			method: "POST",
 			headers: {
@@ -80,7 +80,7 @@ export class OpenAIModel extends AIModelInterface {
 	}
 
 	async explainCode(input) {
-		console.log("input",input, this.getPrompt("explain_code", input, this.defaultPrompts))
+		//console.log("input",input, this.getPrompt("explain_code", input, this.defaultPrompts))
 		const response = await fetch(this.endpoint, {
 			method: "POST",
 			headers: {
@@ -139,7 +139,7 @@ export class OpenAIModel extends AIModelInterface {
 	}
 
 	async highLevelExplainCode(input) {
-		console.log("input",input, this.getPrompt("high_level_explain_code", input, this.defaultPrompts))
+		//console.log("input",input, this.getPrompt("high_level_explain_code", input, this.defaultPrompts))
 		const response = await fetch(this.endpoint, {
 			method: "POST",
 			headers: {
@@ -179,7 +179,7 @@ export class OpenAIModel extends AIModelInterface {
 	}
 
 	async alterCode(input) {
-		console.log("input",input, this.getPrompt("alter_code", input, this.defaultPrompts))
+		//console.log("input",input, this.getPrompt("alter_code", input, this.defaultPrompts))
 		const response = await fetch(this.endpoint, {
 			method: "POST",
 			headers: {
@@ -205,12 +205,18 @@ export class OpenAIModel extends AIModelInterface {
 								},
 								code: {
 									type: "string"
+								},
+								patch: {
+									type: "string"
 								}
 							},
 							required: [
-								"explanation",
-								"code"
+								"explanation"
 							],
+							oneOf: [
+							    { "required": ["code"] },
+							    { "required": ["patch"] }
+							  ],
 							additionalProperties: false
 						}
 					}
@@ -223,7 +229,7 @@ export class OpenAIModel extends AIModelInterface {
 	}
 
 	async fixCode(input) {
-		console.log("input",input, this.getPrompt("fix_code", input, this.defaultPrompts))
+		//console.log("input",input, this.getPrompt("fix_code", input, this.defaultPrompts))
 		const response = await fetch(this.endpoint, {
 			method: "POST",
 			headers: {
@@ -247,13 +253,13 @@ export class OpenAIModel extends AIModelInterface {
 								explanation: {
 									type: "string"
 								},
-								code: {
+								patch: {
 									type: "string"
 								}
 							},
 							required: [
 								"explanation",
-								"code"
+								"patch"
 							],
 							additionalProperties: false
 						}

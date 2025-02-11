@@ -57,6 +57,7 @@ function aiParamSetup(){
     const settingsSections = document.querySelectorAll(".ai-settings");
     const customPromptToggle = document.getElementById("customPromptToggle");
     const customPromptSections = document.querySelectorAll(".custom-prompt-section");
+    const languageSelector = document.getElementById("languageSelector");
 
     function updateSettingsDisplay() {
         settingsSections.forEach(section => section.style.display = "none");
@@ -92,6 +93,7 @@ function aiParamSetup(){
         const aiConfig = {
             interface: aiInterface.value,
             customPromptsEnabled: customPromptToggle.checked,
+            language: languageSelector.value,
             openai: collectSettings("openai"),
             gemini: collectSettings("gemini"),
             ollama: collectSettings("ollama")
@@ -108,6 +110,7 @@ function aiParamSetup(){
                 isLoading=true;
                 aiInterface.value = data.aiConfig.interface || "openai";
                 customPromptToggle.checked = data.aiConfig.customPromptsEnabled || false;
+                languageSelector.value = data.aiConfig.language || "English";
                 toggleCustomPrompts();
                 ["openai", "gemini", "ollama"].forEach(interfaceName => {
                     if (data.aiConfig[interfaceName]) {
@@ -132,6 +135,7 @@ function aiParamSetup(){
     document.querySelectorAll(".input, .textarea").forEach(input => {
         input.addEventListener("blur", saveAIConfig); // Auto-save on field blur
     });
+    languageSelector.addEventListener("change", saveAIConfig);
     
     
 }

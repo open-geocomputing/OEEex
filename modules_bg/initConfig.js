@@ -1,6 +1,7 @@
 const aiDefaultConfig=
 {
     "customPromptsEnabled": false,
+    "language":"English",
     "gemini":
     {
         "apiKey": "",

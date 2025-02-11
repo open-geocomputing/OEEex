@@ -20,6 +20,7 @@ export class AIModelInterface {
         this.host = llmsSetting.interfaceParam.host || "";
         this.apiKey = llmsSetting.interfaceParam.apiKey || "";
         this.modelVersion = llmsSetting.interfaceParam.modelVersion || "";
+        this.language = llmsSetting.language || "English";
         this.customPrompt = Object.fromEntries(
           Object.entries(llmsSetting.interfaceParam.customPrompt || {})
           .filter(([_, value]) => value)
