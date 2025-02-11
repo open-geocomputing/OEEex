@@ -25,7 +25,7 @@ for (let i = 0; i < permanentModule2Load.length; i++) {
         .then(module => {
             if (module.initialize) {
                 module.initialize();
-                console.log(moduleName)
+                //console.log(moduleName)
             }
         })
         .catch(err => {
@@ -45,7 +45,7 @@ chrome.storage.local.get(moules2Load, function(items) {
                 .then(module => {
                     if (module.initialize) {
                         module.initialize();
-                        console.log(moduleName)
+                        //console.log(moduleName)
                     }
                 })
                 .catch(err => {

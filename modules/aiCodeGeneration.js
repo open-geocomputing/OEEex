@@ -4,6 +4,19 @@ let OEEexEscape = trustedTypes.createPolicy("OEEexEscape", {
 	createHTML: (string, sink) => string
 });
 
+let OEEexEscapeURL = trustedTypes.createPolicy("OEEexEscapeURL", {
+	createScriptURL: (string, sink) => string
+});
+
+
+function injectMarked(extensionId){
+	var s = document.createElement('script');
+	s.src = OEEexEscapeURL.createScriptURL("chrome-extension://"+extensionId+"/3rd_party/marked.min.js");
+	s.onload = function() {
+		this.remove();
+	};
+	(document.head || document.documentElement).appendChild(s);
+}
 
 /**** make panel ******/
 
@@ -14,12 +27,14 @@ function enableAiInterface(aiConfig){
 	rightAiTab.addAiOutput=function(text){
 		const div = document.createElement("div");
 		div.classList.add("aiResult","animate__zoomInUp")
-		div.textContent = text;  
+		div.innerHTML = OEEexEscape.createHTML(marked.parse(text));  
 		this.appendChild(div);
 		this.show();
 	};
 
 	fillFirstAiPanel(leftAiTab,rightAiTab, aiConfig);
+	aiConfig.leftAiTab=leftAiTab;
+	aiConfig.rightAiTab=rightAiTab;
 }
 
 function addTab(parent,name, hidden=false, selected=false, parm3=false ){
@@ -265,8 +280,9 @@ function explainDetails(leftAiTab,rightAiTab, aiConfig) {
 
 // Placeholder function for modifying code based on user input
 function modifyCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
-	aiConfig.llmiInterface.alterCode(packInformation(aiConfig, userRequest)).then(function(val){
-		aiConfig.codeEditor.setValue(val.code)
+	let request=packInformation(aiConfig, userRequest)
+	aiConfig.llmiInterface.alterCode(request).then(function(val){
+		aiConfig.codeEditor.setValue(updateCodeFromDiff(val, request.code, aiConfig.codeEditor.getValue()))
 		rightAiTab.addAiOutput(val.explanation)
 	})
 }
@@ -283,6 +299,21 @@ function packInformation(aiConfig, prompt=null){
 	let code=aiConfig.codeEditor.getValue();
 	let selectedCode=aiConfig.codeEditor.getSelectedText();
 	return { prompt, code, selectedCode, errors }
+}
+
+/**** apply diff*****/
+
+function updateCodeFromDiff(diffObj, originalCode, currentCode) {
+    let patch = diffObj.patch;
+    if (!patch || patch.trim() === "") {
+	    	if (patch.startsWith("```") && str.endsWith("```")) {
+					patch = patch.slice(3, -3); // Remove first and last 3 characters
+				}
+        // Compute patch between originalCode and diffObj.code if patch is empty
+        patch = Diff.createPatch("filename", originalCode, diffObj.code, "", "");
+    }
+    const newCode = Diff.applyPatch(currentCode, patch);
+    return newCode;
 }
 
 /*** display line comment***/
@@ -321,37 +352,139 @@ function removeCodeAnnotation(editor){
 	});
 }
 
-
-// autoRemoveAi_comment=false;
-
-// function explainCode(){
-	
-
-// 	if(! autoRemoveAi_comment){
-// 		autoRemoveAi_comment=true;
-// 		editor.getSession().on("changeAnnotation", function(){
-// 			let session=editor.getSession();
-// 			for (var i = session.getLength(); i >= 0; i--) {
-// 				session.removeGutterDecoration(i,"oeeex-ai-comment")
-// 			}
-// 		});
-// 	}
-
-
-
-// 	let object={code: editor.getSession().getValue(), header:"",start:0, end:editor.getSession().getLength(), language:aiSettings.AiLanguage}
-// 	let selectionRange=editor.getSession().selection.getRange();
-// 	if(!((selectionRange.start.row==selectionRange.end.row) && (selectionRange.start.row==selectionRange.end.column ))){
-// 		object.start 	=selectionRange.start.row;
-// 		object.end 		=selectionRange.end.row+1;
-// 	}
-// 	sendCodeAndDisplayComment(object);
-// 	document.getElementById("oeeex-tool-ai-button").disabled=true;
-// }
-
-// let aiTab=null;
-
 /***  error in console ***/
+
+
+async function sendErrorAndCodeAndDisplayComment(errorMessage, button, message, aiConfig) {
+	let request=packInformation(aiConfig, "")
+	request.errors=[message];
+	aiConfig.llmiInterface.fixCode(request).then(function(val){
+		displayAiErrorHelpMessage(errorMessage, val, request, aiConfig);
+	})
+}
+
+function displayAiErrorHelpMessage(e,jsonData,request,aiConfig){
+	let advice=jsonData?.explanation
+	let aiAnswerMessageDiv=document.createElement("div");
+	aiAnswerMessageDiv.classList.add("aiAnswer");
+	aiAnswerMessageDiv.innerHTML="<b>AI Assistance</b><br>"+marked.parse(advice);
+	aiAnswerMessageDiv.classList.add("animate__zoomInDown")
+	
+	if(jsonData?.patch){
+
+		let updateButton=document.createElement("span");
+		updateButton.innerText='🔄';
+		updateButton.classList.add("updateCode");
+		aiAnswerMessageDiv.insertBefore(updateButton,aiAnswerMessageDiv.firstChild);
+		updateButton.addEventListener('click',function(){
+			console.log(jsonData, request.code, aiConfig.codeEditor.getValue())
+			console.log(updateCodeFromDiff(jsonData, request.code, aiConfig.codeEditor.getValue()))
+			aiConfig.codeEditor.setValue(updateCodeFromDiff(jsonData, request.code, aiConfig.codeEditor.getValue()))
+		})
+	}
+
+	e.appendChild(aiAnswerMessageDiv);
+	e.removeChild(e.querySelector(".aiButton"))
+}
+
+function addErrorButon(e, message, aiConfig){
+	const sheet = new CSSStyleSheet();
+	// Apply a rule to the sheet
+	sheet.replaceSync("@keyframes zoomInDown {\
+		from {\
+			opacity: 0;\
+			-webkit-transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);\
+			transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);\
+			-webkit-animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);\
+			animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);\
+		}\
+	\
+		60% {\
+			opacity: 1;\
+			-webkit-transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);\
+			transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);\
+			-webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);\
+			animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);\
+		}\
+	}\
+	.animate__zoomInDown {\
+		-webkit-animation-name: zoomInDown;\
+		animation-name: zoomInDown;\
+	}\
+	.message.severity-error .summary{\
+		padding-right: 27px;\
+	}\
+	.aiButton{\
+		position: relative;\
+		float: right;\
+		right: -4px;\
+		bottom: -4px;\
+		padding: 2px 5px 4px 3px;\
+		border-top-left-radius: 4px;\
+		border-right: none;\
+		border-bottom: none;\
+		border: 2px white solid;\
+		user-select: none;\
+		font-size: 1.3em;\
+		margin-top: -25px;\
+		text-shadow: 0 0 0px white;\
+	}\
+\
+	.aiButton.disabled {\
+	   filter: grayscale(1);\
+	}\
+	.aiAnswer{\
+		background: linear-gradient(to right top, rgba(82, 73, 208, 0.5) 10%, rgba(208, 153, 250, 0.5));\
+		border-radius: 5px;\
+		padding-left: 13px;\
+		padding: 5px;\
+		margin: 2px;\
+		text-align: justify;\
+		animation-duration: 0.3s;\
+	}\
+	.updateCode{\
+	  position: relative;\
+	  font-size: 1.4em;\
+    float: right;\
+     top: -5px;\
+    right: -2px;\
+	}\
+	");
+	e.shadowRoot.adoptedStyleSheets=[...e.shadowRoot.adoptedStyleSheets,sheet];
+	let errorMessage=e.shadowRoot.querySelector(".message.severity-error");
+	if(errorMessage){
+		let aiButton=document.createElement("span");
+		aiButton.classList.add("aiButton");
+		aiButton.textContent="✨";
+		errorMessage.appendChild(aiButton);
+		aiButton.addEventListener("click",function(){
+			if(aiButton.classList.contains("disabled"))
+				return;
+			aiButton.classList.add("disabled");
+			sendErrorAndCodeAndDisplayComment(errorMessage, aiButton, message, aiConfig)
+		})
+	}
+}
+
+function addConsoleErrorObeserver(aiConfig){
+	let MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
+	let myObserver          = new MutationObserver(function(mutList){
+		[...mutList].map(function(mut){
+			[...mut.addedNodes].map(function(e){
+				if(e.classList.contains('OEEexAIErrorHelper'))
+					return;
+				e.classList.add('OEEexAIErrorHelper');
+				if(e[Object.getOwnPropertySymbols(e)[1]]=='error'){
+					setTimeout(addErrorButon,0,e,e[Object.getOwnPropertySymbols(e)[0]],aiConfig);
+				}
+			});
+		});
+	});
+	let obsConfig = { childList: true};
+	
+	if(document.querySelector('ee-console'))
+		myObserver.observe(document.querySelector('ee-console'), obsConfig);
+}
 
 /***  get editor interface ***/
 
@@ -378,6 +511,8 @@ function createLLMInterface(aiConfig, extensionId){
 		let selectInterface=event.detail.interface;
 		const llmsSetting = {
 			interface: selectInterface,
+			customPrompt:event.detail?.customPromptsEnabled,
+			language:event.detail?.language,
 			interfaceParam: event.detail[selectInterface]
 		};
 		aiConfig.llmiInterface=createAIModel(llmsSetting,extensionId);
@@ -392,6 +527,8 @@ export function initializeMT(extensionId){
 	createLLMInterface(aiConfig, extensionId)
 	setEditor(aiConfig)
 	enableAiInterface(aiConfig);
+	addConsoleErrorObeserver(aiConfig);
+	injectMarked(extensionId);
 }
 
 function setLLmConfigCommunication() {
@@ -421,6 +558,5 @@ function setLLmConfigCommunication() {
 }
 
 export function initialize(extensionId){
-	setLLmConfigCommunication()
-
+	setLLmConfigCommunication();
 }

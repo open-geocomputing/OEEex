@@ -34,7 +34,7 @@ window.addEventListener("moduleMT2Load", function(items) {
 			.then(module => {
 				if (module.initializeMT) {
 					module.initializeMT(extensionId);
-					console.log(moduleName)
+					//console.log(moduleName)
 				}
 			})
 			.catch(err => {
