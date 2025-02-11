@@ -46,7 +46,7 @@ function addTab(parent,name, hidden=false, selected=false, parm3=false ){
 	newTab[Object.getOwnPropertySymbols(newTab)[3]]=localName;
 	parent.appendChild(newTab);
 	parent.shadowRoot.querySelector('.header button.selected').click();
-	newTab.hidden=hidden;
+	if (hidden) newTab.setAttribute("hidden", "");
 
 	newTab.select=function(){
 		this.show();
@@ -63,6 +63,27 @@ function addTab(parent,name, hidden=false, selected=false, parm3=false ){
 		newTab[Object.getOwnPropertySymbols(newTab)[1]]=true;
 		parent.shadowRoot.querySelector('.header button.selected').click();
 		this.setAttribute("hidden", "");
+	}
+
+	const sheet = new CSSStyleSheet();
+	// Apply a rule to the sheet
+	sheet.replaceSync(`
+		button.processing{
+			background: linear-gradient(270deg, #524ad0, #D099FA, #524ad0, #D099FA, #524ad0);
+			background-size: 200% 100%;
+			animation: loadingAnimation 2s infinite linear;
+		}
+
+		@keyframes loadingAnimation {
+			0% { background-position: 100% 0; }
+			100% { background-position: 0% 0; }
+		}
+	`)
+	parent.shadowRoot.adoptedStyleSheets=[...parent.shadowRoot.adoptedStyleSheets,sheet];
+	
+
+	newTab.procesing=function(active){
+		[...parent.shadowRoot.querySelectorAll("button")].filter(b => b.innerText==name).map(b=> b.classList.toggle("processing",active))
 	}
 
 	return newTab
@@ -257,33 +278,41 @@ function fillFirstAiPanel(leftAiTab,rightAiTab, aiConfig){
 
 // Placeholder function for generating code based on user input
 function generateCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
+	leftAiTab.procesing(true);
 	aiConfig.llmiInterface.generateCode(packInformation(aiConfig, userRequest)).then(function(val){
 		aiConfig.codeEditor.setValue(val.code);
 		rightAiTab.addAiOutput(val.explanation)
+		leftAiTab.procesing(false);
 	})
 }
 
 // Function to explain the overall purpose of the code
 function explainOverview(leftAiTab,rightAiTab, aiConfig) {
+	leftAiTab.procesing(true);
 	aiConfig.llmiInterface.highLevelExplainCode(packInformation(aiConfig)).then(function(val){
 		rightAiTab.addAiOutput(val.explanation)
+		leftAiTab.procesing(false);
 	})
 }
 
 // Function to explain the code line by line
 function explainDetails(leftAiTab,rightAiTab, aiConfig) {
+	leftAiTab.procesing(true);
 	aiConfig.llmiInterface.explainCode(packInformation(aiConfig)).then(function(val){
 		console.log(val)
 		mapAnnotations(aiConfig.codeEditor.getSession(), val.explanations);
+		leftAiTab.procesing(false);
 	})
 }
 
 // Placeholder function for modifying code based on user input
 function modifyCode(leftAiTab, rightAiTab, userRequest, aiConfig) {
+	leftAiTab.procesing(true);
 	let request=packInformation(aiConfig, userRequest)
 	aiConfig.llmiInterface.alterCode(request).then(function(val){
 		aiConfig.codeEditor.setValue(updateCodeFromDiff(val, request.code, aiConfig.codeEditor.getValue()))
 		rightAiTab.addAiOutput(val.explanation)
+		leftAiTab.procesing(false);
 	})
 }
 
@@ -358,8 +387,10 @@ function removeCodeAnnotation(editor){
 async function sendErrorAndCodeAndDisplayComment(errorMessage, button, message, aiConfig) {
 	let request=packInformation(aiConfig, "")
 	request.errors=[message];
+	aiConfig.leftAiTab.procesing(true);
 	aiConfig.llmiInterface.fixCode(request).then(function(val){
 		displayAiErrorHelpMessage(errorMessage, val, request, aiConfig);
+		aiConfig.leftAiTab.procesing(false);
 	})
 }
 
