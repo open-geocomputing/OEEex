@@ -334,10 +334,12 @@ function packInformation(aiConfig, prompt=null){
 
 function updateCodeFromDiff(diffObj, originalCode, currentCode) {
     let patch = diffObj.patch;
-    if (!patch || patch.trim() === "") {
+    if (patch && patch.trim() !== "") {
 	    	if (patch.startsWith("```") && str.endsWith("```")) {
 					patch = patch.slice(3, -3); // Remove first and last 3 characters
 				}
+			}
+	else{
         // Compute patch between originalCode and diffObj.code if patch is empty
         patch = Diff.createPatch("filename", originalCode, diffObj.code, "", "");
     }

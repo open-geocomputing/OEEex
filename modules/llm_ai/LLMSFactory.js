@@ -7,7 +7,7 @@ export function createAIModel(llmsSetting, extensionId=null) {
         case "openai":
             return new OpenAIModel(llmsSetting);
         case "gemini":
-            return new GeminiModel(llmsSetting);
+            return new GeminiModel(llmsSetting, extensionId);
         case "ollama":
             return new OllamaModel(llmsSetting, extensionId);
         default:

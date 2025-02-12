@@ -86,7 +86,7 @@ export function initialize(){
 
 // export function initialize(){
 	chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
-		if (request.action === "ollamaRequest") {
+		if (request.action === "ollamaRequest" || request.action==="geminiRequest") {
 			fetch(...request.arguments).then(async (res) => {
 			    const headers = Object.fromEntries(res.headers.entries());
 			    const body = await res.text(); // Capture the body as text

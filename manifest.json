@@ -35,15 +35,16 @@
 		}
     ],
 	"host_permissions": [
+		"http://127.0.0.1/",
+		"http://localhost/",
 		"https://code.earthengine.google.com/",
 		"https://code.earthengine.google.com/repo/file/load?*",
-		"http://localhost/",
-		"http://127.0.0.1/"
+		"https://generativelanguage.googleapis.com/"
 	],
 	"permissions": [
 		"activeTab",
-		"storage",
-		"declarativeNetRequest"
+		"declarativeNetRequest",
+		"storage"
 	],
 	"content_scripts":
     [
