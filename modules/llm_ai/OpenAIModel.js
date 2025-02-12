@@ -11,7 +11,7 @@ export class OpenAIModel extends AIModelInterface {
 			explain_code: this.stringToFunction("Explain this code line by line:\n${code}"),
 			high_level_explain_code: this.stringToFunction("Summarize the purpose of this code:\n${code}"),
 			alter_code: this.stringToFunction("Modify the following code:\n${code}\nChanges: ${prompt}\n Prefer to provide a code pach if possible, alternatively you can provide a complete code."),
-			fix_code: this.stringToFunction("Fix the errors in this code:\n${code}\nError: ${error}\n Provide only the code patch (diff file) to correct the code. Diff content should be dircetly in the patch parameter or the answer.")
+			fix_code: this.stringToFunction("Fix the errors in this code:\n${code}\nError: ${errors}\n Provide only the code patch (diff file) to correct the code. Diff content should be dircetly in the patch parameter or the answer.")
 		};
 	}
 
