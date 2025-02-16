@@ -1,0 +1,90 @@
+html {
+    --ai-background-color: rgb(240, 240, 240);
+    --ai-color: black;
+    background-color: var(--ai-background-color);
+} 
+
+html.dark {
+    --ai-background-color: rgb(29, 31, 33);
+    --ai-color: #C5C8C6;
+} 
+
+body {
+    
+    color: var(--ai-color);
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.subtitle, .title, .label  {
+    color: var(--ai-color);
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1, h2 {
+    color: var(--ai-color);
+}
+
+.field {
+    margin-bottom: 1rem;
+}
+
+.select select {
+    width: 100%;
+}
+
+.input, .textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: var(--ai-background-color);
+    color: var(--ai-color);
+}
+
+.dark .input::placeholder, .dark .textarea::placeholder{
+    color: #5c5b5b ;
+}
+
+.textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.ai-settings {
+    display: none;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: rgba(62, 142, 208, 0.1);
+    margin-bottom: 20px;
+}
+
+.openai-settings, .gemini-settings, .ollama-settings {
+    display: none;
+}
+
+.button.is-primary {
+    background-color: #3e8ed0;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button.is-primary:hover {
+    background-color: #3273a8;
+}
+
+.custom-prompt-section {
+    display: none;
+}
+
+.custom-prompt-enabled .custom-prompt-section {
+    display: block;
+}

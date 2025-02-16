@@ -6,7 +6,8 @@ let permanentModule2Load=[
     "surveyMessage"
 ];
 
-let moules2Load = [
+let moules2Load = [ 
+    "aiCodeGeneration",   
     "copyAsJson",
     "darkMode",
     "editorSettings",
@@ -24,7 +25,7 @@ for (let i = 0; i < permanentModule2Load.length; i++) {
         .then(module => {
             if (module.initialize) {
                 module.initialize();
-                console.log(moduleName)
+                //console.log(moduleName)
             }
         })
         .catch(err => {
@@ -44,7 +45,7 @@ chrome.storage.local.get(moules2Load, function(items) {
                 .then(module => {
                     if (module.initialize) {
                         module.initialize();
-                        console.log(moduleName)
+                        //console.log(moduleName)
                     }
                 })
                 .catch(err => {
@@ -57,6 +58,7 @@ chrome.storage.local.get(moules2Load, function(items) {
 /*************** MT part **************************/
 
 let moulesMT2Load = [
+    "aiCodeGeneration",
     "consoleError",
     "darkMode",
     "docLink",

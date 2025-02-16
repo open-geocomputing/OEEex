@@ -1,4 +1,5 @@
 listOfScript=[
+	'aiCodeGeneration',
 	'copyAsJson',
 	'docLink',
 	'plotly',
@@ -134,12 +135,7 @@ function setLight(){
 function switch2DarkMode(toDark,
 		isAuto=false){
 	lightIsAutomatic=isAuto;
-	if (toDark){
-		document.getElementsByTagName('html')[0].classList.add('dark');
-	}
-	else{
-		document.getElementsByTagName('html')[0].classList.remove('dark');
-	}
+	document.getElementsByTagName('html')[0].classList.toggle('dark',toDark)
 
 	var lightModeElement=document.querySelector('.lightMode');
 	lightModeElement.querySelectorAll('span').forEach((e)=>e.classList.remove('active'))
@@ -322,3 +318,4 @@ function makeRangeDisplay(idObject){
 
 makeRangeDisplay('rangeParallelUpload');
 makeRangeDisplay('rangeParallelDownload');
+
