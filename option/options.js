@@ -1,13 +1,14 @@
 listOfScript=[
-	'copyAsJson',
-	'docLink',
-	'plotly',
 	'consoleError',
-	'editorSettings',
+	'copyAsJson',
 	'darkMode',
+	'docLink',
+	'editorSettings',
 	'insertFucntionSignature',
+	'isShareable',
 	'oeelCache',
 	'openInNewTab',
+	'plotly',
 	'pythonCE',
 	'uploadWithManifest',
 ];

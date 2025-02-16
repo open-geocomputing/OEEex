@@ -62,6 +62,7 @@ let moulesMT2Load = [
     "docLink",
     "editorSettings",
     "insertFucntionSignature",
+    "isShareable",
     "plotly",
     "pythonCE",
     "sharedCodeSession",

@@ -159,6 +159,20 @@ ee-tab-panel ee-tab:nth-child(2){
 	color:red;
 }
 
+.oeeSCSContainer p.title{
+	text-align: center;
+	margin:0;
+}
+
+.oeeSCSContainer ul{
+	list-style-type: disclosure-closed;
+	padding: 0 20px;
+}
+
+.oeeSCSContainer p.title b{
+	font-size:1.4em
+}
+
 .remoteSelection{
 	background-color: rgba(0,255,0,0.5);
 }

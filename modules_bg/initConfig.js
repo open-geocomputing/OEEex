@@ -1,5 +1,5 @@
 let defaultParam={
-	//isShareable:false,
+	isShareable:true,
 	consoleError:true,
 	copyAsJson:true,
 	darkMode:true,
