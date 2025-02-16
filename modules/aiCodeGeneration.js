@@ -235,7 +235,7 @@ function fixCodePanel(leftAiTab,rightAiTab, aiConfig) {
 
 		// Create the paragraph section
 	const paragraph = document.createElement("p");
-	paragraph.textContent = "To do!!";
+	paragraph.textContent = "Check the console directly for error details and help.";
 
 		// Append elements to the container
 	container.appendChild(paragraph);
