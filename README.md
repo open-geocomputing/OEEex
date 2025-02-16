@@ -33,4 +33,4 @@ Contributions are welcome!
 
 ## License
 
-This project is licensed under the LGPLv3 License.
+This project is licensed under the GPLv3 License.
