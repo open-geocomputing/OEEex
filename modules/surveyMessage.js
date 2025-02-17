@@ -23,8 +23,8 @@ function pythonMessage(){
 }
 
 function surveyMessage(){
-    let start=new Date('2024-02-23');
-    let end=new Date('2024-03-20');
+    let start=new Date('2024-01-23');
+    let end=new Date('2024-03-23');
     let now=new Date()
     if(!((start< now) && (now< end)))return;
     var s = document.createElement('script');
@@ -45,10 +45,37 @@ function surveyMessage(){
     }
 }
 
+function v2Message(){
+    let start=new Date('2025-01-23');
+    let end=new Date('2025-03-23');
+    let now=new Date()
+    if(!((start< now) && (now< end)))return;
+    var s = document.createElement('script');
+    s.src = 'chrome-extension://'+OEEexidString+'/3rd_party/lottie-player.js';
+    s.onload = function() {
+        this.remove();
+    };
+    (document.head || document.documentElement).appendChild(s);
+    //document.querySelector("button.goog-button.reset-button").click()
+    let message=document.querySelector("ee-console").shadowRoot.querySelector(".intro-message");
+    if(message){
+        message.innerHTML=('<strong style="font-size:1.15em">🚀 Open Earth Engine Toolbox V2 is Here! 🎉</strong>\
+            <br>\
+            <lottie-player hover loop src="chrome-extension://'+OEEexidString+'/images/logo.json" mode="bounce" autoplay="true" id="logo" background="transparent" speed="0.5" style="width: 70px; height: 70px; float: right; margin-left: 5px"></lottie-player>\
+            <br>We’re thrilled to introduce <strong>Open Earth Engine Toolbox V2</strong>, packed with new improvements, an integrated <strong>AI feature 🤖</strong>, and a <strong>complete background redesign</strong> to boost performance and reduce crashes! ⚡🚀\
+            <br>If you come across any issues or bugs, please report them on our <a target="_blank" href="https://github.com/open-geocomputing/OEEex/issues" style="color: hsl(0deg 100% 40%); font-weight: bold;">GitHub issues page</a> 🛠️🔍.\
+        ')
+        message.style.background='linear-gradient(to top right, hsl(244deg 59% 55% / 50%) 10%, hsl(274deg 91% 79% / 50%))';
+        message.style.borderRadius= '5px';
+        message.style.paddingLeft= '5px';
+    }
+}
+
 
 export function initialize(){
 	chrome.storage.local.get(["pythonCE"],function(r){
 		if(r["pythonCE"]) window.addEventListener("load",pythonMessage)
 	})
 	window.addEventListener("load",surveyMessage);
+    window.addEventListener("load",v2Message);
 }
