@@ -208,6 +208,7 @@ footer.footer section.section{
 	span.mainSectionButton {
 		left: 50px;
 		position: absolute;
+		display: contents;
 	}
 
 	.box p{
@@ -386,6 +387,10 @@ div.header-button-container .button.is-primary{
 	text-decoration: line-through;
 }
 
+.documentation-menu .disabled{
+	color:gray;
+}
+
 h3.deprecated{
 	text-decoration: line-through;
 	text-decoration-color: gray;
@@ -394,7 +399,11 @@ h3.deprecated{
 h4.deprecated{
 	color: red;
 	font-weight: bold;
+}
 
+h4.disabled{
+	color: orange;
+	font-weight: bold;
 }
 
 #About img{
@@ -407,4 +416,7 @@ h4.deprecated{
 	color: var(--text-Color);
 }
 
+strong{
+	color: inherit;
+}
 
