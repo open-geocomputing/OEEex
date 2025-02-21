@@ -13,7 +13,6 @@ let moules2Load = [
     "editorSettings",
     "openInNewTab",
     "plotly",
-    "runAll",
     "sharedCodeSession",
     "uploadWithManifest"
 ];
@@ -66,6 +65,7 @@ let moulesMT2Load = [
     "insertFucntionSignature",
     "plotly",
     "pythonCE",
+    "runAll",
     "sharedCodeSession",
     "terminal",
     "uploadWithManifest"

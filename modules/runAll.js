@@ -42,6 +42,6 @@ function addRunAllTaskButton(){
 	observer.observe(taskPanel, {subtree: false, childList: true});
 }
 
-export function initialize(){
+export function initializeMT(){
 	addRunAllTaskButton();
 }
