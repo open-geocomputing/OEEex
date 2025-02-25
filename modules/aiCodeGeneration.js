@@ -257,7 +257,7 @@ function fillFirstAiPanel(leftAiTab,rightAiTab, aiConfig){
 		{ code:"generateCode", title: "Generate code", content: generateCodePanel(leftAiTab,rightAiTab, aiConfig)},
 		{ code:"explainCode", title: "Explain code", content: explainCodePanel(leftAiTab,rightAiTab, aiConfig) },
 		{ code:"alterCode", title: "Code modification", content: alterCodePanel(leftAiTab,rightAiTab, aiConfig) },
-		{ code:"fixCode", title: "Fix erors", content: fixCodePanel(leftAiTab,rightAiTab, aiConfig) },
+		{ code:"fixCode", title: "Fix errors", content: fixCodePanel(leftAiTab,rightAiTab, aiConfig) },
 	];
 	
 	let controls=generateCollapsibleMenus(leftAiTab, sectionTitle);
