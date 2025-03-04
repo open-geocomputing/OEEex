@@ -353,6 +353,7 @@ function mapAnnotations(session, annotations) {
     const lines = session.getDocument().getAllLines(); // Get all lines from editor
     const mappedAnnotations = [];
 
+
     annotations.forEach(({ comment, code_line }) => {
         const trimmedCode = code_line.trim(); // Remove extra spaces
 
@@ -367,11 +368,13 @@ function mapAnnotations(session, annotations) {
                 text: comment,
                 type: "info" // Change type if needed
             });
-            session.addGutterDecoration(lineNumber,"oeeex-ai-comment")
         }
     });
 
     session.setAnnotations(mappedAnnotations);
+    mappedAnnotations.forEach(obj => {
+    	session.addGutterDecoration(obj.row,"oeeex-ai-comment");
+    })
 }
 
 function removeCodeAnnotation(editor){
