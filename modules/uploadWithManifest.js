@@ -161,7 +161,7 @@ function uploadTreeFolder(item,path){
 
 function uploadFolder(manifest,fileArray){
 	manifest.file(function(manifestFile){
-		fr = new FileReader();
+		let fr = new FileReader();
 		fr.onload = function(e){
 			let lines = e.target.result;
 			let newArr = JSON.parse(lines);
@@ -196,7 +196,7 @@ function exploreJson2Upload(jsonData,fileArray){
 		{
 			if('name' in jsonData)
 				checkInAvalailable(jsonData.name,null,null);
-			for(k in jsonData){
+			for(let k in jsonData){
 				if(k=='uris')
 					array=array.concat(uploadFilesInGEE(jsonData[k],fileArray));
 				else
@@ -450,8 +450,8 @@ function updateDispaly(uploadDic,chunkSize){
 		total2Upload+=uploadDic.uploadEvents[i].fileSize;
 	}
 
-	propUpload=totalUploaded/total2Upload;
-	smoothness=chunkSize/total2Upload;
+	let propUpload=totalUploaded/total2Upload;
+	let smoothness=chunkSize/total2Upload;
 
 	if(totalUploaded=0){
 		uploadDic.panelTask.querySelector('.content').style.background='rgb(180 180 180 / 37%)'
@@ -479,7 +479,7 @@ function isReadyToIngest(jsonData){
 	}else{
 		if(typeof jsonData==='object') // is dictionary
 		{
-			for(k in jsonData){
+			for(let k in jsonData){
 				if(k=='uris'){
 					for (let i = 0; i < jsonData[k].length; i++) {
 						if(typeof(jsonData[k][i])!== "string"){
