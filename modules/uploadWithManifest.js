@@ -44,7 +44,7 @@ function checkInAvalailable(imName,isPresentCallback,isMissingCallback){
 	}
 	if (!(isPresentCallback||isMissingCallback))
 		return;
-	let isPresente=false;
+	let isPresent=false;
 	if('Ingesting' in listImAvailable){
 		if(listImAvailable['Ingesting'].includes(imName)){
 			isPresent=true;
@@ -453,7 +453,7 @@ function updateDispaly(uploadDic,chunkSize){
 	let propUpload=totalUploaded/total2Upload;
 	let smoothness=chunkSize/total2Upload;
 
-	if(totalUploaded=0){
+	if(totalUploaded==0){
 		uploadDic.panelTask.querySelector('.content').style.background='rgb(180 180 180 / 37%)'
 		return;
 	}
@@ -490,7 +490,7 @@ function isReadyToIngest(jsonData){
 					}
 				}
 				else{
-					canBeIngested&=isReadyToIngest(jsonData[k]);
+					canBeIngested&&=isReadyToIngest(jsonData[k]);
 					if(!canBeIngested)return canBeIngested;
 				}
 			}
