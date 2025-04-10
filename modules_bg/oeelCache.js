@@ -1,6 +1,6 @@
 function redirect(requestDetails) {
 	let newUrl="https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/"+
-	requestDetails.url.match("^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)")[1];
+	requestDetails.url.match("^https://code.earthengine.google.(com|co\\.in)/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)")[2];
 	return {
 		redirectUrl: newUrl
 	};
@@ -12,7 +12,10 @@ function firefoxAddWebRequest(future){
 
 		browser.webRequest.onBeforeRequest.addListener(
 			redirect,
-			{urls:["https://code.earthengine.google.com/repo/file/load?repo=users%2FOEEL%2Flib&path=*"], types:["xmlhttprequest"]},
+			{urls:[
+				"https://code.earthengine.google.com/repo/file/load?repo=users%2FOEEL%2Flib&path=*",
+				"https://code.earthengine.google.co.in/repo/file/load?repo=users%2FOEEL%2Flib&path=*"
+			], types:["xmlhttprequest"]},
 			["blocking"]
 			);
 	}).catch(function(){
@@ -30,11 +33,11 @@ function chromeAddNetRequest(future){
 				"action": {
 					"type": "redirect",
 					"redirect": {
-						"regexSubstitution": "https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/\\1"
+						"regexSubstitution": "https://proxy-oeel-code.open-geocomputing.org/OpenEarthEngineLibrary/\\2"
 					}
 				},
 				"condition": {
-					"regexFilter": "^https://code.earthengine.google.com/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)"
+					"regexFilter": "^https://code.earthengine.google.(com|co\\.in)/repo/file/load\\?repo=users%2FOEEL%2Flib\\&path=(.*)"
 				}}],
 				removeRuleIds: [1]
 			})

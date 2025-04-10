@@ -232,7 +232,7 @@ function oeeRequire(path){
 function requestCodeSync(requestedPath){
 	
 	let path=requestedPath.split(":");
-	let url="https://code.earthengine.google.com/repo/file/load?repo="+encodeURI(path[0])+"&path="+encodeURI(path[1]);
+	let url="https://"+location.host+"/repo/file/load?repo="+encodeURI(path[0])+"&path="+encodeURI(path[1]);
 
 	const request = new XMLHttpRequest();
 	request.open("GET", url, false); // `false` makes the request synchronous
@@ -251,7 +251,7 @@ function requestCodeSync(requestedPath){
 async function requestCodeAsync(requestedPath) {
 	return new Promise((resolve, reject) => {
 		let path = requestedPath.split(":");
-		let url = "https://code.earthengine.google.com/repo/file/load?repo=" + encodeURI(path[0]) + "&path=" + encodeURI(path[1]);
+		let url = "https://"+location.host+"/repo/file/load?repo=" + encodeURI(path[0]) + "&path=" + encodeURI(path[1]);
 
 		const request = new XMLHttpRequest();
 		request.open("GET", url, true); // `true` makes the request asynchronous
@@ -277,7 +277,7 @@ async function requestCodeAsync(requestedPath) {
 
 async function requestListAsync(requestedRepoPath) {
 	return new Promise((resolve, reject) => {
-		let url = "https://code.earthengine.google.com/repo/load?repo=" + encodeURI(requestedRepoPath);
+		let url = "https://"+location.host+"/repo/load?repo=" + encodeURI(requestedRepoPath);
 
 		const request = new XMLHttpRequest();
 		request.open("GET", url, true); // `true` makes the request asynchronous
@@ -303,7 +303,7 @@ async function requestListAsync(requestedRepoPath) {
 
 
 function requestListSync(requestedRepoPath) {
-	let url = "https://code.earthengine.google.com/repo/load?repo=" + encodeURI(requestedRepoPath);
+	let url = "https://"+location.host+"/repo/load?repo=" + encodeURI(requestedRepoPath);
 
 	const request = new XMLHttpRequest();
 	request.open("GET", url, false);

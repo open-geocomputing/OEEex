@@ -296,7 +296,7 @@ function ingestInGEE(manifest,successCallback,errorCallback){
 
 function uploadFromLocal(index,uris,fileEntry){
 	let uploadImage=new XMLHttpRequest();
-	uploadImage.open("GET",'https://code.earthengine.google.com/assets/upload/geturl',true);
+	uploadImage.open("GET",'https://'+location.host+'/assets/upload/geturl',true);
 	uploadImage.responseType = 'json';
 	uploadImage.isLocal=true;
 	uploadImage.onload = function(e) {
@@ -334,7 +334,7 @@ function uploadFromLocal(index,uris,fileEntry){
 
 function uploadFromBlob(index,uris,blob,asZip=false){
 	let uploadImage=new XMLHttpRequest();
-	uploadImage.open("GET",'https://code.earthengine.google.com/assets/upload/geturl',true);
+	uploadImage.open("GET",'https://'+location.host+'/assets/upload/geturl',true);
 	uploadImage.responseType = 'json';
 	uploadImage.isLocal=false;
 	uploadImage.onload = function(e) {

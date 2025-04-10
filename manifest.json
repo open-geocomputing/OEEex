@@ -74,6 +74,7 @@
             "matches":
             [
                 "https://code.earthengine.google.com/*",
+                "https://code.earthengine.google.co.in/*",
                 "https://*.earthengine.app/*"
             ],
             "js":

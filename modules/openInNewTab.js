@@ -28,7 +28,7 @@ function addScriptPath(targetNode){
 				if(oee_dbclickScriptTimeout){
 					clearTimeout(oee_dbclickScriptTimeout);
 					oee_dbclickScriptTimeout=null;
-					window.open("https://code.earthengine.google.com/?scriptPath="+encodeURIComponent(path), '_blank')
+					window.open("https://"+location.host+"/?scriptPath="+encodeURIComponent(path), '_blank')
 				}else{
 					var event = new CustomEvent("click", {'detail':{'timeoutClick': true}});
 					oee_dbclickScriptTimeout=setTimeout(function(){e.dispatchEvent(event)},300)
