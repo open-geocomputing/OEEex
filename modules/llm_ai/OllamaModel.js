@@ -8,12 +8,13 @@ export class OllamaModel extends AIModelInterface {
         this.endpoint = `${this.host}/api/generate`;
         this.modelsEndpoint = `${this.host}/api/tags`;  
         this.superPrompt =`You are an expert assistant in Google Earth Engine (GEE) coding. Any code request must be written exclusively in JavaScript for the browser-based Google Earth Engine Code Editor. Additionally comment should be written exlusively in ${this.language}. For explanatory text that needs to be structured, use Markdown syntax.\n`;
+        this.isStructurableOuptutCompatible=this.modelVersion.startsWith("llama");
         this.defaultPrompts = {
             generate_code:  this.stringToFunction("Generate efficient code for:\n${prompt}"),
             explain_code: this.stringToFunction("Explain this code line by line:\n${code}"),
             high_level_explain_code: this.stringToFunction("Summarize the purpose of this code:\n${code}"),
             alter_code: this.stringToFunction("Modify the following code:\n${code}\nChanges: ${prompt}\n Provide a complete code."),
-            fix_code: this.stringToFunction("Fix the errors in this code:\n${code}\nError: ${errors}\n Provide only the code patch (diff file) to correct the code. Diff content should be dircetly in the patch parameter or the answer.")
+            fix_code: this.stringToFunction("Fix the errors in this code:\n${code}\nError: ${errors}\n\nProvide only the code patch in unified diff (git diff) format. \nRequirements for the patch:\n- Use the standard headers: \"--- a/<filename>\" and \"+++ b/<filename>\".\n- Each hunk header must include proper line ranges (e.g., \"@@ -1,2 +1,2 @@\"), not just \"@@\".\n- Do NOT put line number in the front of each line.\n- Removed lines must start with \"-\", and added lines with \"+\".\n- Do not rewrite unchanged lines as removed/added.\n- Always include at least one line of unchanged context before and after the change, if possible.\n- The output must be a valid patch that can be applied directly with \"git apply\" or \"Diff.applyPatch\".")
         };
     }
 
@@ -59,19 +60,14 @@ export class OllamaModel extends AIModelInterface {
     }
 
     async generateCode(input) {
-        const payload = {
-            model: this.modelVersion,
-            system: this.superPrompt,
-            prompt: this.getPrompt("generate_code", input, this.defaultPrompts),
-            stream: false,
-            format: {
+        const format={
                 type: "object",
                 properties: {
                   code: {
                     type: "string"
                   },
                   explanation: {
-                    "type": "string"
+                    type: "string"
                   }
                 },
                 required: [
@@ -79,8 +75,16 @@ export class OllamaModel extends AIModelInterface {
                   "explanation"
                 ]
               }
+
+        const payload = {
+            model: this.modelVersion,
+            system: this.superPrompt+(!this.isStructurableOuptutCompatible? "\n The output should be a JSON that follow a structure compatible with this format structure: "+JSON.stringify(format):""),
+            prompt: this.getPrompt("generate_code", input, this.defaultPrompts),
+            stream: false,
+            ...(this.isStructurableOuptutCompatible? {format:format}:{})
             };
 
+        console.log(payload)
         const response = await this.fetchOllama(this.endpoint, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -88,16 +92,12 @@ export class OllamaModel extends AIModelInterface {
         });
 
         const data = await response.json();
+        console.log(data)
         return JSON.parse(data.response);
     }
 
     async explainCode(input) {
-        const payload = {
-            model: this.modelVersion,
-            system: this.superPrompt,
-            prompt: this.getPrompt("explain_code", input, this.defaultPrompts),
-            stream: false,
-            format: {
+        const format={
                 type: "object",
                 properties: {
                     explanations: {
@@ -108,7 +108,7 @@ export class OllamaModel extends AIModelInterface {
                             properties: {
                                 code_line: {
                                     type: "string",
-                                    description: "A line of code to be explained."
+                                    description: "The line of code explained."
                                 },
                                 comment: {
                                     type: "string",
@@ -122,7 +122,14 @@ export class OllamaModel extends AIModelInterface {
                 },
                 required: ["explanations"],
                 additionalProperties: false
-            }
+            };
+
+        const payload = {
+            model: this.modelVersion,
+            system: this.superPrompt+(!this.isStructurableOuptutCompatible? "\n The output should be a JSON that follow a structure compatible with this format structure: "+JSON.stringify(format)+"\n Do not put suround text, provide online the valide JSON.":""),
+            prompt: this.getPrompt("explain_code", input, this.defaultPrompts),
+            stream: false,
+            ...(this.isStructurableOuptutCompatible? {format:format}:{}) 
         };
 
         const response = await this.fetchOllama(this.endpoint, {
@@ -131,23 +138,26 @@ export class OllamaModel extends AIModelInterface {
             body: JSON.stringify(payload)
         });
         const data = await response.json();
+        console.log(data)
         return JSON.parse(data.response);
     }
 
     async highLevelExplainCode(input) {
-        const payload = {
-            model: this.modelVersion,
-            system: this.superPrompt,
-            prompt: this.getPrompt("high_level_explain_code", input, this.defaultPrompts),
-            stream: false,
-            format: {
+        const format={
                 type: "object",
                 properties: {
                     explanation: { type: "string" }
                 },
                 required: ["explanation"],
                 additionalProperties: false
-            }
+            };
+
+        const payload = {
+            model: this.modelVersion,
+            system: this.superPrompt+(!this.isStructurableOuptutCompatible? "\n The output should be a JSON that follow a structure compatible with this format structure: "+JSON.stringify(format):""),
+            prompt: this.getPrompt("high_level_explain_code", input, this.defaultPrompts),
+            stream: false,
+            ...(this.isStructurableOuptutCompatible? {format:format}:{}) 
         };
 
         const response = await this.fetchOllama(this.endpoint, {
@@ -160,12 +170,7 @@ export class OllamaModel extends AIModelInterface {
     }
 
     async alterCode(input) {
-        const payload = {
-            model: this.modelVersion,
-            system: this.superPrompt,
-            prompt: this.getPrompt("alter_code", input, this.defaultPrompts),
-            stream: false,
-            format: {
+        const format={
                 type: "object",
                 properties: {
                     explanation: { type: "string" },
@@ -175,6 +180,13 @@ export class OllamaModel extends AIModelInterface {
                 required: ["explanation","code"],
                 additionalProperties: false
             }
+
+        const payload = {
+            model: this.modelVersion,
+            system: this.superPrompt+(!this.isStructurableOuptutCompatible? "\n The output should be a JSON that follow a structure compatible with this format structure: "+JSON.stringify(format):""),
+            prompt: this.getPrompt("alter_code", input, this.defaultPrompts),
+            stream: false,
+            ...(this.isStructurableOuptutCompatible? {format:format}:{}) 
         };
 
         const response = await this.fetchOllama(this.endpoint, {
@@ -187,12 +199,7 @@ export class OllamaModel extends AIModelInterface {
     }
 
     async fixCode(input) {
-        const payload = {
-            model: this.modelVersion,
-            system: this.superPrompt,
-            prompt: this.getPrompt("fix_code", input, this.defaultPrompts),
-            stream: false,
-            format: {
+        const format={
                 type: "object",
                 properties: {
                     explanation: { type: "string" },
@@ -200,7 +207,14 @@ export class OllamaModel extends AIModelInterface {
                 },
                 required: ["explanation", "patch"],
                 additionalProperties: false
-            }
+            };
+
+        const payload = {
+            model: this.modelVersion,
+            system: this.superPrompt+(!this.isStructurableOuptutCompatible? "\n The output should be a JSON that follow a structure compatible with this format structure: "+JSON.stringify(format):""),
+            prompt: this.getPrompt("fix_code", input, this.defaultPrompts),
+            stream: false,
+            ...(this.isStructurableOuptutCompatible? {format:format}:{}) 
         };
 
         const response = await this.fetchOllama(this.endpoint, {

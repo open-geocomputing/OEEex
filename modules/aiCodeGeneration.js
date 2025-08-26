@@ -335,14 +335,16 @@ function packInformation(aiConfig, prompt=null){
 function updateCodeFromDiff(diffObj, originalCode, currentCode) {
     let patch = diffObj.patch;
     if (patch && patch.trim() !== "") {
-	    	if (patch.startsWith("```") && str.endsWith("```")) {
+	    	if (patch.startsWith("```") && patch.endsWith("```")) {
 					patch = patch.slice(3, -3); // Remove first and last 3 characters
-				}
 			}
+			patch = patch.replace(/^\s*@@\s*$/gm, '@@ @@');
+		}
 	else{
         // Compute patch between originalCode and diffObj.code if patch is empty
         patch = Diff.createPatch("filename", originalCode, diffObj.code, "", "");
     }
+    console.log("newPatch", patch)
     const newCode = Diff.applyPatch(currentCode, patch);
     return newCode;
 }
@@ -413,6 +415,7 @@ function displayAiErrorHelpMessage(e,jsonData,request,aiConfig){
 		updateButton.classList.add("updateCode");
 		aiAnswerMessageDiv.insertBefore(updateButton,aiAnswerMessageDiv.firstChild);
 		updateButton.addEventListener('click',function(){
+			console.log(jsonData.patch)
 			console.log(jsonData, request.code, aiConfig.codeEditor.getValue())
 			console.log(updateCodeFromDiff(jsonData, request.code, aiConfig.codeEditor.getValue()))
 			aiConfig.codeEditor.setValue(updateCodeFromDiff(jsonData, request.code, aiConfig.codeEditor.getValue()))

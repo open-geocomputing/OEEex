@@ -126,8 +126,13 @@
             <h2 class="subtitle">Ollama Settings</h2>
             <label class="label">Host Address</label>
             <input class="input" data-type="host" type="text" placeholder="Enter Ollama host">
-            <label class="label">Model Version</label>
-            <input class="input" data-type="modelVersion" type="text" placeholder="Enter model version">
+           <label class="label">Model</label>
+            <div class="select">
+                <select id="ollamaModelSelector">
+                    <option value="">— select or type below —</option>
+                </select>
+            </div>
+            <input class="input" id="ollamaModelInput" data-type="modelVersion" type="text" placeholder="Enter model (e.g. llama3:8b)" style="display: none;">
             <div class="custom-prompt-section">
                 <hr>
                 <h2 class="subtitle">Custom Prompts</h2>

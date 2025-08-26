@@ -91,6 +91,8 @@ export function initialize(){
 			    const headers = Object.fromEntries(res.headers.entries());
 			    const body = await res.text(); // Capture the body as text
 
+			    console.log(res, body)
+
 			    // Serialize response
 			    const serializedResponse = JSON.stringify({
 			      status: res.status,
