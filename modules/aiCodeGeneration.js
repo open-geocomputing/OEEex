@@ -40,10 +40,10 @@ function enableAiInterface(aiConfig){
 function addTab(parent,name, hidden=false, selected=false, parm3=false ){
 	let localName=name;
 	let newTab=document.createElement("ee-tab");
-	newTab[Object.getOwnPropertySymbols(newTab)[0]]=selected;
-	newTab[Object.getOwnPropertySymbols(newTab)[1]]=hidden;
-	newTab[Object.getOwnPropertySymbols(newTab)[2]]=parm3;
-	newTab[Object.getOwnPropertySymbols(newTab)[3]]=localName;
+	newTab[Object.getOwnPropertySymbols(newTab)[1]]=selected;
+	newTab[Object.getOwnPropertySymbols(newTab)[2]]=hidden;
+	newTab[Object.getOwnPropertySymbols(newTab)[3]]=parm3;
+	newTab[Object.getOwnPropertySymbols(newTab)[4]]=localName;
 	parent.appendChild(newTab);
 	parent.shadowRoot.querySelector('.header button.selected').click();
 	if (hidden) newTab.setAttribute("hidden", "");
@@ -453,20 +453,17 @@ function addErrorButon(e, message, aiConfig){
 	.message.severity-error .summary{\
 		padding-right: 27px;\
 	}\
+	.message.severity-error .error-container{\
+		min-height: 48px;\
+	}\
 	.aiButton{\
 		position: relative;\
 		float: right;\
-		right: -4px;\
-		bottom: -4px;\
-		padding: 2px 5px 4px 3px;\
-		border-top-left-radius: 4px;\
-		border-right: none;\
-		border-bottom: none;\
-		border: 2px white solid;\
+		bottom: 0px;\
 		user-select: none;\
-		font-size: 1.3em;\
+		font-size: 1.5em;\
 		margin-top: -25px;\
-		text-shadow: 0 0 0px white;\
+		text-shadow: 0 0 2px blue;\
 	}\
 \
 	.aiButton.disabled {\
