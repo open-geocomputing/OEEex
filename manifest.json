@@ -38,9 +38,9 @@
 	"host_permissions": [
 		"http://127.0.0.1/",
 		"http://localhost/",
-		"https://code.earthengine.google.com/",
+		"https://code.earthengine.google.com/*",
 		"https://code.earthengine.google.com/repo/file/load?*",
-		"https://code.earthengine.google.co.in/",
+		"https://code.earthengine.google.co.in/*",
 		"https://code.earthengine.google.co.in/repo/file/load?*",
 		"https://generativelanguage.googleapis.com/"
 	],
