@@ -103,5 +103,6 @@ export function initialize(){
 			    sendResponse(serializedResponse);
 			})
 		}
+		return true;
 	});
 }
