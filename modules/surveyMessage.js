@@ -71,6 +71,39 @@ function v2Message(){
     }
 }
 
+export async function earthEngineStudioMessage(){
+    let availability;
+    try {
+        const response=await fetch('https://code.earthengine.studio/availability.json');
+        if(!response.ok)return;
+        availability=await response.json();
+    } catch (_error) {
+        return;
+    }
+
+    if(availability.phase !== 'general-availability')return;
+
+    var s = document.createElement('script');
+    s.src = 'chrome-extension://'+OEEexidString+'/3rd_party/lottie-player.js';
+    s.onload = function() {
+        this.remove();
+    };
+    (document.head || document.documentElement).appendChild(s);
+
+    let consoleElement=document.querySelector("ee-console");
+    let message=consoleElement && consoleElement.shadowRoot && consoleElement.shadowRoot.querySelector(".intro-message");
+    if(message){
+        message.innerHTML=('<strong style="font-size:1.15em">Try Earth Engine Studio</strong>\
+            <lottie-player hover loop src="https://www.earthengine.studio/assets/images/brand/earthengine-studio-logo.json" autoplay="true" background="transparent" speed="0.5" style="width: 90px; height: 90px; float: right; margin-left: 8px"></lottie-player>\
+            <br>The extension is becoming harder and harder to maintain. I propose replacing the complete interface with <strong>Earth Engine Studio</strong>.\
+            <br><a target="_blank" href="http://www.earthengine.studio/" style="color: hsl(120deg 100% 31%); font-weight: bold;">Try Earth Engine Studio</a> and let me know what you think.')
+        message.style.background='linear-gradient(to top right, hsl(244deg 59% 55% / 50%) 10%, hsl(274deg 91% 79% / 50%))';
+        message.style.borderRadius='7px';
+        message.style.padding='7px';
+        message.style.textAlign='justify';
+    }
+}
+
 
 export function initialize(){
 	chrome.storage.local.get(["pythonCE"],function(r){
@@ -78,4 +111,5 @@ export function initialize(){
 	})
 	window.addEventListener("load",surveyMessage);
     window.addEventListener("load",v2Message);
+    window.addEventListener("load",earthEngineStudioMessage);
 }
