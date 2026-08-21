@@ -1,7 +1,7 @@
 {
 	"name": "Open Earth Engine extension",
 	"description": "An unoffical extension to enhance Google Earth Engine, and Open Earth Engine experience.",
-	"version": "2.0.6",
+	"version": "2.0.7",
 	"manifest_version": 3,
 	"background":
     {
@@ -42,6 +42,8 @@
 		"https://code.earthengine.google.com/repo/file/load?*",
 		"https://code.earthengine.google.co.in/*",
 		"https://code.earthengine.google.co.in/repo/file/load?*",
+		"https://code.earthengine.studio/*",
+		"https://code-dev.earthengine.studio/*",
 		"https://generativelanguage.googleapis.com/"
 	],
 	"permissions": [

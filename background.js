@@ -3,6 +3,7 @@ import { initialize as oeelCacheInitialize } from './modules_bg/oeelCache.js';
 import { initialize as actionButtonInitialize } from './modules_bg/actionButtonModuleManager.js';
 import { initialize as aiOllamaFetchInit } from './modules_bg/aiModuleManager.js';
 import { initialize as initConfig } from './modules_bg/initConfig.js';
+import { enableStudioUploadCorsWorkaround } from './modules_bg/studioUploadWorkaround.js';
 // import { initialize as messageChatGPTInitialize } from './modules_bg/messageChatGPT.js';
 
 // // Add other module imports here
@@ -46,10 +47,13 @@ async function enablePlaygroundRequirePatch() {
 
 chrome.runtime.onInstalled.addListener(() => {
   enablePlaygroundRequirePatch().catch(console.error);
+  enableStudioUploadCorsWorkaround().catch(console.error);
 });
 
 chrome.runtime.onStartup.addListener(() => {
   enablePlaygroundRequirePatch().catch(console.error);
+  enableStudioUploadCorsWorkaround().catch(console.error);
 });
 
 enablePlaygroundRequirePatch().catch(console.error);
+enableStudioUploadCorsWorkaround().catch(console.error);
